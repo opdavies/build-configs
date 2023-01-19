@@ -1,0 +1,25 @@
+name: php-full
+type: drupal
+
+dockerfile:
+  stages:
+    build:
+      extends: base
+      packages:
+        - git
+        - unzip
+      commands:
+        - composer install
+
+    test:
+      extends: base
+      commands:
+        - phpunit --testdox
+
+php:
+  version: 8.1-cli-bullseye
+  phpstan:
+    level: 7
+    paths:
+      - app
+      - src
