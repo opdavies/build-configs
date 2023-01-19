@@ -1,8 +1,11 @@
 {
+  "compression": "GZ",
   "directories": [
     "src",
     "templates",
     "vendor"
   ],
-  "main": "build-config.php"
+  "exclude-dev-files": true,
+  "main": "bin/build-config.php",
+  "output": "build/build-config"
 }

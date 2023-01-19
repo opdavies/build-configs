@@ -6,10 +6,10 @@ use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $filesystem = new Filesystem();
-$twig = new Environment(new FilesystemLoader([__DIR__.'/templates']));
+$twig = new Environment(new FilesystemLoader([__DIR__.'/../templates']));
 
 $application = new Application();
 
