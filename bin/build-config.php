@@ -17,4 +17,5 @@ $application->addCommands([
     new BuildConfigurationCommand($twig, $filesystem),
 ]);
 
+$application->setDefaultCommand('build-configuration', true);
 $application->run();
