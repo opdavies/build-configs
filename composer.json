@@ -1,0 +1,9 @@
+{
+    "require": {
+        "twig/twig": "^3.5",
+        "symfony/console": "^6.2"
+    },
+    "require-dev": {
+        "humbug/box": "^4.2"
+    }
+}
