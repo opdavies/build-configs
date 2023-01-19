@@ -1,0 +1,58 @@
+FROM php:{{ php.version }} AS base
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN which composer && composer -V
+
+WORKDIR /app
+
+ENV PATH="${PATH}:/app/vendor/bin"
+
+COPY composer.* ./
+
+{% if dockerfile.stages.build %}
+################################################################################
+
+FROM {{ dockerfile.stages.build.extends }} AS build
+
+{% if dockerfile.stages.build.packages %}
+RUN apt-get update -yqq \
+  && apt-get install -yqq --no-install-recommends \
+    {{ dockerfile.stages.build.packages | join(' ') }}
+{% endif %}
+
+{% if dockerfile.stages.build.extensions.install %}
+RUN docker-php-ext-install {{ dockerfile.stages.build.extensions.install | join(' ') }}
+{% endif %}
+
+RUN {% for command in dockerfile.stages.build.commands %}
+{% if not loop.first %}  && {% endif %}
+{{- command }}
+{%- if not loop.last %} \{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if dockerfile.stages.test %}
+################################################################################
+
+FROM {{ dockerfile.stages.test.extends }} AS test
+
+COPY . .
+
+RUN {% for command in dockerfile.stages.test.commands -%}
+{% if not loop.first %}  && {% endif %}
+{{- command }}
+{%- if not loop.last %} \{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if web.type == "nginx" %}
+################################################################################
+
+FROM nginx:1 as web
+
+EXPOSE 8080
+
+WORKDIR /app
+
+COPY tools/docker/images/nginx/root /
+{% endif %}
