@@ -26,8 +26,9 @@ RUN docker-php-ext-install {{ dockerfile.stages.build.extensions.install | join(
 
 RUN {% for command in dockerfile.stages.build.commands %}
 {% if not loop.first %}  && {% endif %}
-{{- command }}
+{{ command }}
 {%- if not loop.last %} \{% endif %}
+
 {% endfor %}
 {% endif %}
 
@@ -40,8 +41,9 @@ COPY . .
 
 RUN {% for command in dockerfile.stages.test.commands -%}
 {% if not loop.first %}  && {% endif %}
-{{- command }}
+{{ command }}
 {%- if not loop.last %} \{% endif %}
+
 {% endfor %}
 {% endif %}
 
