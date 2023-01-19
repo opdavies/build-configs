@@ -5,7 +5,6 @@
     "templates",
     "vendor"
   ],
-  "exclude-dev-files": true,
   "main": "bin/build-config.php",
   "output": "build/build-config"
 }
