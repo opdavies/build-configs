@@ -2,13 +2,19 @@
 
 use OliverDaviesLtd\BuildConfiguration\Console\Command\BuildConfigurationCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$app = new Application();
+$filesystem = new Filesystem();
+$twig = new Environment(new FilesystemLoader([__DIR__.'/templates']));
 
-$app->addCommands([
-    new BuildConfigurationCommand(),
+$application = new Application();
+
+$application->addCommands([
+    new BuildConfigurationCommand($twig, $filesystem),
 ]);
 
-$app->run();
+$application->run();

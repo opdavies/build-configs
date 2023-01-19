@@ -12,7 +12,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 #[AsCommand(
     description: 'Build configuration files',
@@ -20,20 +19,27 @@ use Twig\Loader\FilesystemLoader;
 )]
 final class BuildConfigurationCommand extends Command
 {
+    private const LANGUAGE_PHP = 'php';
+
+    public function __construct(
+        private Environment $twig,
+        private Filesystem $filesystem,
+    ) {
+        parent::__construct();
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        // Find a build.yaml file.
+        $io = new SymfonyStyle($input, $output);
+
         $buildYaml = Yaml::parseFile(getcwd().'/build.yaml');
 
-        $io = new SymfonyStyle($input, $output);
         $io->info("Building configuration for {$buildYaml['name']}.");
 
-        $twig = new Environment(new FilesystemLoader([__DIR__.'/../../../templates']));
-        $output = $twig->render('test.twig', $buildYaml);
+        if ($buildYaml['language'] === self::LANGUAGE_PHP) {
+            $this->filesystem->dumpFile('Dockerfile', $this->twig->render('php/Dockerfile.twig', $buildYaml));
+        }
 
-        $fs = new Filesystem();
-        $fs->dumpFile('test.txt', $output);
-    //
         return Command::SUCCESS;
     }
 }
