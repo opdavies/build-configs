@@ -1,4 +1,5 @@
 name: php-simple
+language: php
 type: php-library
 php:
   version: 8.1-cli-bullseye

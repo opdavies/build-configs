@@ -1,4 +1,5 @@
 name: php-full
+language: php
 type: drupal
 
 dockerfile:
