@@ -32,16 +32,18 @@ final class BuildConfigurationCommand extends Command
     protected function configure(): void
     {
         $this
+            ->addOption('config', 'c', InputOption::VALUE_REQUIRED, 'The configuration file to use', 'build.yaml')
             ->addOption('output-dir', 'o', InputOption::VALUE_REQUIRED, 'The directory to create files in', '.');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $configFile = $input->getOption('config');
         $outputDir = $input->getOption('output-dir');
 
         $io = new SymfonyStyle($input, $output);
 
-        $configurationData = Yaml::parseFile(getcwd().'/build.yaml');
+        $configurationData = Yaml::parseFile($configFile);
         $configurationData['dockerCompose'] = $configurationData['docker-compose'];
         $configurationData['docker-compose'] = null;
 
