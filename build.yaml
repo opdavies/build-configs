@@ -1,0 +1,11 @@
+name: build-config
+language: php
+type: php-library
+
+php:
+  version: 8.0
+  phpstan:
+    level: 8
+    paths:
+      - bin
+      - src
