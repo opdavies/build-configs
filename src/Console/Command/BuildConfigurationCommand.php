@@ -52,7 +52,7 @@ final class BuildConfigurationCommand extends Command
         $this->filesystem->dumpFile("{$outputDir}/.env.example", $this->twig->render('env.example.twig', $configurationData));
         $this->filesystem->dumpFile("{$outputDir}/Dockerfile", $this->twig->render('Dockerfile.twig', $configurationData));
 
-        if ($configurationData['dockerCompose'] === true) {
+        if ($configurationData['dockerCompose'] !== null) {
             $this->filesystem->dumpFile("{$outputDir}/docker-compose.yaml", $this->twig->render('docker-compose.yaml.twig', $configurationData));
         }
 
