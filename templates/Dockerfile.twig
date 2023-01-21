@@ -32,6 +32,11 @@ RUN {% for command in dockerfile.stages.build.commands %}
 {% endfor %}
 {% endif %}
 
+COPY tools/docker/images/php/root /
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-php"]
+CMD ["php-fpm"]
+
 {% if dockerfile.stages.test %}
 ################################################################################
 

@@ -60,6 +60,10 @@ final class BuildConfigurationCommand extends Command
             $this->filesystem->dumpFile("{$outputDir}/phpcs.xml.dist", $this->twig->render('phpcs.xml.twig', $configurationData));
             $this->filesystem->dumpFile("{$outputDir}/phpstan.neon.dist", $this->twig->render('phpstan.neon.twig', $configurationData));
             $this->filesystem->dumpFile("{$outputDir}/phpunit.xml.dist", $this->twig->render('phpunit.xml.twig', $configurationData));
+
+            $this->filesystem->mkdir("{$outputDir}/tools/docker/images/php/root/usr/local/bin");
+            $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", $this->twig->render('docker-entrypoint-php.twig', $configurationData));
+        }
         }
 
         return Command::SUCCESS;
