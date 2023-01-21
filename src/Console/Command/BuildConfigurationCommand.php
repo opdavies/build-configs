@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OliverDaviesLtd\BuildConfiguration\Console\Command;
+namespace OliverDaviesLtd\BuildConfigs\Console\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +16,7 @@ use Twig\Environment;
 
 #[AsCommand(
     description: 'Build configuration files',
-    name: 'build-configuration'
+    name: 'build-configs'
 )]
 final class BuildConfigurationCommand extends Command
 {

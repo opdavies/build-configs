@@ -1,6 +1,6 @@
 <?php
 
-use OliverDaviesLtd\BuildConfiguration\Console\Command\BuildConfigurationCommand;
+use OliverDaviesLtd\BuildConfigs\Console\Command\BuildConfigurationCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
@@ -17,5 +17,5 @@ $application->addCommands([
     new BuildConfigurationCommand($twig, $filesystem),
 ]);
 
-$application->setDefaultCommand('build-configuration', true);
+$application->setDefaultCommand('build-configs', true);
 $application->run();
