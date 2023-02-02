@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OliverDaviesLtd\BuildConfigs\Console\Command;
 
+use OliverDaviesLtd\BuildConfigs\Enum\Language;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,8 +21,6 @@ use Twig\Environment;
 )]
 final class BuildConfigurationCommand extends Command
 {
-    private const LANGUAGE_PHP = 'php';
-
     public function __construct(
         private Environment $twig,
         private Filesystem $filesystem,
@@ -56,7 +55,7 @@ final class BuildConfigurationCommand extends Command
             $this->filesystem->dumpFile("{$outputDir}/docker-compose.yaml", $this->twig->render('docker-compose.yaml.twig', $configurationData));
         }
 
-        if ($configurationData['language'] === self::LANGUAGE_PHP) {
+        if (strtoupper($configurationData['language']) === Language::PHP) {
             $this->filesystem->dumpFile("{$outputDir}/phpcs.xml.dist", $this->twig->render('php/phpcs.xml.twig', $configurationData));
             $this->filesystem->dumpFile("{$outputDir}/phpstan.neon.dist", $this->twig->render('php/phpstan.neon.twig', $configurationData));
             $this->filesystem->dumpFile("{$outputDir}/phpunit.xml.dist", $this->twig->render('php/phpunit.xml.twig', $configurationData));
