@@ -57,12 +57,12 @@ final class BuildConfigurationCommand extends Command
         }
 
         if ($configurationData['language'] === self::LANGUAGE_PHP) {
-            $this->filesystem->dumpFile("{$outputDir}/phpcs.xml.dist", $this->twig->render('phpcs.xml.twig', $configurationData));
-            $this->filesystem->dumpFile("{$outputDir}/phpstan.neon.dist", $this->twig->render('phpstan.neon.twig', $configurationData));
-            $this->filesystem->dumpFile("{$outputDir}/phpunit.xml.dist", $this->twig->render('phpunit.xml.twig', $configurationData));
+            $this->filesystem->dumpFile("{$outputDir}/phpcs.xml.dist", $this->twig->render('php/phpcs.xml.twig', $configurationData));
+            $this->filesystem->dumpFile("{$outputDir}/phpstan.neon.dist", $this->twig->render('php/phpstan.neon.twig', $configurationData));
+            $this->filesystem->dumpFile("{$outputDir}/phpunit.xml.dist", $this->twig->render('php/phpunit.xml.twig', $configurationData));
 
             $this->filesystem->mkdir("{$outputDir}/tools/docker/images/php/root/usr/local/bin");
-            $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", $this->twig->render('docker-entrypoint-php.twig', $configurationData));
+            $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", $this->twig->render('php/docker-entrypoint-php.twig', $configurationData));
         }
 
         if ($configurationData['web']['type'] === 'nginx') {
