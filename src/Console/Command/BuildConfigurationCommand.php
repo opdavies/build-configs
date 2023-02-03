@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OliverDaviesLtd\BuildConfigs\Console\Command;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use OliverDaviesLtd\BuildConfigs\Enum\Language;
 use OliverDaviesLtd\BuildConfigs\Enum\WebServer;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -23,11 +24,18 @@ use Twig\Environment;
 )]
 final class BuildConfigurationCommand extends Command
 {
+    /** @phpstan-ignore-next-line */
+    private Collection $files;
+
+    private string $outputDir;
+
     public function __construct(
         private Environment $twig,
         private Filesystem $filesystem,
     ) {
         parent::__construct();
+
+        $this->files = new Collection();
     }
 
     protected function configure(): void
@@ -40,7 +48,7 @@ final class BuildConfigurationCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $configFile = $input->getOption('config');
-        $outputDir = $input->getOption('output-dir');
+        $this->outputDir = $input->getOption('output-dir');
 
         $io = new SymfonyStyle($input, $output);
 
@@ -50,28 +58,45 @@ final class BuildConfigurationCommand extends Command
 
         $io->info("Building configuration for {$configurationData['name']}.");
 
-        $this->filesystem->dumpFile("{$outputDir}/.env.example", $this->twig->render('env.example.twig', $configurationData));
-        $this->filesystem->dumpFile("{$outputDir}/Dockerfile", $this->twig->render('Dockerfile.twig', $configurationData));
+        $this->files->push(['env.example', '.env.example']);
+        $this->files->push(['Dockerfile', 'Dockerfile']);
 
         if ($configurationData['dockerCompose'] !== null) {
-            $this->filesystem->dumpFile("{$outputDir}/docker-compose.yaml", $this->twig->render('docker-compose.yaml.twig', $configurationData));
+            $this->files->push(['docker-compose.yaml', 'docker-compose.yaml']);
         }
 
         if (self::isPhp(Arr::get($configurationData, 'language'))) {
-            $this->filesystem->dumpFile("{$outputDir}/phpcs.xml.dist", $this->twig->render('php/phpcs.xml.twig', $configurationData));
-            $this->filesystem->dumpFile("{$outputDir}/phpstan.neon.dist", $this->twig->render('php/phpstan.neon.twig', $configurationData));
-            $this->filesystem->dumpFile("{$outputDir}/phpunit.xml.dist", $this->twig->render('php/phpunit.xml.twig', $configurationData));
+            $this->files->push(['php/phpcs.xml', 'phpcs.xml.dist']);
+            $this->files->push(['php/phpstan.neon', 'phpstan.neon.dist']);
+            $this->files->push(['php/phpunit.xml', 'phpunit.xml.dist']);
 
-            $this->filesystem->mkdir("{$outputDir}/tools/docker/images/php/root/usr/local/bin");
-            $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", $this->twig->render('php/docker-entrypoint-php.twig', $configurationData));
+            $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin");
+            $this->files->push(['php/docker-entrypoint-php', 'tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php']);
         }
 
         if (self::isNginx(Arr::get($configurationData, 'web.type'))) {
-            $this->filesystem->mkdir("{$outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d");
-            $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d/default.conf", $this->twig->render('default.conf', $configurationData));
+            $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d");
+            $this->files->push(['default.conf', 'tools/docker/images/nginx/root/etc/nginx/conf.d/default.conf']);
         }
 
+        $this->generateFiles($configurationData);
+
         return Command::SUCCESS;
+    }
+
+    /**
+     * @param array<string, string> $configurationData
+     */
+    private function generateFiles(array $configurationData): void
+    {
+        $this->files->map(function(array $filenames): array {
+            $filenames[0] = "{$filenames[0]}.twig";
+            $filenames[1] = "{$this->outputDir}/${filenames[1]}";
+
+            return $filenames;
+        })->each(function(array $filenames) use ($configurationData): void {
+            $this->filesystem->dumpFile($filenames[1], $this->twig->render($filenames[0], $configurationData));
+        });
     }
 
     private static function isNginx(?string $webServer): bool
