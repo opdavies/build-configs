@@ -76,11 +76,19 @@ final class BuildConfigurationCommand extends Command
 
     private static function isNginx(?string $webServer): bool
     {
-        return strtoupper($webServer) == WebServer::NGINX;
+        if (is_null($webServer)) {
+            return false;
+        }
+
+        return strtoupper($webServer) === WebServer::NGINX->name;
     }
 
     private static function isPhp(?string $language): bool
     {
-        return strtoupper($language) == Language::PHP;
+        if (is_null($language)) {
+            return false;
+        }
+
+        return strtoupper($language) === Language::PHP->name;
     }
 }
