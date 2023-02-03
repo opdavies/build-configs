@@ -64,7 +64,7 @@ final class BuildConfigurationCommand extends Command
             $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", $this->twig->render('php/docker-entrypoint-php.twig', $configurationData));
         }
 
-        if ($configurationData['web']['type'] === 'nginx') {
+        if (isset($configurationData['web']['type']) && $configurationData['web']['type'] === 'nginx') {
             $this->filesystem->mkdir("{$outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d");
             $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d/default.conf", $this->twig->render('default.conf', $configurationData));
         }
