@@ -5,6 +5,6 @@
     "templates",
     "vendor"
   ],
-  "main": "bin/build-config.php",
-  "output": "build/build-config"
+  "main": "bin/build-configs",
+  "output": "build/build-configs"
 }
