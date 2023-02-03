@@ -36,12 +36,15 @@ services:
     build:
       context: .
       target: {{ dockerCompose.services.php.build.target }}
+    {% if "database" in dockerCompose.services|keys -%}
     depends_on:
       - database
+    {% endif -%}
     profiles: [php]
 
+{% if "database" in dockerCompose.services|keys %}
   database:
-    image: mariadb:10
+    image: {{ database.type }}:{{ database.version }}
     deploy:
       resources:
         limits:
@@ -59,6 +62,7 @@ services:
 
 volumes:
   db-data: {}
+{% endif -%}
 
 networks:
   web:
