@@ -1,9 +1,10 @@
 {
     "require": {
-        "twig/twig": "^3.5",
+        "illuminate/support": "^9.50",
         "symfony/console": "^6.2",
+        "symfony/filesystem": "^6.2",
         "symfony/yaml": "^6.2",
-        "symfony/filesystem": "^6.2"
+        "twig/twig": "^3.5"
     },
     "require-dev": {
         "humbug/box": "^4.2",
@@ -14,5 +15,8 @@
         "psr-4": {
             "OliverDaviesLtd\\BuildConfigs\\": "src/"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

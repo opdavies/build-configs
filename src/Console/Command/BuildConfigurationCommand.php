@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace OliverDaviesLtd\BuildConfigs\Console\Command;
 
+use Illuminate\Support\Arr;
 use OliverDaviesLtd\BuildConfigs\Enum\Language;
+use OliverDaviesLtd\BuildConfigs\Enum\WebServer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,7 +57,7 @@ final class BuildConfigurationCommand extends Command
             $this->filesystem->dumpFile("{$outputDir}/docker-compose.yaml", $this->twig->render('docker-compose.yaml.twig', $configurationData));
         }
 
-        if (strtoupper($configurationData['language']) === Language::PHP) {
+        if (self::isPhp(Arr::get($configurationData, 'language'))) {
             $this->filesystem->dumpFile("{$outputDir}/phpcs.xml.dist", $this->twig->render('php/phpcs.xml.twig', $configurationData));
             $this->filesystem->dumpFile("{$outputDir}/phpstan.neon.dist", $this->twig->render('php/phpstan.neon.twig', $configurationData));
             $this->filesystem->dumpFile("{$outputDir}/phpunit.xml.dist", $this->twig->render('php/phpunit.xml.twig', $configurationData));
@@ -64,11 +66,21 @@ final class BuildConfigurationCommand extends Command
             $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", $this->twig->render('php/docker-entrypoint-php.twig', $configurationData));
         }
 
-        if (isset($configurationData['web']['type']) && $configurationData['web']['type'] === 'nginx') {
+        if (self::isNginx(Arr::get($configurationData, 'web.type'))) {
             $this->filesystem->mkdir("{$outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d");
             $this->filesystem->dumpFile("{$outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d/default.conf", $this->twig->render('default.conf', $configurationData));
         }
 
         return Command::SUCCESS;
+    }
+
+    private static function isNginx(?string $webServer): bool
+    {
+        return strtoupper($webServer) == WebServer::NGINX;
+    }
+
+    private static function isPhp(?string $language): bool
+    {
+        return strtoupper($language) == Language::PHP;
     }
 }
