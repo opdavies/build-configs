@@ -25,7 +25,7 @@ use Twig\Environment;
 final class BuildConfigurationCommand extends Command
 {
     /** @phpstan-ignore-next-line */
-    private Collection $files;
+    private Collection $filesToGenerate;
 
     private string $outputDir;
 
@@ -35,7 +35,7 @@ final class BuildConfigurationCommand extends Command
     ) {
         parent::__construct();
 
-        $this->files = new Collection();
+        $this->filesToGenerate = new Collection();
     }
 
     protected function configure(): void
@@ -58,25 +58,25 @@ final class BuildConfigurationCommand extends Command
 
         $io->info("Building configuration for {$configurationData['name']}.");
 
-        $this->files->push(['env.example', '.env.example']);
-        $this->files->push(['Dockerfile', 'Dockerfile']);
+        $this->filesToGenerate->push(['env.example', '.env.example']);
+        $this->filesToGenerate->push(['Dockerfile', 'Dockerfile']);
 
         if ($configurationData['dockerCompose'] !== null) {
-            $this->files->push(['docker-compose.yaml', 'docker-compose.yaml']);
+            $this->filesToGenerate->push(['docker-compose.yaml', 'docker-compose.yaml']);
         }
 
         if (self::isPhp(Arr::get($configurationData, 'language'))) {
-            $this->files->push(['php/phpcs.xml', 'phpcs.xml.dist']);
-            $this->files->push(['php/phpstan.neon', 'phpstan.neon.dist']);
-            $this->files->push(['php/phpunit.xml', 'phpunit.xml.dist']);
+            $this->filesToGenerate->push(['php/phpcs.xml', 'phpcs.xml.dist']);
+            $this->filesToGenerate->push(['php/phpstan.neon', 'phpstan.neon.dist']);
+            $this->filesToGenerate->push(['php/phpunit.xml', 'phpunit.xml.dist']);
 
             $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin");
-            $this->files->push(['php/docker-entrypoint-php', 'tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php']);
+            $this->filesToGenerate->push(['php/docker-entrypoint-php', 'tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php']);
         }
 
         if (self::isNginx(Arr::get($configurationData, 'web.type'))) {
             $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d");
-            $this->files->push(['default.conf', 'tools/docker/images/nginx/root/etc/nginx/conf.d/default.conf']);
+            $this->filesToGenerate->push(['default.conf', 'tools/docker/images/nginx/root/etc/nginx/conf.d/default.conf']);
         }
 
         $this->generateFiles($configurationData);
@@ -89,7 +89,7 @@ final class BuildConfigurationCommand extends Command
      */
     private function generateFiles(array $configurationData): void
     {
-        $this->files->map(function(array $filenames): array {
+        $this->filesToGenerate->map(function(array $filenames): array {
             $filenames[0] = "{$filenames[0]}.twig";
             $filenames[1] = "{$this->outputDir}/${filenames[1]}";
 
