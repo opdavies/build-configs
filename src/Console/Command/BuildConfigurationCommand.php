@@ -56,12 +56,17 @@ final class BuildConfigurationCommand extends Command
         $configurationData['dockerCompose'] = $configurationData['docker-compose'];
         $configurationData['docker-compose'] = null;
 
+        if (isset($configurationData['docker-compose'])) {
+            $configurationData['dockerCompose'] = $configurationData['docker-compose'];
+            $configurationData['docker-compose'] = null;
+        }
+
         $io->info("Building configuration for {$configurationData['name']}.");
 
         $this->filesToGenerate->push(['env.example', '.env.example']);
         $this->filesToGenerate->push(['Dockerfile', 'Dockerfile']);
 
-        if ($configurationData['dockerCompose'] !== null) {
+        if (isset($configurationData['dockerCompose']) && $configurationData['dockerCompose'] !== null) {
             $this->filesToGenerate->push(['docker-compose.yaml', 'docker-compose.yaml']);
         }
 
