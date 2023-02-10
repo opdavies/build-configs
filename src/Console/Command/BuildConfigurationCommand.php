@@ -15,6 +15,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\Validation;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 
@@ -53,8 +56,51 @@ final class BuildConfigurationCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $configurationData = Yaml::parseFile($configFile);
-        $configurationData['dockerCompose'] = $configurationData['docker-compose'];
-        $configurationData['docker-compose'] = null;
+
+        $validator = Validation::createValidator();
+        $groups = new Assert\GroupSequence(['Default', 'custom']);
+        $constraint = new Assert\Collection(
+            [
+                'name' => [
+                    new Assert\NotNull(),
+                    new Assert\Type('string'),
+                    new Assert\Length(['min' => 1]),
+                ],
+
+                'language' => [
+                    new Assert\NotNull(),
+                    new Assert\Type('string'),
+                    new Assert\Choice(['php']),
+                ],
+
+                'type' => [
+                    new Assert\NotNull(),
+                    new Assert\Type('string'),
+                    new Assert\Choice(['drupal-project', 'php-library']),
+                ],
+
+                'database' => new Assert\Optional(),
+
+                'docker-compose' => new Assert\Optional(),
+
+                'dockerfile' => new Assert\Optional(),
+
+                'php' => new Assert\Optional(),
+            ],
+        );
+
+        $violations = $validator->validate($configurationData, $constraint, $groups);
+        if (0 < $violations->count()) {
+            $io->error('Configuration is invalid.');
+
+            $io->listing(
+                collect($violations)
+                    ->map(fn(ConstraintViolation $v) => "{$v->getInvalidValue()} - {$v->getMessage()}")
+                    ->toArray()
+            );
+
+            return Command::FAILURE;
+        }
 
         if (isset($configurationData['docker-compose'])) {
             $configurationData['dockerCompose'] = $configurationData['docker-compose'];
