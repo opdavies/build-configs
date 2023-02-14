@@ -29,6 +29,8 @@ RUN {% for command in dockerfile.stages.build.commands %}
 {{ command }}
 {%- if not loop.last %} \{% endif %}
 
+{% for command in dockerfile.stages.build.commands %}
+RUN {{ command }}
 {% endfor %}
 {% endif %}
 
