@@ -53,6 +53,17 @@ RUN {% for command in dockerfile.stages.test.commands -%}
 {% endfor %}
 {% endif %}
 
+
+{% if web.type == "caddy" %}
+################################################################################
+
+FROM caddy:2 as web
+
+WORKDIR /app
+
+COPY tools/docker/images/web/root /
+{% endif %}
+
 {% if web.type == "nginx" %}
 ################################################################################
 
@@ -62,5 +73,5 @@ EXPOSE 8080
 
 WORKDIR /app
 
-COPY tools/docker/images/nginx/root /
+COPY tools/docker/images/web/root /
 {% endif %}

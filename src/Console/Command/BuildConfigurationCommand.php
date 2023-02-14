@@ -127,9 +127,14 @@ final class BuildConfigurationCommand extends Command
             $this->filesToGenerate->push(['php/docker-entrypoint-php', 'tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php']);
         }
 
+        if (self::isCaddy(Arr::get($configurationData, 'web.type'))) {
+            $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/web/root/etc/caddy");
+            $this->filesToGenerate->push(['web/caddy/Caddyfile', 'tools/docker/images/web/root/etc/caddy/Caddyfile']);
+        }
+
         if (self::isNginx(Arr::get($configurationData, 'web.type'))) {
-            $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/nginx/root/etc/nginx/conf.d");
-            $this->filesToGenerate->push(['default.conf', 'tools/docker/images/nginx/root/etc/nginx/conf.d/default.conf']);
+            $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/web/root/etc/nginx/conf.d");
+            $this->filesToGenerate->push(['web/nginx/default.conf', 'tools/docker/images/web/root/etc/nginx/conf.d/default.conf']);
         }
 
         $this->generateFiles($configurationData);
@@ -155,6 +160,15 @@ final class BuildConfigurationCommand extends Command
         if ($this->filesystem->exists("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php")) {
             $this->filesystem->chmod("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", 0755);
         }
+    }
+
+    private static function isCaddy(?string $webServer): bool
+    {
+        if (is_null($webServer)) {
+            return false;
+        }
+
+        return strtoupper($webServer) === WebServer::CADDY->name;
     }
 
     private static function isNginx(?string $webServer): bool

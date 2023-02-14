@@ -6,5 +6,6 @@ namespace OliverDaviesLtd\BuildConfigs\Enum;
 
 enum WebServer
 {
+    case CADDY;
     case NGINX;
 }
