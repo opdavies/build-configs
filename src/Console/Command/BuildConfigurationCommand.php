@@ -150,6 +150,11 @@ final class BuildConfigurationCommand extends Command
         })->each(function(array $filenames) use ($configurationData): void {
             $this->filesystem->dumpFile($filenames[1], $this->twig->render($filenames[0], $configurationData));
         });
+
+        // If the Docker entrypoint file is generated, ensure it is executable.
+        if ($this->filesystem->exists("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php")) {
+            $this->filesystem->chmod("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", 0755);
+        }
     }
 
     private static function isNginx(?string $webServer): bool
