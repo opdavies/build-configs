@@ -24,10 +24,9 @@ RUN apt-get update -yqq \
 RUN docker-php-ext-install {{ dockerfile.stages.build.extensions.install | join(' ') }}
 {% endif %}
 
-RUN {% for command in dockerfile.stages.build.commands %}
-{% if not loop.first %}  && {% endif %}
-{{ command }}
-{%- if not loop.last %} \{% endif %}
+{% for directory in dockerfile.stages.build.extra_directories %}
+COPY {{ directory }} {{ directory }}
+{% endfor %}
 
 {% for command in dockerfile.stages.build.commands %}
 RUN {{ command }}
