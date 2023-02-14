@@ -86,6 +86,8 @@ final class BuildConfigurationCommand extends Command
                 'dockerfile' => new Assert\Optional(),
 
                 'php' => new Assert\Optional(),
+
+                'web' => new Assert\Optional(),
             ],
         );
 
