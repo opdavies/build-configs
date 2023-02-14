@@ -28,7 +28,12 @@ services:
       - web
     labels:
       - "traefik.docker.network=traefik_proxy"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${COMPOSE_PROJECT_NAME}.localhost`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(
+          `${COMPOSE_PROJECT_NAME}.localhost`,
+          {% for host in web.extra_hosts | default([]) -%}
+            {{ '`' ~ host ~ '`,' }}
+          {% endfor -%}
+        )"
     profiles: [web]
 
   php:
