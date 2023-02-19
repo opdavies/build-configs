@@ -1,6 +1,6 @@
 x-app: &default-app
   volumes:
-    - "${DOCKER_WEB_VOLUME:-./web:/app/web}"
+    - "${DOCKER_WEB_VOLUME:-./{{ drupal.docroot }}:/app/{{ drupal.docroot }}}"
   env_file:
     - .env
   restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"

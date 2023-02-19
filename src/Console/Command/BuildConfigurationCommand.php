@@ -81,6 +81,8 @@ final class BuildConfigurationCommand extends Command
 
                 'database' => new Assert\Optional(),
 
+                'drupal' => new Assert\Optional(),
+
                 'docker-compose' => new Assert\Optional(),
 
                 'dockerfile' => new Assert\Optional(),
@@ -135,6 +137,13 @@ final class BuildConfigurationCommand extends Command
         if (self::isNginx(Arr::get($configurationData, 'web.type'))) {
             $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/web/root/etc/nginx/conf.d");
             $this->filesToGenerate->push(['web/nginx/default.conf', 'tools/docker/images/web/root/etc/nginx/conf.d/default.conf']);
+        }
+
+        if ('drupal-project' === Arr::get($configurationData, 'type')) {
+            // Ensure a "docroot" value is set.
+            if (null === Arr::get($configurationData, 'drupal.docroot')) {
+                Arr::set($configurationData, 'drupal.docroot', 'web');
+            }
         }
 
         $this->generateFiles($configurationData);

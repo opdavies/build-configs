@@ -1,7 +1,7 @@
 server {
   server_name _;
 
-  root /app/docroot;
+  root /app/{{ drupal.docroot }};
 
   location / {
     try_files $uri /index.php?$query_string;
