@@ -34,6 +34,9 @@ RUN apt-get update -yqq \
 RUN docker-php-ext-install {{ dockerfile.stages.build.extensions.install | join(' ') }}
 {% endif %}
 
+{% if dockerfile.stages.build.extra_files %}
+COPY --chown=app:app {{ dockerfile.stages.build.extra_files | join(" ") }} ./
+{% endif %}
 {% for directory in dockerfile.stages.build.extra_directories %}
 COPY --chown=app:app {{ directory }} {{ directory }}
 {% endfor %}
