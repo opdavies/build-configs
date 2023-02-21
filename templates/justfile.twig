@@ -1,0 +1,15 @@
+default:
+  @just --list
+
+{% if "php" is same as language %}
+composer *args:
+  {{ "just _exec php composer {{ args }}" | raw }}
+{% endif %}
+
+{% if "drupal-project" is same as type %}
+drush *args:
+  {{ "just _exec php drush {{ args }}" | raw }}
+{% endif %}
+
+_exec +args:
+  {{ "docker compose exec {{ args }}" | raw }}

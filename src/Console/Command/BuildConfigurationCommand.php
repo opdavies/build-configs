@@ -115,6 +115,7 @@ final class BuildConfigurationCommand extends Command
 
         $this->filesToGenerate->push(['env.example', '.env.example']);
         $this->filesToGenerate->push(['Dockerfile', 'Dockerfile']);
+        $this->filesToGenerate->push(['justfile', 'justfile']);
 
         if (isset($configurationData['dockerCompose']) && $configurationData['dockerCompose'] !== null) {
             $this->filesToGenerate->push(['docker-compose.yaml', 'docker-compose.yaml']);
