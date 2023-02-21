@@ -87,6 +87,9 @@ final class BuildConfigurationCommand extends Command
 
                 'dockerfile' => new Assert\Optional(),
 
+                // TODO: this should be a boolean if present.
+                'justfile' => new Assert\Optional(),
+
                 'php' => new Assert\Optional(),
 
                 'web' => new Assert\Optional(),
@@ -115,7 +118,10 @@ final class BuildConfigurationCommand extends Command
 
         $this->filesToGenerate->push(['env.example', '.env.example']);
         $this->filesToGenerate->push(['Dockerfile', 'Dockerfile']);
-        $this->filesToGenerate->push(['justfile', 'justfile']);
+
+        if (false !== Arr::get($configurationData, "justfile", true)) {
+            $this->filesToGenerate->push(['justfile', 'justfile']);
+        }
 
         if (isset($configurationData['dockerCompose']) && $configurationData['dockerCompose'] !== null) {
             $this->filesToGenerate->push(['docker-compose.yaml', 'docker-compose.yaml']);
