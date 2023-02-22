@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use OliverDaviesLtd\BuildConfigs\Enum\Language;
 use OliverDaviesLtd\BuildConfigs\Enum\WebServer;
+use OliverDaviesLtd\BuildConfigs\Validator\ConfigurationValidator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,9 +16,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\Validation;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 
@@ -35,6 +33,7 @@ final class BuildConfigurationCommand extends Command
     public function __construct(
         private Environment $twig,
         private Filesystem $filesystem,
+        private ConfigurationValidator $configurationValidator,
     ) {
         parent::__construct();
 
@@ -57,46 +56,8 @@ final class BuildConfigurationCommand extends Command
 
         $configurationData = Yaml::parseFile($configFile);
 
-        $validator = Validation::createValidator();
-        $groups = new Assert\GroupSequence(['Default', 'custom']);
-        $constraint = new Assert\Collection(
-            [
-                'name' => [
-                    new Assert\NotNull(),
-                    new Assert\Type('string'),
-                    new Assert\Length(['min' => 1]),
-                ],
+        $violations = $this->configurationValidator->validate($configurationData);
 
-                'language' => [
-                    new Assert\NotNull(),
-                    new Assert\Type('string'),
-                    new Assert\Choice(['php']),
-                ],
-
-                'type' => [
-                    new Assert\NotNull(),
-                    new Assert\Type('string'),
-                    new Assert\Choice(['drupal-project', 'php-library']),
-                ],
-
-                'database' => new Assert\Optional(),
-
-                'drupal' => new Assert\Optional(),
-
-                'docker-compose' => new Assert\Optional(),
-
-                'dockerfile' => new Assert\Optional(),
-
-                // TODO: this should be a boolean if present.
-                'justfile' => new Assert\Optional(),
-
-                'php' => new Assert\Optional(),
-
-                'web' => new Assert\Optional(),
-            ],
-        );
-
-        $violations = $validator->validate($configurationData, $constraint, $groups);
         if (0 < $violations->count()) {
             $io->error('Configuration is invalid.');
 

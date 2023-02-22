@@ -2,6 +2,7 @@
 <?php
 
 use OliverDaviesLtd\BuildConfigs\Console\Command\BuildConfigurationCommand;
+use OliverDaviesLtd\BuildConfigs\Validator\ConfigurationValidator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
@@ -11,11 +12,13 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $filesystem = new Filesystem();
 $twig = new Environment(new FilesystemLoader([__DIR__.'/../templates']));
+$configurationValidator = new ConfigurationValidator();
 
 $application = new Application();
+$command = new BuildConfigurationCommand($twig, $filesystem, $configurationValidator);
 
 $application->addCommands([
-    new BuildConfigurationCommand($twig, $filesystem),
+    new BuildConfigurationCommand($twig, $filesystem, $configurationValidator),
 ]);
 
 $application->setDefaultCommand('build-configs', true);
