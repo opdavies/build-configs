@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit
+  beStrictAboutChangesToGlobalState="true"
+  beStrictAboutOutputDuringTests="true"
+  beStrictAboutTestsThatDoNotTestAnything="true"
+  bootstrap="{{ drupal.docroot }}/core/tests/bootstrap.php"
+  cacheResult="false"
+  colors="true"
+  failOnWarning="true"
+  printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter"
+>
+  <php>
+    <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
+    <env name="MINK_DRIVER_ARGS" value=''/>
+    <env name="MINK_DRIVER_ARGS_WEBDRIVER" value=''/>
+    <env name="MINK_DRIVER_CLASS" value=''/>
+    <env name="SIMPLETEST_BASE_URL" value="http://web"/>
+    <env name="SIMPLETEST_DB" value="sqlite://localhost//dev/shm/test.sqlite"/>
+
+    <ini name="error_reporting" value="32767"/>
+    <ini name="memory_limit" value="-1"/>
+  </php>
+   
+  <testsuites>
+    <testsuite name="functional">
+      <directory>./{{ drupal.docroot }}/modules/custom/**/tests/**/Functional</directory>
+    </testsuite>
+    <testsuite name="kernel">
+      <directory>./{{ drupal.docroot }}/modules/custom/**/tests/**/Kernel</directory>
+    </testsuite>
+    <testsuite name="unit">
+      <directory>./{{ drupal.docroot }}/modules/custom/**/tests/**/Unit</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

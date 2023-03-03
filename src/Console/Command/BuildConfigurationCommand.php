@@ -112,6 +112,9 @@ final class BuildConfigurationCommand extends Command
             if (null === Arr::get($configurationData, 'drupal.docroot')) {
                 Arr::set($configurationData, 'drupal.docroot', 'web');
             }
+
+            // Add a Drupal version of phpunit.xml.dist.
+            $this->filesToGenerate->push(['drupal-project/phpunit.xml.dist', 'phpunit.xml.dist']);
         }
 
         $this->generateFiles($configurationData);
