@@ -13,7 +13,7 @@ RUN adduser --disabled-password --uid "${DOCKER_UID}" app \
 
 USER app
 
-ENV PATH="${PATH}:/app/vendor/bin"
+ENV PATH="${PATH}:/app/bin:/app/vendor/bin"
 
 COPY --chown=app:app composer.* ./
 
