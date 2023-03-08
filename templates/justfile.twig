@@ -9,6 +9,9 @@ composer *args:
 {% if "drupal-project" is same as type %}
 drush *args:
   {{ "just _exec php drush {{ args }}" | raw }}
+
+install *args:
+  just _exec php drush site:install -y {{ args }}
 {% endif %}
 
 _exec +args:
