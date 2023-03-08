@@ -17,3 +17,12 @@ jobs:
         run: |
           docker image build . \
             --tag build-configs
+
+      - name: Run PHPStan
+        run: |
+          docker run \
+            --rm \
+            --interactive \
+            --entrypoint phpstan \
+            build-configs \
+              --no-progress
