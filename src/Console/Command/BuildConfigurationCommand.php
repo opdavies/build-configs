@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
 
@@ -63,7 +64,7 @@ final class BuildConfigurationCommand extends Command
 
             $io->listing(
                 collect($violations)
-                    ->map(fn(ConstraintViolation $v) => "{$v->getInvalidValue()} - {$v->getMessage()}")
+                    ->map(fn (ConstraintViolationInterface $v) => "{$v->getInvalidValue()} - {$v->getMessage()}")
                     ->toArray()
             );
 
