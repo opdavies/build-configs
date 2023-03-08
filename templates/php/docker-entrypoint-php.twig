@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# {{ managedText | raw }}
+
 [[ -f composer.json && ! -d vendor ]] && composer install
 
 eval "$@"
