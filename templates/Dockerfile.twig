@@ -36,6 +36,8 @@ RUN apt-get update -yqq \
 RUN docker-php-ext-install {{ dockerfile.stages.build.extensions.install | join(' ') }}
 {% endif %}
 
+COPY --chown=app:app phpunit.xml* ./
+
 {% if dockerfile.stages.build.extra_files %}
 COPY --chown=app:app {{ dockerfile.stages.build.extra_files | join(" ") }} ./
 {% endif %}
