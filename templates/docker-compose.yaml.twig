@@ -45,6 +45,8 @@ services:
     build:
       context: .
       target: {{ dockerCompose.services.php.build.target }}
+    volumes:
+      - .:{{ project_root }}
     {% if "database" in dockerCompose.services|keys -%}
     depends_on:
       - database
