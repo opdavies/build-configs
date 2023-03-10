@@ -45,6 +45,10 @@ COPY --chown=app:app {{ dockerfile.stages.build.extra_files | join(" ") }} ./
 COPY --chown=app:app {{ directory }} {{ directory }}
 {% endfor %}
 
+{% for command in dockerfile.stages.build.root_commands | default([]) %}
+RUN {{ command | raw }}
+{% endfor %}
+
 USER app
 
 {% for command in dockerfile.stages.build.commands %}
