@@ -13,7 +13,7 @@ drush *args:
   {{ "just _exec php drush {{ args }}" | raw }}
 
 install *args:
-  just _exec php drush site:install -y {{ args }}
+  {{ "just _exec php drush site:install -y {{ args }}" | raw }}
 {% endif %}
 
 _exec +args:
