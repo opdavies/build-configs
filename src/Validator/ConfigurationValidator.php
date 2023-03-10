@@ -37,6 +37,11 @@ final class ConfigurationValidator implements ValidatorInterface
                         new Assert\Choice(['drupal-project', 'php-library']),
                     ],
 
+                    'project_root' => [
+                        new Assert\NotNull(),
+                        new Assert\Type('string'),
+                    ],
+
                     'database' => new Assert\Optional(),
 
                     'drupal' => new Assert\Optional(),

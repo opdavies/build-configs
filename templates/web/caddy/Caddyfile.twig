@@ -1,6 +1,6 @@
 # {{ managedText | raw }}
 
 :80
-root * /app/{{ drupal.docroot }}
+root * {{ project_root }}/{{ drupal.docroot }}
 file_server
 php_fastcgi php:9000

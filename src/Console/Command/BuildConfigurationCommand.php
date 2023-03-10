@@ -55,7 +55,10 @@ final class BuildConfigurationCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $configurationData = Yaml::parseFile($configFile);
+        $configurationData = array_merge(
+            Yaml::parseFile(__DIR__.'/../../../resources/build.defaults.yaml'),
+            Yaml::parseFile($configFile),
+        );
 
         $violations = $this->configurationValidator->validate($configurationData);
 

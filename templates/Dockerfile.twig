@@ -8,14 +8,14 @@ RUN which composer && composer -V
 ARG DOCKER_UID=1000
 ENV DOCKER_UID="${DOCKER_UID}"
 
-WORKDIR /app
+WORKDIR {{ project_root }}
 
 RUN adduser --disabled-password --uid "${DOCKER_UID}" app \
-  && chown app:app -R /app
+  && chown app:app -R {{ project_root }}
 
 USER app
 
-ENV PATH="${PATH}:/app/bin:/app/vendor/bin"
+ENV PATH="${PATH}:{{ project_root }}/bin:{{ project_root }}/vendor/bin"
 
 COPY --chown=app:app composer.* ./
 
@@ -78,7 +78,7 @@ RUN {% for command in dockerfile.stages.test.commands -%}
 
 FROM caddy:2 as web
 
-WORKDIR /app
+WORKDIR {{ project_root }}
 
 COPY tools/docker/images/web/root /
 {% endif %}
@@ -90,7 +90,7 @@ FROM nginx:1 as web
 
 EXPOSE 8080
 
-WORKDIR /app
+WORKDIR {{ project_root }}
 
 COPY tools/docker/images/web/root /
 {% endif %}
