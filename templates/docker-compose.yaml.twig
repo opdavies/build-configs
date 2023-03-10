@@ -18,6 +18,7 @@ x-app: &default-app
   tty: true
 
 services:
+  {% if dockerCompose.services.web != false %}
   web:
     <<: *default-app
     build:
@@ -37,6 +38,7 @@ services:
           {% endfor -%}
         )"
     profiles: [web]
+  {% endif %}
 
   php:
     <<: *default-app
