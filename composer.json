@@ -9,8 +9,9 @@
     },
     "require-dev": {
         "humbug/box": "^4.2",
-        "symfony/var-dumper": "^6.2",
-        "phpstan/phpstan": "^1.9"
+        "pestphp/pest": "^1.22",
+        "phpstan/phpstan": "^1.9",
+        "symfony/var-dumper": "^6.2"
     },
     "autoload": {
         "psr-4": {
@@ -18,6 +19,9 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
