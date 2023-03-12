@@ -28,13 +28,20 @@ final class ConfigurationValidator implements ValidatorInterface
                     'language' => [
                         new Assert\NotNull(),
                         new Assert\Type('string'),
-                        new Assert\Choice(['node', 'php']),
+                        new Assert\Choice([
+                            'node',
+                            'php',
+                        ]),
                     ],
 
                     'type' => [
                         new Assert\NotNull(),
                         new Assert\Type('string'),
-                        new Assert\Choice(['drupal-project', 'fractal', 'php-library']),
+                        new Assert\Choice([
+                            'drupal-project',
+                            'fractal',
+                            'php-library',
+                        ]),
                     ],
 
                     'project_root' => [
@@ -52,6 +59,8 @@ final class ConfigurationValidator implements ValidatorInterface
 
                     // TODO: this should be a boolean if present.
                     'justfile' => new Assert\Optional(),
+
+                    'node' => new Assert\Optional(),
 
                     'php' => new Assert\Optional(),
 

@@ -6,5 +6,6 @@ namespace OliverDaviesLtd\BuildConfigs\Enum;
 
 enum Language
 {
+    case NODE;
     case PHP;
 }

@@ -40,6 +40,7 @@ services:
     profiles: [web]
   {% endif %}
 
+{% if "php" == language %}
   php:
     <<: *default-app
     build:
@@ -52,6 +53,20 @@ services:
       - database
     {% endif -%}
     profiles: [php]
+{% elseif "node" == language %}
+  node:
+    <<: *default-app
+    build:
+      context: .
+      target: build
+    volumes:
+      - .:{{ project_root }}
+    {% if "database" in dockerCompose.services|keys -%}
+    depends_on:
+      - database
+    {% endif -%}
+    profiles: [node]
+{% endif %}
 
 {% if "database" in dockerCompose.services|keys %}
   database:

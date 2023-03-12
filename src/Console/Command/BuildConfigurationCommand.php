@@ -101,6 +101,11 @@ final class BuildConfigurationCommand extends Command
             $this->filesToGenerate->push(['php/docker-entrypoint-php', 'tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php']);
         }
 
+        if (self::isNode(Arr::get($configurationData, 'language'))) {
+            $this->filesToGenerate->push(['node/.yarnrc', '.yarnrc']);
+            $this->filesToGenerate->push(['node/Dockerfile', 'Dockerfile']);
+        }
+
         if (self::isCaddy(Arr::get($configurationData, 'web.type'))) {
             $this->filesystem->mkdir("{$this->outputDir}/tools/docker/images/web/root/etc/caddy");
             $this->filesToGenerate->push(['web/caddy/Caddyfile', 'tools/docker/images/web/root/etc/caddy/Caddyfile']);
@@ -164,6 +169,15 @@ final class BuildConfigurationCommand extends Command
         }
 
         return strtoupper($webServer) === WebServer::NGINX->name;
+    }
+
+    private static function isNode(?string $language): bool
+    {
+        if (is_null($language)) {
+            return false;
+        }
+
+        return strtoupper($language) === Language::NODE->name;
     }
 
     private static function isPhp(?string $language): bool
