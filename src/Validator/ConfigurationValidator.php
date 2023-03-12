@@ -28,7 +28,7 @@ final class ConfigurationValidator implements ValidatorInterface
                     'language' => [
                         new Assert\NotNull(),
                         new Assert\Type('string'),
-                        new Assert\Choice(['php']),
+                        new Assert\Choice(['node', 'php']),
                     ],
 
                     'type' => [
