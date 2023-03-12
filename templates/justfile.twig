@@ -16,5 +16,15 @@ install *args:
   {{ "just _exec php drush site:install -y {{ args }}" | raw }}
 {% endif %}
 
+{% if "node" is same as language %}
+yarn *args:
+  {{ "just _exec node yarn {{ args }}" | raw }}
+{% endif %}
+
+{% if "fractal" is same as type %}
+fractal *args:
+  {{ "just yarn fractal {{ args }}" | raw }}
+{% endif %}
+
 _exec +args:
   {{ "docker compose exec {{ args }}" | raw }}
