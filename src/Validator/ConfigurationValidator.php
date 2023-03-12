@@ -34,7 +34,7 @@ final class ConfigurationValidator implements ValidatorInterface
                     'type' => [
                         new Assert\NotNull(),
                         new Assert\Type('string'),
-                        new Assert\Choice(['drupal-project', 'php-library']),
+                        new Assert\Choice(['drupal-project', 'fractal', 'php-library']),
                     ],
 
                     'project_root' => [
