@@ -82,7 +82,6 @@ final class BuildConfigurationCommand extends Command
         $io->info("Building configuration for {$configurationData['name']}.");
 
         $this->filesToGenerate->push(['env.example', '.env.example']);
-        $this->filesToGenerate->push(['Dockerfile', 'Dockerfile']);
 
         if (false !== Arr::get($configurationData, "justfile", true)) {
             $this->filesToGenerate->push(['justfile', 'justfile']);
@@ -93,6 +92,7 @@ final class BuildConfigurationCommand extends Command
         }
 
         if (self::isPhp(Arr::get($configurationData, 'language'))) {
+            $this->filesToGenerate->push(['php/Dockerfile', 'Dockerfile']);
             $this->filesToGenerate->push(['php/phpcs.xml', 'phpcs.xml.dist']);
             $this->filesToGenerate->push(['php/phpstan.neon', 'phpstan.neon.dist']);
             $this->filesToGenerate->push(['php/phpunit.xml', 'phpunit.xml.dist']);
