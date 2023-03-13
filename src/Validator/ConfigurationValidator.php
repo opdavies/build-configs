@@ -40,6 +40,7 @@ final class ConfigurationValidator implements ValidatorInterface
                         new Assert\Choice([
                             'drupal-project',
                             'fractal',
+                            'laravel',
                             'php-library',
                         ]),
                     ],
