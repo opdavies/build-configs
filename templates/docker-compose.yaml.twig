@@ -18,7 +18,7 @@ x-app: &default-app
   tty: true
 
 services:
-  {% if dockerCompose.services.web != false %}
+  {% if dockerCompose.services.web is not defined or dockerCompose.services.web != false -%}
   web:
     <<: *default-app
     build:
