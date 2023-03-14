@@ -1,6 +1,5 @@
 # {{ managedText | raw }}
 
-{{type}}
 x-app: &default-app
   volumes:
     - "${DOCKER_WEB_VOLUME:-./{{ "drupal-project" == type ?? drupal.docroot }}:{{ project_root }}{{ "drupal-project" == type ?? '/' ~ drupal.docroot }}}"
