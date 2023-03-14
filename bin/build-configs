@@ -54,6 +54,7 @@ $app->command(
         $io->info("Building configuration for {$configurationData['name']}.");
 
         $filesToGenerate = collect([
+            ['common/.dockerignore', '.dockerignore'],
             ['env.example', '.env.example'],
         ]);
 
