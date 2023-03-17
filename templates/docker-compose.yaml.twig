@@ -45,7 +45,7 @@ services:
     <<: *default-app
     build:
       context: .
-      target: {{ dockerCompose.services.php.build.target }}
+      target: build
     volumes:
       - .:{{ project_root }}
     {% if "database" in dockerCompose.services|keys -%}
