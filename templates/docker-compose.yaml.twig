@@ -1,5 +1,18 @@
 # {{ managedText | raw }}
 
+x-proxy: &default-proxy
+  networks:
+    - default
+    - web
+  labels:
+    - "traefik.docker.network=traefik_proxy"
+    - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(
+        `${COMPOSE_PROJECT_NAME}.localhost`,
+        {% for host in web.extra_hosts | default([]) -%}
+          {{ '`' ~ host ~ '`,' }}
+        {%- endfor %}
+      )"
+
 x-app: &default-app
   volumes:
     - "${DOCKER_WEB_VOLUME:-./{{ "drupal-project" == type ? drupal.docroot : '' }}:{{ project_root }}{{ "drupal-project" == type ? '/' ~ drupal.docroot : '' }}}"
@@ -21,22 +34,12 @@ services:
   {% if dockerCompose.services.web is not defined or dockerCompose.services.web != false -%}
   web:
     <<: *default-app
+    <<: *default-proxy
     build:
       context: .
       target: web
     depends_on:
       - php
-    networks:
-      - default
-      - web
-    labels:
-      - "traefik.docker.network=traefik_proxy"
-      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(
-          `${COMPOSE_PROJECT_NAME}.localhost`,
-          {% for host in web.extra_hosts | default([]) -%}
-            {{ '`' ~ host ~ '`,' }}
-          {% endfor -%}
-        )"
     profiles: [web]
   {% endif %}
 
@@ -56,6 +59,7 @@ services:
 {% elseif "node" == language %}
   node:
     <<: *default-app
+    {{ type is same as "fractal" ? "<<: *default-proxy" }}
     build:
       context: .
       target: build
