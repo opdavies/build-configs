@@ -49,6 +49,8 @@ services:
     build:
       context: .
       target: build
+      args:
+        - "DOCKER_UID=${DOCKER_UID:-1000}"
     volumes:
       - .:{{ project_root }}
     {% if "database" in dockerCompose.services|keys -%}
