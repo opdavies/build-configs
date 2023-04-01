@@ -5,10 +5,8 @@ declare(strict_types=1);
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use OliverDaviesLtd\BuildConfigs\Enum\Language;
-use OliverDaviesLtd\BuildConfigs\Enum\WebServer;
+use Illuminate\Support\{Arr, Collection};
+use OliverDaviesLtd\BuildConfigs\Enum\{Language, WebServer};
 use OliverDaviesLtd\BuildConfigs\Validator\ConfigurationValidator;
 use Silly\Application;
 use Symfony\Component\Console\Style\SymfonyStyle;
