@@ -74,6 +74,7 @@ $app->command(
 
         $filesToGenerate = collect([
             ['common/.dockerignore', '.dockerignore'],
+            ['common/.hadolint.yaml', '.hadolint.yaml'],
             ['env.example', '.env.example'],
         ]);
 
