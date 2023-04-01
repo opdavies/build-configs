@@ -21,6 +21,27 @@ use Twig\Loader\FilesystemLoader;
 $app = new Application();
 
 $app->command(
+    'generate-build-file [-p|--project-name=] [-t|--type=]',
+    function(
+        string $projectName,
+        string $type,
+    ): void {
+        $projectName = str_replace('.', '-', $projectName);
+
+        // TODO: validate the project type.
+        $output = <<<EOF
+            name: $projectName
+            type: $type
+            EOF;
+
+        file_put_contents('build.yaml', $output);
+    }
+)->descriptions('Generate a new build.yaml file.', [
+    '--project-name' => 'The name of the project.',
+    '--type' => 'The project type.',
+]);;
+
+$app->command(
     'run [-c|--config-file=] [-o|--output-dir=]',
     function (
         SymfonyStyle $io,
@@ -109,8 +130,6 @@ $app->command(
     '--config-file' => 'The path to the project\'s build.yaml file',
     '--output-dir' => 'The directory to create files in',
 ]);
-
-$app->setDefaultCommand('run');
 
 $app->run();
 
