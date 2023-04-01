@@ -24,6 +24,19 @@ yarn *args:
 {% if "fractal" is same as type %}
 fractal *args:
   {{ "just yarn fractal {{ args }}" | raw }}
+
+clean:
+  rm -fr build
+
+build *args:
+  just fractal build {{ args }}
+
+sync: clean build
+  #!/usr/bin/env bash
+  set -eux
+  aws s3 sync "build/." s3://"${BUCKET_NAME}" \
+    --acl "public-read" \
+    --cache-control max-age=3600
 {% endif %}
 
 {% if "laravel" is same as type %}
