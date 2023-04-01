@@ -107,11 +107,6 @@ $app->command(
         }
 
         if ('drupal-project' === Arr::get($configurationData, 'type')) {
-            // Ensure a "docroot" value is set.
-            if (null === Arr::get($configurationData, 'drupal.docroot')) {
-                Arr::set($configurationData, 'drupal.docroot', 'web');
-            }
-
             // Add a Drupal version of phpunit.xml.dist.
             $filesToGenerate->push(['drupal-project/phpunit.xml.dist', 'phpunit.xml.dist']);
         }
