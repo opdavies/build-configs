@@ -33,8 +33,7 @@ x-app: &default-app
 services:
   {% if dockerCompose.services.web is not defined or dockerCompose.services.web != false -%}
   web:
-    <<: *default-app
-    <<: *default-proxy
+    <<: [*default-proxy, *default-app]
     build:
       context: .
       target: web
@@ -60,8 +59,7 @@ services:
     profiles: [php]
 {% elseif "node" == language %}
   node:
-    <<: *default-app
-    {{ type is same as "fractal" ? "<<: *default-proxy" }}
+    {{ type is same as "fractal" ? "<<: [*default-proxy, *default-app]" : "<<: *default-app" }}
     build:
       context: .
       target: build
