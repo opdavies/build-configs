@@ -82,6 +82,7 @@ services:
           memory: "${DOCKER_MYSQL_MEMORY:-0}"
     volumes:
       - db-data:/var/lib/mysql
+      {{ database.extra_databases is not empty ? '- ./tools/docker/images/database/root/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d' : '' }}
     env_file:
       - .env
     labels:

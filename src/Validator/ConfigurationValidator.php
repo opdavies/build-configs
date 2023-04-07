@@ -50,7 +50,22 @@ final class ConfigurationValidator implements ValidatorInterface
                         new Assert\Type('string'),
                     ],
 
-                    'database' => new Assert\Optional(),
+                    'database' => new Assert\Collection(
+                        [
+                            'extra_databases' => new Assert\Optional(
+                                [
+                                    new Assert\Type(['type' => 'array']),
+                                    new Assert\All(
+                                        [
+                                            new Assert\Type(['type' => 'string'])
+                                        ]
+                                    )
+                                ],
+                            ),
+                            'type' => new Assert\Type(['type' => 'string']),
+                            'version' => new Assert\Type(['type' => 'integer']),
+                        ]
+                    ),
 
                     'drupal' => new Assert\Optional(),
 

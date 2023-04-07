@@ -78,6 +78,13 @@ $app->command(
             ['env.example', '.env.example'],
         ]);
 
+        $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
+        if (count($extraDatabases) > 0) {
+            $filesystem = new Filesystem();
+            $filesystem->mkdir("{$outputDir}/tools/docker/images/database/root/docker-entrypoint-initdb.d");
+            $filesToGenerate->push(['extra-databases.sql', 'tools/docker/images/database/root/docker-entrypoint-initdb.d/extra-databases.sql']);
+        }
+
         if (false !== Arr::get($configurationData, "justfile", true)) {
             $filesToGenerate->push(['justfile', 'justfile']);
         }
