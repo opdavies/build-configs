@@ -17,9 +17,14 @@ final class ConfigurationData
             'type' => new Assert\Choice(['mariadb', 'mysql']),
             'version' => new Assert\Type('integer'),
         ],
-        allowExtraFields: false,
     )]
     public array $database;
+
+    #[Assert\Collection(
+        allowExtraFields: false,
+        fields: ['docroot' => new Assert\Choice(['web', 'docroot'])],
+    )]
+    public array $drupal;
 
     #[Assert\Choice(choices: ['node', 'php'])]
     #[Assert\NotBlank]
