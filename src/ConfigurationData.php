@@ -22,7 +22,7 @@ final class ConfigurationData
 
     #[Assert\Collection(
         allowExtraFields: false,
-        fields: ['docroot' => new Assert\Choice(['web', 'docroot'])],
+        fields: ['docroot' => new Assert\Choice([null, 'web', 'docroot'])],
     )]
     public array $drupal;
 
