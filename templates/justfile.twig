@@ -41,12 +41,11 @@ sync: clean build
 
 {% if "laravel" is same as type %}
 artisan *args:
-  docker compose run \
-    --entrypoint php \
-    --rm \
-    --tty \
-    php artisan {{ "{{ args }}" | raw }}
+  {{ "just _run artisan {{ args }}" | raw }}
 {% endif %}
 
 _exec +args:
   {{ "docker compose exec {{ args }}" | raw }}
+
+_run command *args:
+  {{ "docker compose run --rm --no-deps --entrypoint {{ command }} --tty php {{ args }}" | raw }}
