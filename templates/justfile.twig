@@ -10,7 +10,7 @@ composer *args:
 alias phpunit := test
 
 test *args:
-  {{ "just _run phpunit {{ args }}" | raw }}
+  {{ "just _run php phpunit {{ args }}" | raw }}
 {% endif %}
 
 {% if "drupal-project" is same as type %}
@@ -52,5 +52,5 @@ artisan *args:
 _exec +args:
   {{ "docker compose exec {{ args }}" | raw }}
 
-_run command *args:
-  {{ "docker compose run --rm --no-deps --entrypoint {{ command }} --tty php {{ args }}" | raw }}
+_run service command *args:
+  {{ "docker compose run --rm --no-deps --entrypoint {{ command }} --tty {{ service }} {{ args }}" | raw }}
