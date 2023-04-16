@@ -8,6 +8,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class ConfigurationData
 {
+    /**
+     * @var array<string,string|integer|array<int,string>>
+     */
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -20,6 +23,9 @@ final class ConfigurationData
     )]
     public array $database;
 
+    /**
+     * @var array<string,string|null>
+     */
     #[Assert\Collection(
         allowExtraFields: false,
         fields: ['docroot' => new Assert\Choice([null, 'web', 'docroot'])],
