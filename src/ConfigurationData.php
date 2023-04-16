@@ -32,6 +32,15 @@ final class ConfigurationData
     )]
     public array $drupal;
 
+    /**
+     * @var array<string,string|null>
+     */
+    #[Assert\Collection(
+        allowExtraFields: false,
+        fields: ['useNewDatabaseCredentials' => new Assert\Type('boolean')]
+    )]
+    public array $experimental;
+
     #[Assert\Choice(choices: ['node', 'php'])]
     #[Assert\NotBlank]
     public string $language;

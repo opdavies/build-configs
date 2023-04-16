@@ -1,4 +1,7 @@
 drupal:
   docroot: web
 
+experimental:
+  useNewDatabaseCredentials: false
+
 project_root: /app
