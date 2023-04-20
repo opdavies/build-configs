@@ -7,6 +7,7 @@ require __DIR__.'/../vendor/autoload.php';
 
 use Illuminate\Support\{Arr, Collection};
 use OliverDaviesLtd\BuildConfigs\ConfigurationData;
+use OliverDaviesLtd\BuildConfigs\DataTransferObject\TemplateFile;
 use OliverDaviesLtd\BuildConfigs\Enum\{Language, WebServer};
 use Silly\Application;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -82,56 +83,76 @@ $app->command(
 
         $io->info("Building configuration for {$configurationData['name']}.");
 
+        /** @var Collection<int, TemplateFile> */
         $filesToGenerate = collect([
-            ['common/.dockerignore', '.dockerignore'],
-            ['common/.hadolint.yaml', '.hadolint.yaml'],
-            ['env.example', '.env.example'],
+            new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'),
+            new TemplateFile(data: 'common/.hadolint.yaml', name: '.hadolint.yaml'),
+            new TemplateFile(data: 'env.example', name: '.env.example'),
         ]);
 
         $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
         if (count($extraDatabases) > 0) {
-            $filesystem = new Filesystem();
-            $filesystem->mkdir("{$outputDir}/tools/docker/images/database/root/docker-entrypoint-initdb.d");
-            $filesToGenerate->push(['extra-databases.sql', 'tools/docker/images/database/root/docker-entrypoint-initdb.d/extra-databases.sql']);
+            $filesToGenerate[] = new TemplateFile(
+                data: 'extra-databases.sql',
+                name: 'extra-databases.sql',
+                path: 'tools/docker/images/database/root/docker-entrypoint-initdb.d',
+            );
         }
 
         if (false !== Arr::get($configurationData, "justfile", true)) {
-            $filesToGenerate->push(['justfile', 'justfile']);
+            $filesToGenerate[] = new TemplateFile(data: 'justfile', name: 'justfile');
         }
 
         if (isset($configurationData['dockerCompose']) && $configurationData['dockerCompose'] !== null) {
-            $filesToGenerate->push(['docker-compose.yaml', 'docker-compose.yaml']);
+            $filesToGenerate[] = new TemplateFile(data: 'docker-compose.yaml', name: 'docker-compose.yaml');
         }
 
         if (isPhp(Arr::get($configurationData, 'language'))) {
-            $filesToGenerate->push(['php/Dockerfile', 'Dockerfile']);
-            $filesToGenerate->push(['php/phpcs.xml', 'phpcs.xml.dist']);
-            $filesToGenerate->push(['php/phpstan.neon', 'phpstan.neon.dist']);
-            $filesToGenerate->push(['php/phpunit.xml', 'phpunit.xml.dist']);
-            $filesToGenerate->push(['php/docker-entrypoint-php', 'tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php']);
+            $filesToGenerate[] = new TemplateFile(data: 'php/Dockerfile', name: 'Dockerfile');
+            $filesToGenerate[] = new TemplateFile(data: 'php/phpcs.xml', name: 'phpcs.xml.dist');
+            $filesToGenerate[] = new TemplateFile(data: 'php/phpstan.neon', name: 'phpstan.neon.dist');
+            $filesToGenerate[] = new TemplateFile(data: 'php/phpunit.xml', name: 'phpunit.xml.dist');
+            $filesToGenerate[] = new TemplateFile(
+                data: 'php/docker-entrypoint-php',
+                name: 'docker-entrypoint-php',
+                path: 'tools/docker/images/php/root/usr/local/bin',
+            );
         }
 
         if (isNode(Arr::get($configurationData, 'language'))) {
-            $filesToGenerate->push(['node/.yarnrc', '.yarnrc']);
-            $filesToGenerate->push(['node/Dockerfile', 'Dockerfile']);
+            $filesToGenerate[] = new TemplateFile(data: 'node/.yarnrc', name: '.yarnrc');
+            $filesToGenerate[] = new TemplateFile(data: 'node/Dockerfile', name: 'Dockerfile');
         }
 
         if (isCaddy(Arr::get($configurationData, 'web.type'))) {
-            $filesToGenerate->push(['web/caddy/Caddyfile', 'tools/docker/images/web/root/etc/caddy/Caddyfile']);
+            $filesToGenerate[] = new TemplateFile(
+                data: 'web/caddy/Caddyfile',
+                name: 'Caddyfile',
+                path: 'tools/docker/images/web/root/etc/caddy',
+            );
         }
 
         if (isNginx(Arr::get($configurationData, 'web.type'))) {
-            $filesToGenerate->push(['web/nginx/default.conf', 'tools/docker/images/web/root/etc/nginx/conf.d/default.conf']);
+            $filesToGenerate[] = new TemplateFile(
+                data: 'web/nginx/default.conf',
+                name: 'default.conf',
+                path: 'tools/docker/images/web/root/etc/nginx/conf.d',
+            );
         }
 
         if ('drupal-project' === Arr::get($configurationData, 'type')) {
             // Add a Drupal version of phpunit.xml.dist.
-            $filesToGenerate->push(['drupal-project/phpunit.xml.dist', 'phpunit.xml.dist']);
+            $filesToGenerate[] = new TemplateFile(data: 'drupal-project/phpunit.xml.dist', name: 'phpunit.xml.dist');
         }
 
         // Display a list of generated files.
         $io->write('Generated files:');
-        $io->listing($filesToGenerate->pluck(1)->sort()->toArray());
+        $io->listing($filesToGenerate
+            ->map(fn (TemplateFile $templateFile): string =>
+                collect([$templateFile->path, $templateFile->name])->filter()->implode('/'))
+            ->unique()
+            ->sort()
+            ->toArray());
 
         $configurationData['managedText'] = 'Do not edit this file. It is automatically generated by \'build-configs\'.';
 
@@ -150,6 +171,7 @@ $app->run();
 
 /**
  * @param array<string, string> $configurationData
+ * @param Collection<int, TemplateFile> $filesToGenerate
  */
 function generateFiles(
     Collection $filesToGenerate,
@@ -160,23 +182,21 @@ function generateFiles(
     $filesystem = new Filesystem();
     $twig = new Environment(new FilesystemLoader([__DIR__ . '/../templates']));
 
-    if (isPhp(Arr::get($configurationData, 'language'))) {
-        $filesystem->mkdir("{$outputDir}/tools/docker/images/php/root/usr/local/bin");
-    }
+    $filesToGenerate->each(function(TemplateFile $templateFile) use ($configurationData, $filesystem, $outputDir, $twig): void {
+        if ($templateFile->path !== null) {
+            if (!$filesystem->exists($templateFile->path)) {
+                $filesystem->mkdir("{$outputDir}/{$templateFile->path}");
+            }
+        }
 
-    if (isCaddy(Arr::get($configurationData, 'web.type'))) {
-        $filesystem->mkdir("{$outputDir}/tools/docker/images/web/root/etc/caddy");
-    } elseif (isNginx(Arr::get($configurationData, 'web.type'))) {
-        $filesystem->mkdir("{$outputDir}/tools/docker/images/web/root/etc/nginx/conf.d");
-    }
+        $sourceFile = "{$templateFile->data}.twig";
+        $outputFile = collect([
+            $outputDir,
+            $templateFile->path,
+            $templateFile->name,
+        ])->filter()->implode('/');
 
-    $filesToGenerate->map(function(array $filenames) use ($outputDir): array {
-        $filenames[0] = "{$filenames[0]}.twig";
-        $filenames[1] = "{$outputDir}/${filenames[1]}";
-
-        return $filenames;
-    })->each(function(array $filenames) use ($configurationData, $filesystem, $twig): void {
-        $filesystem->dumpFile($filenames[1], $twig->render($filenames[0], $configurationData));
+        $filesystem->dumpFile($outputFile, $twig->render($sourceFile, $configurationData));
     });
 
     // If the Docker entrypoint file is generated, ensure it is executable.

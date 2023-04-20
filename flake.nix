@@ -11,10 +11,7 @@
       in
       {
         devShell = with pkgs; pkgs.mkShell {
-          buildInputs = [
-            just
-            php
-          ];
+          buildInputs = [ php82 ];
         };
       });
 }
