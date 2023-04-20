@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<ruleset name="php-full coding standards">
-   <description>PHPCS configuration file for php-full.</description>
-   <file>src</file>
-   <arg value="np"/>
-   <rule ref=""/>
-</ruleset>
