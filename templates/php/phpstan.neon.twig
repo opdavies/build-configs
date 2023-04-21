@@ -2,7 +2,10 @@
 
 parameters:
   level: {{ php.phpstan.level }}
+  ignorePaths:
+    - *Test.php
+    - *TestBase.php
   paths:
     {% for path in php.phpstan.paths | default(["src"]) -%}
     - {{ path }}
-    {% endfor %}
+    {%- endfor %}
