@@ -203,6 +203,14 @@ function getFiles(array $configurationData): Collection
         $filesToGenerate[] = new TemplateFile(data: 'drupal-project/phpunit.xml.dist', name: 'phpunit.xml.dist');
     }
 
+    if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {
+        $filesToGenerate[] = new TemplateFile(
+            data: 'ci/github-actions/ci.yml',
+            name: 'ci.yml',
+            path: '.github/workflows',
+        );
+    }
+
     return $filesToGenerate;
 }
 

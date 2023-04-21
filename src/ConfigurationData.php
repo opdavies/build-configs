@@ -37,7 +37,11 @@ final class ConfigurationData
      */
     #[Assert\Collection(
         allowExtraFields: false,
-        fields: ['useNewDatabaseCredentials' => new Assert\Type('boolean')]
+        allowMissingFields: true,
+        fields: [
+            'createGitHubActionsConfiguration' => new Assert\Type('boolean'),
+            'useNewDatabaseCredentials' => new Assert\Type('boolean'),
+        ]
     )]
     public array $experimental;
 

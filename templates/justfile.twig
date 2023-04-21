@@ -57,5 +57,5 @@ _run service command *args:
     --entrypoint {{ "{{ command }}"|raw }} \
     --no-deps \
     --rm \
-    --tty \
+    -T \
     {{ "{{ service }} {{ args }}"|raw }}
