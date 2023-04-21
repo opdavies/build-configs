@@ -38,6 +38,10 @@ jobs:
 
           just composer install --quiet --no-progress
 
-          # TODO: add PHPCS and PHPStan
+          # TODO: add PHPCS
+
+          {% if "phpstan" in php|keys -%}
+          just _run php phpstan analyze
+          {%- endif %}
 
           just test --testdox --colors=always
