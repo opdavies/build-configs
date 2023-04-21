@@ -171,13 +171,16 @@ function getFiles(array $configurationData): Collection
     if (isPhp(Arr::get($configurationData, 'language'))) {
         $filesToGenerate[] = new TemplateFile(data: 'php/Dockerfile', name: 'Dockerfile');
         $filesToGenerate[] = new TemplateFile(data: 'php/phpcs.xml', name: 'phpcs.xml.dist');
-        $filesToGenerate[] = new TemplateFile(data: 'php/phpstan.neon', name: 'phpstan.neon.dist');
         $filesToGenerate[] = new TemplateFile(data: 'php/phpunit.xml', name: 'phpunit.xml.dist');
         $filesToGenerate[] = new TemplateFile(
             data: 'php/docker-entrypoint-php',
             name: 'docker-entrypoint-php',
             path: 'tools/docker/images/php/root/usr/local/bin',
         );
+
+        if (Arr::has(array: $configurationData, keys: 'php.phpstan')) {
+            $filesToGenerate[] = new TemplateFile(data: 'php/phpstan.neon', name: 'phpstan.neon.dist');
+        }
     }
 
     if (isNode(Arr::get($configurationData, 'language'))) {
