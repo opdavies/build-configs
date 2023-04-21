@@ -24,9 +24,10 @@ use Twig\Loader\FilesystemLoader;
 $app = new Application();
 
 $app->command(
-    'generate-build-file [-p|--project-name=] [-t|--type=]',
+    'init [-p|--project-name=] [-l|--language=] [-t|--type=]',
     function(
         string $projectName,
+        string $language,
         string $type,
     ): void {
         $projectName = str_replace('.', '-', $projectName);
@@ -34,18 +35,20 @@ $app->command(
         // TODO: validate the project type.
         $output = <<<EOF
             name: $projectName
+            language: $language
             type: $type
             EOF;
 
         file_put_contents('build.yaml', $output);
     }
-)->descriptions('Generate a new build.yaml file.', [
+)->descriptions('Initialise a new build.yaml file.', [
     '--project-name' => 'The name of the project.',
+    '--language' => 'The language used in the project.',
     '--type' => 'The project type.',
 ]);;
 
 $app->command(
-    'run [-c|--config-file=] [-o|--output-dir=]',
+    'generate [-c|--config-file=] [-o|--output-dir=]',
     function (
         SymfonyStyle $io,
         string $configFile = 'build.yaml',
