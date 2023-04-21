@@ -1,8 +1,7 @@
 {
     "require": {
         "illuminate/support": "^9.50",
-        "mnapoli/silly-php-di": "^1.2",
-        "php-di/php-di": "^6.3",
+        "mnapoli/silly": "^1.8",
         "symfony/console": "^6.2",
         "symfony/filesystem": "^6.2",
         "symfony/property-access": "^6.2",
@@ -25,8 +24,7 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "phpstan/extension-installer": true
+            "pestphp/pest-plugin": true
         }
     }
 }
