@@ -9,3 +9,8 @@ parameters:
     {% for path in php.phpstan.paths | default(["src"]) -%}
     - {{ path }}
     {%- endfor %}
+
+{% if php.phpstan.baseline %}
+includes:
+  - phpstan-baseline.neon
+{% endif %}
