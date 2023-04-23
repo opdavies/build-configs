@@ -5,5 +5,7 @@
    <description>PHPCS configuration file for {{ name }}.</description>
    <file>src</file>
    <arg value="np"/>
-   <rule ref="{{ php.phpcs.standard }}"/>
+   {% for standard in php.phpcs.standards|default(['Drupal', 'DrupalPractice']) %}
+   <rule ref="{{ standard }}"/>
+   {% endif %}
 </ruleset>
