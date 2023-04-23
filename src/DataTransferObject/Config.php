@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OliverDaviesLtd\BuildConfigs;
+namespace App\DataTransferObject;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class ConfigurationData
+final class Config
 {
     /**
      * @var array<string,string|integer|array<int,string>>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OliverDaviesLtd\BuildConfigs\DataTransferObject;
+namespace App\DataTransferObject;
 
 readonly final class TemplateFile
 {

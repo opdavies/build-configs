@@ -1,5 +1,6 @@
 _default:
   @just --list
 
-build:
+compile:
+  composer dump-env prod
   ./vendor/bin/box compile
