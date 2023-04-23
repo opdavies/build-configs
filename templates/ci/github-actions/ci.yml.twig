@@ -38,7 +38,9 @@ jobs:
 
           just composer install --quiet --no-progress
 
-          # TODO: add PHPCS
+          {% if "phpcs" in php|keys -%}
+          just _run php phpcs
+          {%- endif %}
 
           {% if "phpstan" in php|keys -%}
           just _run php phpstan analyze --no-progress --memory-limit=512M
