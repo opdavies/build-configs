@@ -41,7 +41,7 @@ jobs:
           # TODO: add PHPCS
 
           {% if "phpstan" in php|keys -%}
-          just _run php phpstan analyze
+          just _run php phpstan analyze --no-progress --memory-limit=512M
           {%- endif %}
 
           just test --testdox --colors=always
