@@ -7,5 +7,5 @@
    <arg value="np"/>
    {% for standard in php.phpcs.standards|default(['Drupal', 'DrupalPractice']) %}
    <rule ref="{{ standard }}"/>
-   {% endif %}
+   {% endfor %}
 </ruleset>
