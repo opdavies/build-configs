@@ -60,7 +60,7 @@ class GenerateCommand extends Command
         $configFile = $input->getOption(name: 'config-file');
         $outputDir = $input->getOption(name: 'output-dir');
 
-        $pipes = [
+        $pipelines = [
             new CreateFinalConfigurationData(),
 
             new ValidateConfigurationData(),
@@ -80,7 +80,7 @@ class GenerateCommand extends Command
          */
         [$configurationData, $generatedFiles] = (new Pipeline())
             ->send($configFile)
-            ->through($pipes)
+            ->through($pipelines)
             ->thenReturn();
 
         $io->info("Building configuration for {$configurationData['name']}.");
