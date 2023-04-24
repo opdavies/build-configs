@@ -1,0 +1,134 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Action;
+
+use App\DataTransferObject\TemplateFile;
+use App\Enum\Language;
+use App\Enum\WebServer;
+use Illuminate\Support\Arr;
+
+final class CreateListOfFilesToGenerate
+{
+    public function handle(array $configurationData, \Closure $next) {
+        /** @var Collection<int, TemplateFile> */
+        $filesToGenerate = collect([
+            new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'),
+            new TemplateFile(data: 'common/.hadolint.yaml', name: '.hadolint.yaml'),
+            new TemplateFile(data: 'env.example', name: '.env.example'),
+        ]);
+
+        $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
+        if (count($extraDatabases) > 0) {
+            $filesToGenerate[] = new TemplateFile(
+                data: 'extra-databases.sql',
+                name: 'extra-databases.sql',
+                path: 'tools/docker/images/database/root/docker-entrypoint-initdb.d',
+            );
+        }
+
+        if (false !== Arr::get($configurationData, "justfile", true)) {
+            $filesToGenerate[] = new TemplateFile(data: 'justfile', name: 'justfile');
+        }
+
+        if (isset($configurationData['dockerCompose']) && $configurationData['dockerCompose'] !== null) {
+            $filesToGenerate[] = new TemplateFile(data: 'docker-compose.yaml', name: 'docker-compose.yaml');
+        }
+
+        if (static::isPhp(Arr::get($configurationData, 'language'))) {
+            $filesToGenerate[] = new TemplateFile(data: 'php/Dockerfile', name: 'Dockerfile');
+            $filesToGenerate[] = new TemplateFile(data: 'php/phpcs.xml', name: 'phpcs.xml.dist');
+            $filesToGenerate[] = new TemplateFile(data: 'php/phpunit.xml', name: 'phpunit.xml.dist');
+            $filesToGenerate[] = new TemplateFile(
+                data: 'php/docker-entrypoint-php',
+                name: 'docker-entrypoint-php',
+                path: 'tools/docker/images/php/root/usr/local/bin',
+            );
+
+            if (Arr::has(array: $configurationData, keys: 'php.phpstan')) {
+                $filesToGenerate[] = new TemplateFile(data: 'php/phpstan.neon', name: 'phpstan.neon.dist');
+            }
+        }
+
+        if (static::isNode(Arr::get($configurationData, 'language'))) {
+            $filesToGenerate[] = new TemplateFile(data: 'node/.yarnrc', name: '.yarnrc');
+            $filesToGenerate[] = new TemplateFile(data: 'node/Dockerfile', name: 'Dockerfile');
+        }
+
+        if (static::isCaddy(Arr::get($configurationData, 'web.type'))) {
+            $filesToGenerate[] = new TemplateFile(
+                data: 'web/caddy/Caddyfile',
+                name: 'Caddyfile',
+                path: 'tools/docker/images/web/root/etc/caddy',
+            );
+        }
+
+        if (static::isNginx(Arr::get($configurationData, 'web.type'))) {
+            $filesToGenerate[] = new TemplateFile(
+                data: 'web/nginx/default.conf',
+                name: 'default.conf',
+                path: 'tools/docker/images/web/root/etc/nginx/conf.d',
+            );
+        }
+
+        if ('drupal-project' === Arr::get($configurationData, 'type')) {
+            // Add a Drupal version of phpunit.xml.dist.
+            $filesToGenerate[] = new TemplateFile(data: 'drupal-project/phpunit.xml.dist', name: 'phpunit.xml.dist');
+        }
+
+        if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {
+            $filesToGenerate[] = new TemplateFile(
+                data: 'ci/github-actions/ci.yml',
+                name: 'ci.yml',
+                path: '.github/workflows',
+            );
+        }
+
+        if (Arr::get($configurationData, 'experimental.runGitHooksBeforePush', false) === true) {
+            $filesToGenerate[] = new TemplateFile(
+                data: 'git-hooks/pre-push',
+                name: 'pre-push',
+                path: '.githooks',
+            );
+        }
+
+        return $next([$configurationData, $filesToGenerate]);
+    }
+
+    private static function isCaddy(?string $webServer): bool
+    {
+        if (is_null($webServer)) {
+            return false;
+        }
+
+        return strtoupper($webServer) === WebServer::CADDY->name;
+    }
+
+    private static function isNginx(?string $webServer): bool
+    {
+        if (is_null($webServer)) {
+            return false;
+        }
+
+        return strtoupper($webServer) === WebServer::NGINX->name;
+    }
+
+    private static function isNode(?string $language): bool
+    {
+        if (is_null($language)) {
+            return false;
+        }
+
+        return strtoupper($language) === Language::NODE->name;
+    }
+
+    private static function isPhp(?string $language): bool
+    {
+        if (is_null($language)) {
+            return false;
+        }
+
+        return strtoupper($language) === Language::PHP->name;
+    }
+}
