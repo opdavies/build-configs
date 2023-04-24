@@ -19,7 +19,7 @@ composer *args:
 alias phpunit := test
 
 test *args:
-  {{ "just _run php phpunit {{ args }}" | raw }}
+  {{ "just _run php phpunit --colors=always {{ args }}" | raw }}
 {% endif %}
 
 {% if "drupal-project" is same as type %}
@@ -58,6 +58,39 @@ artisan *args:
   {{ "just _run artisan {{ args }}" | raw }}
 {% endif %}
 
+{% if experimental.runGitHooksBeforePush %}
+# Enable or disable Git hooks
+git-hooks command:
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  case "{{ '{{ command }}'|raw }}" in
+    "on")
+      echo "Enabling Git hooks..."
+      git config core.hooksPath .githooks
+      ;;
+    "off")
+      echo "Disabling Git hooks..."
+      git config --unset core.hooksPath
+      ;;
+    *)
+      echo "Error: Invalid argument. Must be either 'on' or 'off'"
+      ;;
+  esac
+
+test-commit:
+  {% if "phpcs" in php|keys -%}
+  just _run php phpcs
+  {%- endif %}
+
+  {% if "phpstan" in php|keys -%}
+  just _run php phpstan analyze --no-progress --memory-limit=512M
+  {%- endif %}
+
+  just test --testdox --testsuite unit
+  just test --testdox --testsuite kernel
+{% endif %}
+
 _exec +args:
   {{ "docker compose exec {{ args }}" | raw }}
 
@@ -68,3 +101,5 @@ _run service command *args:
     --rm \
     -T \
     {{ "{{ service }} {{ args }}"|raw }}
+
+# vim: ft=just

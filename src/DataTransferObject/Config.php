@@ -40,6 +40,7 @@ final class Config
         allowMissingFields: true,
         fields: [
             'createGitHubActionsConfiguration' => new Assert\Type('boolean'),
+            'runGitHooksBeforePush' => new Assert\Type('boolean'),
             'useNewDatabaseCredentials' => new Assert\Type('boolean'),
         ]
     )]

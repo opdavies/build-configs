@@ -142,6 +142,10 @@ class GenerateCommand extends Command
         if ($filesystem->exists("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php")) {
             $filesystem->chmod("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", 0755);
         }
+
+        if ($filesystem->exists("{$outputDir}/.githooks/pre-push")) {
+            $filesystem->chmod("{$outputDir}/.githooks/pre-push", 0755);
+        }
     }
 
     function getFiles(array $configurationData): Collection
@@ -216,6 +220,14 @@ class GenerateCommand extends Command
                 data: 'ci/github-actions/ci.yml',
                 name: 'ci.yml',
                 path: '.github/workflows',
+            );
+        }
+
+        if (Arr::get($configurationData, 'experimental.runGitHooksBeforePush', false) === true) {
+            $filesToGenerate[] = new TemplateFile(
+                data: 'git-hooks/pre-push',
+                name: 'pre-push',
+                path: '.githooks',
             );
         }
 
