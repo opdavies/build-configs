@@ -7,7 +7,7 @@ namespace App\Command;
 use App\Action\CreateFinalConfigurationData;
 use App\Action\CreateListOfFilesToGenerate;
 use App\Action\GenerateConfigurationFiles;
-use App\Action\ValidateBuildConfigurationData;
+use App\Action\ValidateConfigurationData;
 use App\DataTransferObject\TemplateFile;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
@@ -63,7 +63,7 @@ class GenerateCommand extends Command
         $pipes = [
             new CreateFinalConfigurationData(),
 
-            new ValidateBuildConfigurationData(),
+            new ValidateConfigurationData(),
 
             new CreateListOfFilesToGenerate(),
 

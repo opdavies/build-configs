@@ -9,10 +9,9 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validation;
 
-final class ValidateBuildConfigurationData
+final class ValidateConfigurationData
 {
     public function handle(array $configurationData, \Closure $next) {
         // Convert the input to a configuration data object.
@@ -24,15 +23,7 @@ final class ValidateBuildConfigurationData
         $violations = $validator->validate($configurationDataObject);
 
         if (0 < $violations->count()) {
-            $io->error('Configuration is invalid.');
-
-            $io->listing(
-                collect($violations)
-                    ->map(fn (ConstraintViolationInterface $v) => "{$v->getPropertyPath()} - {$v->getMessage()}")
-                    ->toArray()
-            );
-
-            return;
+            throw new \RuntimeException('Configuration is invalid.');
         }
         
         return $next($configurationData);
