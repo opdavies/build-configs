@@ -3,6 +3,15 @@
 default:
   @just --list
 
+# Start the project
+start:
+  cp -v --no-clobber .env.example .env
+  docker compose up -d
+
+# Stop the project
+stop:
+  docker compose down
+
 {% if "php" is same as language %}
 composer *args:
   {{ "just _exec php composer {{ args }}" | raw }}
