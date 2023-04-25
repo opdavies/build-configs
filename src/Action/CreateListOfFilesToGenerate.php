@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Action;
 
+use App\DataTransferObject\Config;
 use App\DataTransferObject\TemplateFile;
 use App\Enum\Language;
 use App\Enum\WebServer;
@@ -11,7 +12,14 @@ use Illuminate\Support\Arr;
 
 final class CreateListOfFilesToGenerate
 {
-    public function handle(array $configurationData, \Closure $next) {
+    public function handle(array $configurationDataAndDto, \Closure $next) {
+
+        /**
+         * @var Config $configurationDataDto,
+         * @var array<string,mixed> $configurationData
+         */
+        [$configurationData, $configurationDataDto] = $configurationDataAndDto;
+
         /** @var Collection<int, TemplateFile> */
         $filesToGenerate = collect([
             new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'),
@@ -93,7 +101,7 @@ final class CreateListOfFilesToGenerate
             );
         }
 
-        return $next([$configurationData, $filesToGenerate]);
+        return $next([$configurationData, $configurationDataDto, $filesToGenerate]);
     }
 
     private static function isCaddy(?string $webServer): bool

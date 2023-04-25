@@ -76,14 +76,14 @@ class GenerateCommand extends Command
 
         /**
          * @var Collection<int,TemplateFile> $generatedFiles
-         * @var array<string,mixed> $configurationData
+         * @var Config $configurationData
          */
         [$configurationData, $generatedFiles] = (new Pipeline())
             ->send($configFile)
             ->through($pipelines)
             ->thenReturn();
 
-        $io->info("Building configuration for {$configurationData['name']}.");
+        $io->info("Building configuration for {$configurationData->name}.");
 
         $io->write('Generated files:');
         $io->listing(static::getListOfFiles(filesToGenerate: $generatedFiles)->toArray());

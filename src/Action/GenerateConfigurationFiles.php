@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Action;
 
+use App\DataTransferObject\Config;
 use App\DataTransferObject\TemplateFile;
 use Illuminate\Support\Collection;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,9 +23,10 @@ final class GenerateConfigurationFiles
     {
         /**
          * @var Collection<int,TemplateFile> $filesToGenerate
+         * @var Config $configurationDataDto,
          * @var array<string,mixed> $configurationData
          */
-        [$configurationData, $filesToGenerate] = $filesToGenerateAndConfigurationData;
+        [$configurationData, $configurationDataDto, $filesToGenerate] = $filesToGenerateAndConfigurationData;
 
         $filesToGenerate->each(function(TemplateFile $templateFile) use ($configurationData): void {
             if ($templateFile->path !== null) {
@@ -53,6 +55,6 @@ final class GenerateConfigurationFiles
             $this->filesystem->chmod("{$outputDir}/.githooks/pre-push", 0755);
         }
 
-        return $next([$configurationData, $filesToGenerate]);
+        return $next([$configurationDataDto, $filesToGenerate]);
     }
 }

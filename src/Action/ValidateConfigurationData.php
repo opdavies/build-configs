@@ -17,15 +17,16 @@ final class ValidateConfigurationData
         // Convert the input to a configuration data object.
         $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
-        $configurationDataObject = $serializer->deserialize(json_encode($configurationData), Config::class, 'json');
+
+        $configurationDataDto = $serializer->deserialize(json_encode($configurationData), Config::class, 'json');
 
         $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
-        $violations = $validator->validate($configurationDataObject);
+        $violations = $validator->validate($configurationDataDto);
 
         if (0 < $violations->count()) {
             throw new \RuntimeException('Configuration is invalid.');
         }
         
-        return $next($configurationData);
+        return $next([$configurationData, $configurationDataDto]);
     }
 }
