@@ -19,10 +19,9 @@ ENV PATH="${PATH}:{{ project_root }}/bin:{{ project_root }}/vendor/bin"
 
 COPY --chown=app:app composer.* ./
 
-{% if dockerfile.stages.build %}
 ################################################################################
 
-FROM {{ dockerfile.stages.build.extends }} AS build
+FROM base AS build
 
 USER root
 
@@ -54,7 +53,6 @@ USER app
 {% for command in dockerfile.stages.build.commands %}
 RUN {{ command }}
 {% endfor %}
-{% endif %}
 
 COPY --chown=app:app tools/docker/images/php/root /
 
