@@ -47,12 +47,12 @@ final class GenerateConfigurationFiles
         });
 
         // If the Docker entrypoint file is generated, ensure it is executable.
-        if ($this->filesystem->exists("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php")) {
-            $filesystem->chmod("{$outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", 0755);
+        if ($this->filesystem->exists("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php")) {
+            $this->filesystem->chmod("{$this->outputDir}/tools/docker/images/php/root/usr/local/bin/docker-entrypoint-php", 0755);
         }
 
-        if ($this->filesystem->exists("{$outputDir}/.githooks/pre-push")) {
-            $this->filesystem->chmod("{$outputDir}/.githooks/pre-push", 0755);
+        if ($this->filesystem->exists("{$this->outputDir}/.githooks/pre-push")) {
+            $this->filesystem->chmod("{$this->outputDir}/.githooks/pre-push", 0755);
         }
 
         return $next([$configurationDataDto, $filesToGenerate]);
