@@ -31,7 +31,6 @@ final class CreateFinalConfigurationData
         ];
 
         $phpExtensions = [
-            'bcmath',
             'gd',
             // TODO: only add `pdo_mysql` if its used.
             'pdo_mysql',
