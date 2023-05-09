@@ -31,7 +31,7 @@ x-app: &default-app
   tty: true
 
 services:
-  {% if "web" in dockerCompose.services %}
+{% if "web" in dockerCompose.services %}
   web:
     <<: [*default-proxy, *default-app]
     build:
@@ -40,7 +40,7 @@ services:
     depends_on:
       - php
     profiles: [web]
-  {% endif %}
+{% endif %}
 
 {% if "php" == language %}
   php:
