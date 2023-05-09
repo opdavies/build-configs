@@ -39,7 +39,11 @@ final class CreateFinalConfigurationData
 
         $configurationData['dockerfile']['stages']['build']['packages'] = $basePackages;
 
-        $configurationData['dockerfile']['stages']['build']['extensions']['install'] = $phpExtensions;
+        $configurationData['dockerfile']['stages']['build']['extensions']['install'] = collect($phpExtensions)
+            ->merge($configurationData['dockerfile']['stages']['build']['extensions']['install'])
+            ->unique()
+            ->sort()
+            ->toArray();
 
         return $next($configurationData);
     }
