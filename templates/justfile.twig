@@ -19,7 +19,11 @@ composer *args:
 alias phpunit := test
 
 test *args:
+{% if "drupal-project" is same as type %}
+  {{ "just _exec php phpunit --colors=always {{ args }}" | raw }}
+{% else %}
   {{ "just _run php phpunit --colors=always {{ args }}" | raw }}
+{% endif %}
 {% endif %}
 
 {% if "drupal-project" is same as type %}
