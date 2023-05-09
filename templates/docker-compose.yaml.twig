@@ -52,7 +52,7 @@ services:
         - "DOCKER_UID=${DOCKER_UID:-1000}"
     volumes:
       - .:{{ project_root }}
-    {% if "database" in dockerCompose.services|keys -%}
+    {% if "database" in dockerCompose.services -%}
     depends_on:
       - database
     {% endif -%}
@@ -65,14 +65,14 @@ services:
       target: build
     volumes:
       - .:{{ project_root }}
-    {% if "database" in dockerCompose.services|keys -%}
+    {% if "database" in dockerCompose.services -%}
     depends_on:
       - database
     {% endif -%}
     profiles: [node]
 {% endif %}
 
-{% if "database" in dockerCompose.services|keys %}
+{% if "database" in dockerCompose.services %}
   database:
     image: {{ database.type }}:{{ database.version }}
     deploy:
