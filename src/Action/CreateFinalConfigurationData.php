@@ -39,7 +39,8 @@ final class CreateFinalConfigurationData
         ];
 
         $configurationData['dockerfile']['stages']['build']['packages'] = $basePackages;
-        $configurationData['dockerfile']['stages']['build']['extensions'] = $phpExtensions;
+
+        $configurationData['dockerfile']['stages']['build']['extensions']['install'] = $phpExtensions;
 
         return $next($configurationData);
     }
