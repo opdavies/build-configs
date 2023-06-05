@@ -25,11 +25,17 @@ FROM base AS build
 
 USER root
 
+{% if 'apache' in php.version %}
+RUN a2enmod rewrite
+{% endif %}
+
 {% if dockerfile.stages.build.packages %}
 RUN apt-get update -yqq \
   && apt-get install -yqq --no-install-recommends \
     {{ dockerfile.stages.build.packages | join(' ') }}
 {% endif %}
+
+RUN docker-php-ext-configure gd --with-jpeg
 
 {% if dockerfile.stages.build.extensions.install %}
 RUN docker-php-ext-install {{ dockerfile.stages.build.extensions.install | join(' ') }}

@@ -23,6 +23,7 @@ final class CreateFinalConfigurationData
 
         $basePackages = [
             'git',
+            'libjpeg-dev',
             'libpng-dev',
             'libzip-dev',
             // TODO: only add `mariadb-client` if MariaDB is used.
