@@ -43,8 +43,12 @@ services:
 {% endif %}
 
 {% if "php" == language %}
+  {% set anchors = [
+    "apache" in php.version ? "*default-proxy" : "",
+    "*default-app",
+  ] -%}
   php:
-    <<: *default-app
+    <<: [{{ anchors | join(", ") }}]
     build:
       context: .
       target: build
