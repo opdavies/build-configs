@@ -53,6 +53,11 @@ final class CreateListOfFilesToGenerate
                 name: 'docker-entrypoint-php',
                 path: 'tools/docker/images/php/root/usr/local/bin',
             );
+            $filesToGenerate[] = new TemplateFile(
+                data: 'php/php.ini',
+                name: 'php.ini',
+                path: 'tools/docker/images/php/root/usr/local/etc/php',
+            );
 
             if (Arr::has(array: $configurationData, keys: 'php.phpstan')) {
                 $filesToGenerate[] = new TemplateFile(data: 'php/phpstan.neon', name: 'phpstan.neon.dist');
