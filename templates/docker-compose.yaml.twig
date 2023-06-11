@@ -44,11 +44,11 @@ services:
 
 {% if "php" == language %}
   {% set anchors = [
-    "apache" in php.version ? "*default-proxy" : "",
+    "apache" in php.version ? "*default-proxy" : null,
     "*default-app",
   ] -%}
   php:
-    <<: [{{ anchors | join(", ") }}]
+    <<: [{{ anchors | filter(item => item is not null) | join(", ") }}]
     build:
       context: .
       target: build
