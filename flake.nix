@@ -1,17 +1,16 @@
 {
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/master";
-    flake-utils.url = "github:numtide/flake-utils";
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        devShell = with pkgs; pkgs.mkShell {
-          buildInputs = [ php82 ];
+  outputs = inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+
+      perSystem = { config, self', inputs', pkgs, system, ... }: {
+        devShells = {
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [ php82 php82Packages.composer ];
+          };
         };
-      });
+      };
+    };
 }
