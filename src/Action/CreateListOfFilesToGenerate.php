@@ -9,23 +9,33 @@ use App\DataTransferObject\TemplateFile;
 use App\Enum\Language;
 use App\Enum\WebServer;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 final class CreateListOfFilesToGenerate
 {
-    public function handle(array $configurationDataAndDto, \Closure $next) {
-
+    public function handle(array $configurationDataAndDto, \Closure $next)
+    {
         /**
          * @var Config $configurationDataDto,
          * @var array<string,mixed> $configurationData
          */
         [$configurationData, $configurationDataDto] = $configurationDataAndDto;
 
+        $isDocker = static::isDocker($configurationData);
+        $isFlake = static::isFlake($configurationData);
+
         /** @var Collection<int, TemplateFile> */
-        $filesToGenerate = collect([
-            new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'),
-            new TemplateFile(data: 'common/.hadolint.yaml', name: '.hadolint.yaml'),
-            new TemplateFile(data: 'env.example', name: '.env.example'),
-        ]);
+        $filesToGenerate = collect();
+
+        if ($isDocker) {
+            $filesToGenerate->push(new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'));
+            $filesToGenerate->push(new TemplateFile(data: 'common/.hadolint.yaml', name: '.hadolint.yaml'));
+            $filesToGenerate->push(new TemplateFile(data: 'env.example', name: '.env.example'));
+        }
+
+        if ($isFlake) {
+            $filesToGenerate->push(new TemplateFile(data: 'common/flake.nix', name: 'flake.nix'));
+        }
 
         $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
         if (count($extraDatabases) > 0) {
@@ -45,7 +55,10 @@ final class CreateListOfFilesToGenerate
         }
 
         if (static::isPhp(Arr::get($configurationData, 'language'))) {
-            $filesToGenerate[] = new TemplateFile(data: 'php/Dockerfile', name: 'Dockerfile');
+            if ($isDocker) {
+                $filesToGenerate[] = new TemplateFile(data: 'php/Dockerfile', name: 'Dockerfile');
+            }
+
             $filesToGenerate[] = new TemplateFile(data: 'php/phpcs.xml', name: 'phpcs.xml.dist');
             $filesToGenerate[] = new TemplateFile(data: 'php/phpunit.xml', name: 'phpunit.xml.dist');
             $filesToGenerate[] = new TemplateFile(
@@ -65,8 +78,10 @@ final class CreateListOfFilesToGenerate
         }
 
         if (static::isNode(Arr::get($configurationData, 'language'))) {
-            $filesToGenerate[] = new TemplateFile(data: 'node/.yarnrc', name: '.yarnrc');
-            $filesToGenerate[] = new TemplateFile(data: 'node/Dockerfile', name: 'Dockerfile');
+            if ($isDocker) {
+                $filesToGenerate[] = new TemplateFile(data: 'node/.yarnrc', name: '.yarnrc');
+                $filesToGenerate[] = new TemplateFile(data: 'node/Dockerfile', name: 'Dockerfile');
+            }
         }
 
         if (static::isCaddy(Arr::get($configurationData, 'web.type'))) {
@@ -116,6 +131,20 @@ final class CreateListOfFilesToGenerate
         }
 
         return strtoupper($webServer) === WebServer::CADDY->name;
+    }
+
+    private static function isDocker(array $configurationData): bool
+    {
+        // This should return `false` if there is no explicit `dockerfile` key
+        // in the build.yaml file. This is currently not the case, I assume
+        // because of default values being added.
+        // For now, if it's not a Flake, it's Docker.
+        return !static::isFlake($configurationData);
+    }
+
+    private static function isFlake(array $configurationData): bool
+    {
+        return Arr::get($configurationData, 'flake') !== null;
     }
 
     private static function isNginx(?string $webServer): bool

@@ -1,5 +1,7 @@
 # {{ managedText | raw }}
 
+{% set isFlake = flake is defined %}
+
 default:
   @just --list
 
@@ -39,7 +41,11 @@ install *args:
 
 {% if "node" is same as language %}
 yarn *args:
+{% if isFlake %}
+  {{ "just _exec yarn {{ args }}" | raw }}
+{% else %}
   {{ "just _exec node yarn {{ args }}" | raw }}
+{% endif %}
 {% endif %}
 
 {% if "fractal" is same as type %}
@@ -50,7 +56,7 @@ clean:
   rm -fr build
 
 build *args:
-  just fractal build {{ args }}
+  {{ "just fractal build {{ args }}" | raw }}
 
 sync: clean build
   #!/usr/bin/env bash
@@ -99,8 +105,13 @@ test-commit:
 {% endif %}
 
 _exec +args:
+{% if flake is defined %}
+  {{ "nix develop --command {{ args }}" | raw }}
+{% else %}
   {{ "docker compose exec -T {{ args }}" | raw }}
+{% endif %}
 
+{% if flake is not defined %}
 _run service command *args:
   docker compose run \
     --entrypoint {{ "{{ command }}"|raw }} \
@@ -108,5 +119,6 @@ _run service command *args:
     --rm \
     -T \
     {{ "{{ service }} {{ args }}"|raw }}
+{% endif %}
 
 # vim: ft=just
