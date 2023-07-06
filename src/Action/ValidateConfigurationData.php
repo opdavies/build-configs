@@ -26,7 +26,7 @@ final class ValidateConfigurationData
         if (0 < $violations->count()) {
             throw new \RuntimeException('Configuration is invalid.');
         }
-        
+
         return $next([$configurationData, $configurationDataDto]);
     }
 }
