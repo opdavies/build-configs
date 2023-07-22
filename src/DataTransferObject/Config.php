@@ -54,7 +54,7 @@ final class Config
     #[Assert\NotBlank]
     public string $name;
 
-    #[Assert\Choice(choices: ['drupal-project', 'fractal', 'laravel', 'php-library', 'vuejs'])]
+    #[Assert\Choice(choices: ['drupal', 'fractal', 'laravel', 'php-library', 'vuejs'])]
     #[Assert\NotBlank]
     public string $type;
 

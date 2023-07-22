@@ -15,7 +15,7 @@ x-proxy: &default-proxy
 
 x-app: &default-app
   volumes:
-    - "${DOCKER_WEB_VOLUME:-./{{ "drupal-project" == type ? drupal.docroot : '' }}:{{ project_root }}{{ "drupal-project" == type ? '/' ~ drupal.docroot : '' }}}"
+    - "${DOCKER_WEB_VOLUME:-./{{ "drupal" == type ? drupal.docroot : '' }}:{{ project_root }}{{ "drupal" == type ? '/' ~ drupal.docroot : '' }}}"
   env_file:
     - .env
   restart: "${DOCKER_RESTART_POLICY:-unless-stopped}"

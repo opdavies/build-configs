@@ -100,9 +100,9 @@ final class CreateListOfFilesToGenerate
             );
         }
 
-        if ('drupal-project' === Arr::get($configurationData, 'type')) {
+        if ('drupal' === Arr::get($configurationData, 'type')) {
             // Add a Drupal version of phpunit.xml.dist.
-            $filesToGenerate[] = new TemplateFile(data: 'drupal-project/phpunit.xml.dist', name: 'phpunit.xml.dist');
+            $filesToGenerate[] = new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist');
         }
 
         if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {

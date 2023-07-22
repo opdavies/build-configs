@@ -16,7 +16,7 @@
   {% endif %}
   {% endfor %}
 
-  {% if type is same as "drupal-project" and "Drupal" in php.phpcs.standards or php.phpcs.standards is empty %}
+  {% if type is same as "drupal" and "Drupal" in php.phpcs.standards or php.phpcs.standards is empty %}
   <rule ref="Drupal">
     <exclude name="Drupal.Commenting.ClassComment.Missing"/>
     <exclude name="Drupal.Commenting.DataTypeNamespace.DataTypeNamespace"/>
