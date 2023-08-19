@@ -40,6 +40,8 @@ jobs:
 
           just composer install --quiet --no-progress
 
+          just test --testdox --colors=always
+
           {% if "phpcs" in php|keys -%}
           just _run php phpcs
           {%- endif %}
@@ -47,5 +49,3 @@ jobs:
           {% if "phpstan" in php|keys -%}
           just _run php phpstan analyze --no-progress --memory-limit=512M
           {%- endif %}
-
-          just test --testdox --colors=always
