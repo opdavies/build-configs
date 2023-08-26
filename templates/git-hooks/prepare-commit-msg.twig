@@ -20,6 +20,6 @@ if [ -f "${ISSUE_FILE}" ]; then
   ISSUE_ID=$(cat "${ISSUE_FILE}" | sed 's/ /, /g')
 
   if [ -n "${ISSUE_ID}" ]; then
-    sed -i.bak "s/# ISSUE_ID/Refs: $ISSUE_ID/" "$1"
+    sed -i.bak "s/# Refs:/Refs: $ISSUE_ID/" "$1"
   fi
 fi
