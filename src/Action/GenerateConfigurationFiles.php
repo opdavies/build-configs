@@ -55,6 +55,10 @@ final class GenerateConfigurationFiles
             $this->filesystem->chmod("{$this->outputDir}/.githooks/pre-push", 0755);
         }
 
+        if ($this->filesystem->exists("{$this->outputDir}/.githooks/prepare-commit-msg")) {
+            $this->filesystem->chmod("{$this->outputDir}/.githooks/prepare-commit-msg", 0755);
+        }
+
         return $next([$configurationDataDto, $filesToGenerate]);
     }
 }
