@@ -71,7 +71,6 @@ artisan *args:
   {{ "just _run artisan {{ args }}" | raw }}
 {% endif %}
 
-{% if experimental.runGitHooksBeforePush %}
 # Enable or disable Git hooks
 git-hooks command:
   #!/usr/bin/env bash
@@ -91,6 +90,7 @@ git-hooks command:
       ;;
   esac
 
+{% if experimental.runGitHooksBeforePush %}
 test-commit:
   {% if "phpcs" in php|keys -%}
   just _run php phpcs

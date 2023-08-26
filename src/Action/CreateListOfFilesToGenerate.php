@@ -113,6 +113,12 @@ final class CreateListOfFilesToGenerate
             );
         }
 
+        $filesToGenerate[] = new TemplateFile(
+            data: 'git-hooks/prepare-commit-msg',
+            name: 'prepare-commit-msg',
+            path: '.githooks',
+        );
+
         if (Arr::get($configurationData, 'experimental.runGitHooksBeforePush', false) === true) {
             $filesToGenerate[] = new TemplateFile(
                 data: 'git-hooks/pre-push',
