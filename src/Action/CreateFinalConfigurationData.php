@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Action;
 
+use Illuminate\Support\Arr;
 use Symfony\Component\Yaml\Yaml;
 
 final class CreateFinalConfigurationData
@@ -41,7 +42,7 @@ final class CreateFinalConfigurationData
         $configurationData['dockerfile']['stages']['build']['packages'] = $basePackages;
 
         $configurationData['dockerfile']['stages']['build']['extensions']['install'] = collect($phpExtensions)
-            ->merge($configurationData['dockerfile']['stages']['build']['extensions']['install'])
+            ->merge(Arr::get($configurationData, 'dockerfile.stages.build.extensions.install'))
             ->unique()
             ->sort()
             ->toArray();
