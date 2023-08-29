@@ -34,6 +34,7 @@ final class CreateListOfFilesToGenerate
         }
 
         if ($isFlake) {
+            $filesToGenerate->push(new TemplateFile(data: 'common/envrc', name: '.envrc'));
             $filesToGenerate->push(new TemplateFile(data: 'common/flake.nix', name: 'flake.nix'));
         }
 
