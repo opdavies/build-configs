@@ -31,6 +31,7 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'astro/.envrc', name: '.envrc'),
                     new TemplateFile(data: 'astro/.gitignore', name: '.gitignore'),
                     new TemplateFile(data: 'astro/flake.nix', name: 'flake.nix'),
+                    new TemplateFile(data: 'astro/justfile', name: 'justfile'),
                     new TemplateFile(data: 'astro/tsconfig.json', name: 'tsconfig.json'),
                 ]);
                 break;

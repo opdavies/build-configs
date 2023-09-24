@@ -1,0 +1,62 @@
+# {{ managedText|raw }}
+
+{% set isFlake = flake is defined %}
+
+default:
+  @just --list
+
+{% if not isFlake %}
+# Start the project
+start:
+  cp -v --no-clobber .env.example .env
+  docker compose up -d
+
+# Stop the project
+stop:
+  docker compose down
+{% endif %}
+
+yarn *args:
+{% if isFlake %}
+  {{ "just _exec yarn {{ args }}" | raw }}
+{% else %}
+  {{ "just _exec node yarn {{ args }}" | raw }}
+{% endif %}
+
+# Enable or disable Git hooks
+git-hooks command:
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  case "{{ '{{ command }}'|raw }}" in
+    "on")
+      echo "Enabling Git hooks..."
+      git config core.hooksPath .githooks
+      ;;
+    "off")
+      echo "Disabling Git hooks..."
+      git config --unset core.hooksPath
+      ;;
+    *)
+      echo "Error: Invalid argument. Must be either 'on' or 'off'"
+      ;;
+  esac
+
+_exec +args:
+{% if flake is defined %}
+  {{ "nix develop --command {{ args }}" | raw }}
+{% else %}
+  {{ "docker compose exec -T {{ args }}" | raw }}
+{% endif %}
+
+{% if flake is not defined %}
+_run service command *args:
+  docker compose run \
+    --entrypoint {{ "{{ command }}"|raw }} \
+    --no-deps \
+    --rm \
+    -T \
+    {{ "{{ service }} {{ args }}"|raw }}
+{% endif %}
+
+# vim: ft=just
