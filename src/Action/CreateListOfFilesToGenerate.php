@@ -29,6 +29,7 @@ final class CreateListOfFilesToGenerate
             case (strtolower(ProjectType::Astro->name)):
                 $filesToGenerate = collect([
                     ['astro/.envrc', '.envrc'],
+                    ['astro/.gitignore', '.gitignore'],
                     ['astro/flake.nix', 'flake.nix'],
                     ['astro/tsconfig.json', 'tsconfig.json'],
                 ])->map(function (array $file) {

@@ -1,0 +1,12 @@
+# {{ managedText | raw }}
+
+.astro
+.direnv
+.env
+.env.production
+dist
+node_modules
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
