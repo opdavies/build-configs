@@ -1,0 +1,68 @@
+# {{ managedText | raw }}
+
+default:
+  @just --list
+
+# Start the project
+start:
+  cp -v --no-clobber .env.example .env
+  docker compose up -d
+
+# Stop the project
+stop:
+  docker compose down
+
+composer *args:
+  {{ "just _exec php composer {{ args }}" | raw }}
+
+alias phpunit := test
+
+test *args:
+  {{ "just _exec php phpunit --colors=always {{ args }}" | raw }}
+
+drush *args:
+  {{ "just _exec php drush {{ args }}" | raw }}
+
+install *args:
+  {{ "just _exec php drush site:install -y {{ args }}" | raw }}
+
+# Enable or disable Git hooks
+git-hooks command:
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  case "{{ '{{ command }}'|raw }}" in
+    "on")
+      echo "Enabling Git hooks..."
+      git config core.hooksPath .githooks
+      ;;
+    "off")
+      echo "Disabling Git hooks..."
+      git config --unset core.hooksPath
+      ;;
+    *)
+      echo "Error: Invalid argument. Must be either 'on' or 'off'"
+      ;;
+  esac
+
+{% if experimental.runGitHooksBeforePush %}
+test-commit:
+  just _run php phpcs
+  just _run php phpstan analyze --no-progress --memory-limit=512M
+
+  just test --testdox --testsuite unit
+  just test --testdox --testsuite kernel
+{% endif %}
+
+_exec +args:
+  {{ "docker compose exec -T {{ args }}" | raw }}
+
+_run service command *args:
+  docker compose run \
+    --entrypoint {{ "{{ command }}"|raw }} \
+    --no-deps \
+    --rm \
+    -T \
+    {{ "{{ service }} {{ args }}"|raw }}
+
+# vim: ft=just
