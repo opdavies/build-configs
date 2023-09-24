@@ -213,15 +213,6 @@ final class CreateListOfFilesToGenerate
         return strtoupper($webServer) === WebServer::NGINX->name;
     }
 
-    private static function isTypeScript(?string $language): bool
-    {
-        if (is_null($language)) {
-            return false;
-        }
-
-        return strtoupper($language) === Language::TYPESCRIPT->name;
-    }
-
     private static function isPhp(?string $language): bool
     {
         if (is_null($language)) {
