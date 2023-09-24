@@ -1,0 +1,82 @@
+# {{ managedText | raw }}
+
+{% set isFlake = flake is defined %}
+
+default:
+  @just --list
+
+# Start the project
+start:
+{% if not isFlake %}
+  cp -v --no-clobber .env.example .env
+  docker compose up -d
+{% else %}
+  yarn dev
+{% endif %}
+
+{% if not isFlake %}
+# Stop the project
+stop:
+  docker compose down
+{% endif %}
+
+yarn *args:
+{% if isFlake %}
+  {{ "just _exec yarn {{ args }}" | raw }}
+{% else %}
+  {{ "just _exec node yarn {{ args }}" | raw }}
+{% endif %}
+
+fractal *args:
+  {{ "just yarn fractal {{ args }}" | raw }}
+
+clean:
+  rm -fr build
+
+build *args:
+  {{ "just fractal build {{ args }}" | raw }}
+
+sync: clean build
+  #!/usr/bin/env bash
+  set -eux
+  aws s3 sync "build/." s3://"${BUCKET_NAME}" \
+    --acl "public-read" \
+    --cache-control max-age=3600
+
+# Enable or disable Git hooks
+git-hooks command:
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  case "{{ '{{ command }}'|raw }}" in
+    "on")
+      echo "Enabling Git hooks..."
+      git config core.hooksPath .githooks
+      ;;
+    "off")
+      echo "Disabling Git hooks..."
+      git config --unset core.hooksPath
+      ;;
+    *)
+      echo "Error: Invalid argument. Must be either 'on' or 'off'"
+      ;;
+  esac
+
+_exec +args:
+{% if isFlake %}
+  {{ "nix develop --command {{ args }}" | raw }}
+{% else %}
+  {{ "docker compose exec -T {{ args }}" | raw }}
+{% endif %}
+
+{% if not isFlake %}
+_run service command *args:
+  docker compose run \
+    --entrypoint {{ "{{ command }}"|raw }} \
+    --no-deps \
+    --rm \
+    -T \
+    {{ "{{ service }} {{ args }}"|raw }}
+{% endif %}
+
+# vim: ft=just

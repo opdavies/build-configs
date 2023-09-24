@@ -8,4 +8,5 @@ enum ProjectType
 {
     case Astro;
     case Drupal;
+    case Fractal;
 }

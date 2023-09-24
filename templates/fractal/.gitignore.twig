@@ -1,0 +1,8 @@
+# {{ managedText | raw }}
+
+node_modules
+
+{% if flake is not defined %}
+.env
+docker-compose.override.yaml
+{% endif %}

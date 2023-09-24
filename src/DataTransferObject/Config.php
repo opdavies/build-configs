@@ -46,7 +46,7 @@ final class Config
     )]
     public array $experimental;
 
-    #[Assert\Choice(choices: ['php', 'typescript'])]
+    #[Assert\Choice(choices: ['javascript', 'php', 'typescript'])]
     #[Assert\NotBlank]
     public string $language;
 

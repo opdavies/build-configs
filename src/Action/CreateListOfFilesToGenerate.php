@@ -22,6 +22,9 @@ final class CreateListOfFilesToGenerate
          */
         [$configurationData, $configurationDataDto] = $configurationDataAndDto;
 
+        $isDocker = static::isDocker($configurationData);
+        $isFlake = static::isFlake($configurationData);
+
         /** @var Collection<int, TemplateFile> */
         $filesToGenerate = collect();
 
@@ -34,6 +37,25 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'astro/justfile', name: 'justfile'),
                     new TemplateFile(data: 'astro/tsconfig.json', name: 'tsconfig.json'),
                 ]);
+                break;
+
+            case (strtolower(ProjectType::Fractal->name)):
+                $filesToGenerate = collect([
+                    new TemplateFile(data: 'fractal/.gitignore', name: '.gitignore'),
+                    new TemplateFile(data: 'fractal/justfile', name: 'justfile'),
+                ]);
+
+                if (self::isDocker($configurationData)) {
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/.env.example', name: '.env.example'));
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/.dockerignore', name: '.dockerignore'));
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/.hadolint.yaml', name: '.hadolint.yaml'));
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/.yarnrc', name: '.yarnrc'));
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/Dockerfile', name: 'Dockerfile'));
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/docker-compose.yaml', name: 'docker-compose.yaml'));
+                } elseif (self::isFlake($configurationData)) {
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/.envrc', name: '.envrc'));
+                    $filesToGenerate->push(new TemplateFile(data: 'fractal/flake.nix', name: 'flake.nix'));
+                }
                 break;
 
             case (strtolower(ProjectType::Drupal->name)):
@@ -76,9 +98,6 @@ final class CreateListOfFilesToGenerate
             return $next([$configurationData, $configurationDataDto, $filesToGenerate]);
         }
 
-        $isDocker = static::isDocker($configurationData);
-        $isFlake = static::isFlake($configurationData);
-
         if ($isDocker) {
             $filesToGenerate->push(new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'));
             $filesToGenerate->push(new TemplateFile(data: 'common/.hadolint.yaml', name: '.hadolint.yaml'));
@@ -118,13 +137,6 @@ final class CreateListOfFilesToGenerate
 
             if (Arr::has(array: $configurationData, keys: 'php.phpstan')) {
                 $filesToGenerate[] = new TemplateFile(data: 'php/phpstan.neon', name: 'phpstan.neon.dist');
-            }
-        }
-
-        if (static::isTypeScript(Arr::get($configurationData, 'language'))) {
-            if ($isDocker) {
-                $filesToGenerate[] = new TemplateFile(data: 'typescript/.yarnrc', name: '.yarnrc');
-                $filesToGenerate[] = new TemplateFile(data: 'typescript/Dockerfile', name: 'Dockerfile');
             }
         }
 
