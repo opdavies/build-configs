@@ -28,9 +28,9 @@ final class CreateListOfFilesToGenerate
         switch (strtolower($configurationDataDto->type)) {
             case (strtolower(ProjectType::Astro->name)):
                 $filesToGenerate = collect([
-                    ['astro/.envrc', '.envrc'],
-                    ['astro/flake.nix', 'flake.nix'],
-                    ['astro/tsconfig.json', 'tsconfig.json'],
+                    ['astro/typescript/.envrc', '.envrc'],
+                    ['astro/typescript/flake.nix', 'flake.nix'],
+                    ['astro/typescript/tsconfig.json', 'tsconfig.json'],
                 ])->map(function (array $file) {
                     return new TemplateFile(
                         data: $file[0],
