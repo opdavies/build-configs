@@ -28,17 +28,11 @@ final class CreateListOfFilesToGenerate
         switch (strtolower($configurationDataDto->type)) {
             case (strtolower(ProjectType::Astro->name)):
                 $filesToGenerate = collect([
-                    ['astro/.envrc', '.envrc'],
-                    ['astro/.gitignore', '.gitignore'],
-                    ['astro/flake.nix', 'flake.nix'],
-                    ['astro/tsconfig.json', 'tsconfig.json'],
-                ])->map(function (array $file) {
-                    return new TemplateFile(
-                        data: $file[0],
-                        name: $file[1],
-                        path: null,
-                    );
-                });
+                    new TemplateFile(data: 'astro/.envrc', name: '.envrc'),
+                    new TemplateFile(data: 'astro/.gitignore', name: '.gitignore'),
+                    new TemplateFile(data: 'astro/flake.nix', name: 'flake.nix'),
+                    new TemplateFile(data: 'astro/tsconfig.json', name: 'tsconfig.json'),
+                ]);
                 break;
 
             case (strtolower(ProjectType::Drupal->name)):
