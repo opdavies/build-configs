@@ -7,6 +7,7 @@ namespace App\Action;
 use App\DataTransferObject\Config;
 use App\DataTransferObject\TemplateFile;
 use App\Enum\Language;
+use App\Enum\ProjectType;
 use App\Enum\WebServer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -21,11 +22,31 @@ final class CreateListOfFilesToGenerate
          */
         [$configurationData, $configurationDataDto] = $configurationDataAndDto;
 
-        $isDocker = static::isDocker($configurationData);
-        $isFlake = static::isFlake($configurationData);
-
         /** @var Collection<int, TemplateFile> */
         $filesToGenerate = collect();
+
+        switch (strtolower($configurationDataDto->type)) {
+            case (strtolower(ProjectType::Astro->name)):
+                $filesToGenerate = collect([
+                    ['astro/.envrc', '.envrc'],
+                    ['astro/flake.nix', 'flake.nix'],
+                    ['astro/tsconfig.json', 'tsconfig.json'],
+                ])->map(function (array $file) {
+                    return new TemplateFile(
+                        data: $file[0],
+                        name: $file[1],
+                        path: null,
+                    );
+                });
+                break;
+        }
+
+        if ($filesToGenerate->isNotEmpty()) {
+            return $next([$configurationData, $configurationDataDto, $filesToGenerate]);
+        }
+
+        $isDocker = static::isDocker($configurationData);
+        $isFlake = static::isFlake($configurationData);
 
         if ($isDocker) {
             $filesToGenerate->push(new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'));
