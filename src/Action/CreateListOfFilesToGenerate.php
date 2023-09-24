@@ -91,6 +91,30 @@ final class CreateListOfFilesToGenerate
                     name: 'php.ini',
                     path: 'tools/docker/images/php/root/usr/local/etc/php',
                 ));
+
+                if (static::isCaddy(Arr::get($configurationData, 'web.type'))) {
+                    $filesToGenerate[] = new TemplateFile(
+                        data: 'drupal/caddy/Caddyfile',
+                        name: 'Caddyfile',
+                        path: 'tools/docker/images/web/root/etc/caddy',
+                    );
+                }
+
+                if (static::isNginx(Arr::get($configurationData, 'web.type'))) {
+                    $filesToGenerate[] = new TemplateFile(
+                        data: 'drupal/nginx/default.conf',
+                        name: 'default.conf',
+                        path: 'tools/docker/images/web/root/etc/nginx/conf.d',
+                    );
+                }
+
+                if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {
+                    $filesToGenerate[] = new TemplateFile(
+                        data: 'drupal/.github/workflows/ci.yml',
+                        name: 'ci.yml',
+                        path: '.github/workflows',
+                    );
+                }
                 break;
         }
 
@@ -117,52 +141,6 @@ final class CreateListOfFilesToGenerate
             $filesToGenerate[] = new TemplateFile(data: 'docker-compose.yaml', name: 'docker-compose.yaml');
         }
 
-        if (static::isPhp(Arr::get($configurationData, 'language'))) {
-            if ($isDocker) {
-                $filesToGenerate[] = new TemplateFile(data: 'php/Dockerfile', name: 'Dockerfile');
-            }
-
-            $filesToGenerate[] = new TemplateFile(data: 'php/phpcs.xml', name: 'phpcs.xml.dist');
-            $filesToGenerate[] = new TemplateFile(data: 'php/phpunit.xml', name: 'phpunit.xml.dist');
-            $filesToGenerate[] = new TemplateFile(
-                data: 'php/docker-entrypoint-php',
-                name: 'docker-entrypoint-php',
-                path: 'tools/docker/images/php/root/usr/local/bin',
-            );
-            $filesToGenerate[] = new TemplateFile(
-                data: 'php/php.ini',
-                name: 'php.ini',
-                path: 'tools/docker/images/php/root/usr/local/etc/php',
-            );
-
-            if (Arr::has(array: $configurationData, keys: 'php.phpstan')) {
-                $filesToGenerate[] = new TemplateFile(data: 'php/phpstan.neon', name: 'phpstan.neon.dist');
-            }
-        }
-
-        if (static::isCaddy(Arr::get($configurationData, 'web.type'))) {
-            $filesToGenerate[] = new TemplateFile(
-                data: 'web/caddy/Caddyfile',
-                name: 'Caddyfile',
-                path: 'tools/docker/images/web/root/etc/caddy',
-            );
-        }
-
-        if (static::isNginx(Arr::get($configurationData, 'web.type'))) {
-            $filesToGenerate[] = new TemplateFile(
-                data: 'web/nginx/default.conf',
-                name: 'default.conf',
-                path: 'tools/docker/images/web/root/etc/nginx/conf.d',
-            );
-        }
-
-        if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {
-            $filesToGenerate[] = new TemplateFile(
-                data: 'ci/github-actions/ci.yml',
-                name: 'ci.yml',
-                path: '.github/workflows',
-            );
-        }
 
         $filesToGenerate[] = new TemplateFile(
             data: 'git-hooks/prepare-commit-msg',
@@ -211,14 +189,5 @@ final class CreateListOfFilesToGenerate
         }
 
         return strtoupper($webServer) === WebServer::NGINX->name;
-    }
-
-    private static function isPhp(?string $language): bool
-    {
-        if (is_null($language)) {
-            return false;
-        }
-
-        return strtoupper($language) === Language::PHP->name;
     }
 }
