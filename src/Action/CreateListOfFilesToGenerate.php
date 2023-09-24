@@ -122,32 +122,37 @@ final class CreateListOfFilesToGenerate
             return $next([$configurationData, $configurationDataDto, $filesToGenerate]);
         }
 
+        // TODO: remove?
         if ($isDocker) {
             $filesToGenerate->push(new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'));
             $filesToGenerate->push(new TemplateFile(data: 'common/.hadolint.yaml', name: '.hadolint.yaml'));
             $filesToGenerate->push(new TemplateFile(data: 'env.example', name: '.env.example'));
         }
 
+        // TODO: remove?
         if ($isFlake) {
             $filesToGenerate->push(new TemplateFile(data: 'common/envrc', name: '.envrc'));
             $filesToGenerate->push(new TemplateFile(data: 'common/flake.nix', name: 'flake.nix'));
         }
 
+        // TODO: remove?
         if (false !== Arr::get($configurationData, "justfile", true)) {
             $filesToGenerate[] = new TemplateFile(data: 'justfile', name: 'justfile');
         }
 
+        // TODO: remove?
         if (isset($configurationData['dockerCompose']) && $configurationData['dockerCompose'] !== null) {
             $filesToGenerate[] = new TemplateFile(data: 'docker-compose.yaml', name: 'docker-compose.yaml');
         }
 
-
+        // TODO: re-add for each project type.
         $filesToGenerate[] = new TemplateFile(
             data: 'git-hooks/prepare-commit-msg',
             name: 'prepare-commit-msg',
             path: '.githooks',
         );
 
+        // TODO: re-add for each project type.
         if (Arr::get($configurationData, 'experimental.runGitHooksBeforePush', false) === true) {
             $filesToGenerate[] = new TemplateFile(
                 data: 'git-hooks/pre-push',
