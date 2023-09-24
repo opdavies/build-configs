@@ -1,4 +1,6 @@
 {
+    "name": "oliverdaviesltd/build-configs",
+    "description": "build-configs",
     "type": "project",
     "license": "proprietary",
     "require": {
