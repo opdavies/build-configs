@@ -6,7 +6,6 @@ namespace App\Action;
 
 use App\DataTransferObject\Config;
 use App\DataTransferObject\TemplateFile;
-use App\Enum\Language;
 use App\Enum\ProjectType;
 use App\Enum\WebServer;
 use Illuminate\Support\Arr;
@@ -45,14 +44,14 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'fractal/justfile', name: 'justfile'),
                 ]);
 
-                if (self::isDocker($configurationData)) {
+                if ($isDocker) {
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.env.example', name: '.env.example'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.dockerignore', name: '.dockerignore'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.hadolint.yaml', name: '.hadolint.yaml'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.yarnrc', name: '.yarnrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/Dockerfile', name: 'Dockerfile'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/docker-compose.yaml', name: 'docker-compose.yaml'));
-                } elseif (self::isFlake($configurationData)) {
+                } elseif ($isFlake) {
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.envrc', name: '.envrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/flake.nix', name: 'flake.nix'));
                 }
@@ -116,29 +115,6 @@ final class CreateListOfFilesToGenerate
                     );
                 }
                 break;
-        }
-
-        // TODO: remove?
-        if ($isDocker) {
-            $filesToGenerate->push(new TemplateFile(data: 'common/.dockerignore', name: '.dockerignore'));
-            $filesToGenerate->push(new TemplateFile(data: 'common/.hadolint.yaml', name: '.hadolint.yaml'));
-            $filesToGenerate->push(new TemplateFile(data: 'env.example', name: '.env.example'));
-        }
-
-        // TODO: remove?
-        if ($isFlake) {
-            $filesToGenerate->push(new TemplateFile(data: 'common/envrc', name: '.envrc'));
-            $filesToGenerate->push(new TemplateFile(data: 'common/flake.nix', name: 'flake.nix'));
-        }
-
-        // TODO: remove?
-        if (false !== Arr::get($configurationData, "justfile", true)) {
-            $filesToGenerate[] = new TemplateFile(data: 'justfile', name: 'justfile');
-        }
-
-        // TODO: remove?
-        if (isset($configurationData['dockerCompose']) && $configurationData['dockerCompose'] !== null) {
-            $filesToGenerate[] = new TemplateFile(data: 'docker-compose.yaml', name: 'docker-compose.yaml');
         }
 
         $filesToGenerate[] = new TemplateFile(
