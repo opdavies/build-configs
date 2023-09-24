@@ -1,0 +1,104 @@
+# {{ managedText|raw }}
+
+FROM php:{{ php.version }} AS base
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN which composer && composer -V
+
+ARG DOCKER_UID=1000
+ENV DOCKER_UID="${DOCKER_UID}"
+
+WORKDIR {{ project_root }}
+
+RUN adduser --disabled-password --uid "${DOCKER_UID}" app \
+  && chown app:app -R {{ project_root }}
+
+USER app
+
+ENV PATH="${PATH}:{{ project_root }}/bin:{{ project_root }}/vendor/bin"
+
+COPY --chown=app:app composer.* ./
+
+################################################################################
+
+FROM base AS build
+
+USER root
+
+{% if 'apache' in php.version %}
+RUN a2enmod rewrite
+{% endif %}
+
+{% if dockerfile.stages.build.packages %}
+RUN apt-get update -yqq \
+  && apt-get install -yqq --no-install-recommends \
+    {{ dockerfile.stages.build.packages | join(' ') }}
+{% endif %}
+
+RUN docker-php-ext-configure gd --with-jpeg
+
+{% if dockerfile.stages.build.extensions.install %}
+RUN docker-php-ext-install {{ dockerfile.stages.build.extensions.install | join(' ') }}
+{% endif %}
+
+COPY --chown=app:app phpunit.xml* ./
+
+{% if dockerfile.stages.build.extra_files %}
+COPY --chown=app:app {{ dockerfile.stages.build.extra_files | join(" ") }} ./
+{% endif %}
+{% for directory in dockerfile.stages.build.extra_directories %}
+COPY --chown=app:app {{ directory }} {{ directory }}
+{% endfor %}
+
+{% for command in dockerfile.stages.build.root_commands | default([]) %}
+RUN {{ command | raw }}
+{% endfor %}
+
+USER app
+
+{% for command in dockerfile.stages.build.commands %}
+RUN {{ command }}
+{% endfor %}
+
+COPY --chown=app:app tools/docker/images/php/root /
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-php"]
+CMD ["php-fpm"]
+
+{% if dockerfile.stages.test %}
+################################################################################
+
+FROM {{ dockerfile.stages.test.extends }} AS test
+
+COPY --chown=app:app . .
+
+RUN {% for command in dockerfile.stages.test.commands -%}
+{% if not loop.first %}  && {% endif %}
+{{ command }}
+{%- if not loop.last %} \{% endif %}
+
+{% endfor %}
+{% endif %}
+
+
+{% if web.type == "caddy" %}
+################################################################################
+
+FROM caddy:2 as web
+
+WORKDIR {{ project_root }}
+
+COPY tools/docker/images/web/root /
+{% endif %}
+
+{% if web.type == "nginx" %}
+################################################################################
+
+FROM nginx:1 as web
+
+EXPOSE 8080
+
+WORKDIR {{ project_root }}
+
+COPY tools/docker/images/web/root /
+{% endif %}

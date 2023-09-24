@@ -40,6 +40,40 @@ final class CreateListOfFilesToGenerate
                     );
                 });
                 break;
+
+            case (strtolower(ProjectType::Drupal->name)):
+                $filesToGenerate = collect([
+                    new TemplateFile(data: 'drupal/.dockerignore', name: '.dockerignore'),
+                    new TemplateFile(data: 'drupal/.env.example', name: '.env.example'),
+                    new TemplateFile(data: 'drupal/.gitignore', name: '.gitignore'),
+                    new TemplateFile(data: 'drupal/.hadolint.yaml', name: '.hadolint.yaml'),
+                    new TemplateFile(data: 'drupal/Dockerfile', name: 'Dockerfile'),
+                    new TemplateFile(data: 'drupal/docker-compose.yaml', name: 'docker-compose.yaml'),
+                ]);
+
+                $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
+                if (count($extraDatabases) > 0) {
+                   $filesToGenerate->push(new TemplateFile(
+                        data: 'drupal/extra-databases.sql',
+                        name: 'extra-databases.sql',
+                        path: 'tools/docker/images/database/root/docker-entrypoint-initdb.d',
+                    ));
+                }
+
+                $filesToGenerate->push(new TemplateFile(data: 'drupal/phpcs.xml.dist', name: 'phpcs.xml.dist'));
+                $filesToGenerate->push(new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist'));
+                $filesToGenerate->push(new TemplateFile(
+                    data: 'drupal/docker-entrypoint-php',
+                    name: 'docker-entrypoint-php',
+                    path: 'tools/docker/images/php/root/usr/local/bin',
+                ));
+
+                $filesToGenerate->push(new TemplateFile(
+                    data: 'drupal/php.ini',
+                    name: 'php.ini',
+                    path: 'tools/docker/images/php/root/usr/local/etc/php',
+                ));
+                break;
         }
 
         if ($filesToGenerate->isNotEmpty()) {
@@ -58,15 +92,6 @@ final class CreateListOfFilesToGenerate
         if ($isFlake) {
             $filesToGenerate->push(new TemplateFile(data: 'common/envrc', name: '.envrc'));
             $filesToGenerate->push(new TemplateFile(data: 'common/flake.nix', name: 'flake.nix'));
-        }
-
-        $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
-        if (count($extraDatabases) > 0) {
-            $filesToGenerate[] = new TemplateFile(
-                data: 'extra-databases.sql',
-                name: 'extra-databases.sql',
-                path: 'tools/docker/images/database/root/docker-entrypoint-initdb.d',
-            );
         }
 
         if (false !== Arr::get($configurationData, "justfile", true)) {

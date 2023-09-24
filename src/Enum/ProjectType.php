@@ -7,4 +7,5 @@ namespace App\Enum;
 enum ProjectType
 {
     case Astro;
+    case Drupal;
 }
