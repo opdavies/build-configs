@@ -1,4 +1,4 @@
-{% new TemplateFilefor database in database.extra_databases %}
+{% for database in database.extra_databases %}
 CREATE DATABASE {{ database }};
 GRANT ALL PRIVILEGES ON {{ database }}.* TO drupal@'%' IDENTIFIED BY 'drupal';
 
