@@ -1,5 +1,6 @@
-/build-configs
 /**/vendor/
+/.direnv
+/build-configs
 
 ###> symfony/framework-bundle ###
 /.env.local
