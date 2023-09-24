@@ -142,11 +142,6 @@ final class CreateListOfFilesToGenerate
             );
         }
 
-        if ('drupal' === Arr::get($configurationData, 'type')) {
-            // Add a Drupal version of phpunit.xml.dist.
-            $filesToGenerate[] = new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist');
-        }
-
         if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {
             $filesToGenerate[] = new TemplateFile(
                 data: 'ci/github-actions/ci.yml',
