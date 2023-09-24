@@ -47,7 +47,7 @@ final class CreateListOfFilesToGenerate
 
                 $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
                 if (count($extraDatabases) > 0) {
-                   $filesToGenerate->push(new TemplateFile(
+                    $filesToGenerate->push(new TemplateFile(
                         data: 'drupal/extra-databases.sql',
                         name: 'extra-databases.sql',
                         path: 'tools/docker/images/database/root/docker-entrypoint-initdb.d',
