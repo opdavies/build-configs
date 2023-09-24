@@ -6,6 +6,6 @@ namespace App\Enum;
 
 enum Language
 {
-    case NODE;
     case PHP;
+    case TYPESCRIPT;
 }

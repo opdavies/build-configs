@@ -78,10 +78,10 @@ final class CreateListOfFilesToGenerate
             }
         }
 
-        if (static::isNode(Arr::get($configurationData, 'language'))) {
+        if (static::isTypeScript(Arr::get($configurationData, 'language'))) {
             if ($isDocker) {
-                $filesToGenerate[] = new TemplateFile(data: 'node/.yarnrc', name: '.yarnrc');
-                $filesToGenerate[] = new TemplateFile(data: 'node/Dockerfile', name: 'Dockerfile');
+                $filesToGenerate[] = new TemplateFile(data: 'typescript/.yarnrc', name: '.yarnrc');
+                $filesToGenerate[] = new TemplateFile(data: 'typescript/Dockerfile', name: 'Dockerfile');
             }
         }
 
@@ -163,13 +163,13 @@ final class CreateListOfFilesToGenerate
         return strtoupper($webServer) === WebServer::NGINX->name;
     }
 
-    private static function isNode(?string $language): bool
+    private static function isTypeScript(?string $language): bool
     {
         if (is_null($language)) {
             return false;
         }
 
-        return strtoupper($language) === Language::NODE->name;
+        return strtoupper($language) === Language::TYPESCRIPT->name;
     }
 
     private static function isPhp(?string $language): bool
