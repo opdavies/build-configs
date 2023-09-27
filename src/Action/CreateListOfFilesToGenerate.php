@@ -115,6 +115,13 @@ final class CreateListOfFilesToGenerate
                     );
                 }
                 break;
+
+            case (strtolower(ProjectType::Terraform->name)):
+                $filesToGenerate = collect([
+                    new TemplateFile(data: 'terraform/.gitignore', name: '.gitignore'),
+                    new TemplateFile(data: 'terraform/justfile', name: 'justfile'),
+                ]);
+                break;
         }
 
         $filesToGenerate[] = new TemplateFile(

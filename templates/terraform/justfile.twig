@@ -1,0 +1,25 @@
+# {{ managedText|raw }}
+
+default:
+  @just --list
+
+# Enable or disable Git hooks
+git-hooks command:
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  case "{{ '{{ command }}'|raw }}" in
+    "on")
+      echo "Enabling Git hooks..."
+      git config core.hooksPath .githooks
+      ;;
+    "off")
+      echo "Disabling Git hooks..."
+      git config --unset core.hooksPath
+      ;;
+    *)
+      echo "Error: Invalid argument. Must be either 'on' or 'off'"
+      ;;
+  esac
+
+# vim: ft=just
