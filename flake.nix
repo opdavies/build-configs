@@ -10,22 +10,10 @@
           buildInputs = with pkgs; [ php82 php82Packages.composer ];
         };
 
-        packages.default = pkgs.stdenv.mkDerivation {
-          name = "build-configs2";
-          src = ".";
-
-          # buildPhase = ''
-          #   echo "build"
-          #   ls
-          # '';
-
-          installPhase = ''
-            touch $out
-            # mkdir $out
-            # cp bin vendor $out
-            # ls "$out"
-          '';
-        };
+        packages.default = pkgs.runCommand "default" { src = "./."; } ''
+          mkdir -p $out
+          cp ./build-configs $out
+        '';
       };
     };
 }

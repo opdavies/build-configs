@@ -1,14 +1,29 @@
 {
     "output": "build-configs",
-    "files-bin": [
-        ".env.local.php",
+    "files": [
+        ".env",
         "autoload_runtime.template",
-        "src/Controller/.gitignore"
+        "src/Controller/.gitignore",
+        "templates/fractal/.dockerignore.twig",
+        "templates/fractal/.env.example.twig",
+        "templates/fractal/.envrc.twig",
+        "templates/fractal/.yarnrc.twig",
+        "templates/fractal/.hadolint.yaml.twig",
+        "templates/fractal/.gitignore.twig",
+        "templates/drupal/.dockerignore.twig",
+        "templates/drupal/.env.example.twig",
+        "templates/drupal/.hadolint.yaml.twig",
+        "templates/drupal/.gitignore.twig",
+        "templates/terraform/.gitignore.twig",
+        "templates/astro/.envrc.twig",
+        "templates/astro/.gitignore.twig"
     ],
     "directories": [
         "config",
-        "public",
         "resources",
+        "templates",
+        "templates/common/.githooks",
+        "templates/drupal/.github",
         "var"
     ],
     "force-autodiscovery": true,
