@@ -66,6 +66,7 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'drupal/Dockerfile', name: 'Dockerfile'),
                     new TemplateFile(data: 'drupal/docker-compose.yaml', name: 'docker-compose.yaml'),
                     new TemplateFile(data: 'drupal/justfile', name: 'justfile'),
+                    new TemplateFile(data: 'drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'),
                 ]);
 
                 $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
