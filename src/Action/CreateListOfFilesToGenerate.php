@@ -33,7 +33,7 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'astro/.envrc', name: '.envrc'),
                     new TemplateFile(data: 'astro/.gitignore', name: '.gitignore'),
                     new TemplateFile(data: 'astro/flake.nix', name: 'flake.nix'),
-                    new TemplateFile(data: 'astro/justfile', name: 'justfile'),
+                    new TemplateFile(data: 'astro/run', name: 'run'),
                     new TemplateFile(data: 'astro/tsconfig.json', name: 'tsconfig.json'),
                 ]);
                 break;
@@ -41,7 +41,7 @@ final class CreateListOfFilesToGenerate
             case (strtolower(ProjectType::Fractal->name)):
                 $filesToGenerate = collect([
                     new TemplateFile(data: 'fractal/.gitignore', name: '.gitignore'),
-                    new TemplateFile(data: 'fractal/justfile', name: 'justfile'),
+                    new TemplateFile(data: 'fractal/run', name: 'run'),
                 ]);
 
                 if ($isDocker) {
@@ -55,6 +55,14 @@ final class CreateListOfFilesToGenerate
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.envrc', name: '.envrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/flake.nix', name: 'flake.nix'));
                 }
+
+                if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {
+                    $filesToGenerate[] = new TemplateFile(
+                        data: 'fractal/.github/workflows/ci.yml',
+                        name: 'ci.yml',
+                        path: '.github/workflows',
+                    );
+                }
                 break;
 
             case (strtolower(ProjectType::Drupal->name)):
@@ -65,8 +73,8 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'drupal/.hadolint.yaml', name: '.hadolint.yaml'),
                     new TemplateFile(data: 'drupal/Dockerfile', name: 'Dockerfile'),
                     new TemplateFile(data: 'drupal/docker-compose.yaml', name: 'docker-compose.yaml'),
-                    new TemplateFile(data: 'drupal/justfile', name: 'justfile'),
                     new TemplateFile(data: 'drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'),
+                    new TemplateFile(data: 'drupal/run', name: 'run'),
                 ]);
 
                 $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
@@ -120,7 +128,7 @@ final class CreateListOfFilesToGenerate
             case (strtolower(ProjectType::Terraform->name)):
                 $filesToGenerate = collect([
                     new TemplateFile(data: 'terraform/.gitignore', name: '.gitignore'),
-                    new TemplateFile(data: 'terraform/justfile', name: 'justfile'),
+                    new TemplateFile(data: 'terraform/run', name: 'run'),
                 ]);
                 break;
         }

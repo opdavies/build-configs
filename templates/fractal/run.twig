@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+# {{ managedText | raw }}
+
+set -eu
+
+{% set isFlake = flake is defined %}
+
+PATH="$PATH:./node_modules/.bin"
+
+{% if not isFlake %}
+# If we're running in CI we need to disable TTY allocation for docker compose
+# commands that enable it by default, such as exec and run.
+TTY="${TTY:-}"
+if [[ ! -t 1 ]]; then
+  TTY="-T"
+fi
+{% endif %}
+
+# Remove and generated or temporary files.
+function build {
+  fractal build "${@}"
+}
+
+function ci:build {
+  build
+}
+
+# Remove and generated or temporary files.
+function clean {
+  rm -fr build node_modules
+  touch build/.keep
+}
+
+# Disable Git hooks.
+function git-hooks:off {
+  git config --unset core.hooksPath
+}
+
+# Enable Git hooks.
+function git-hooks:on {
+  git config core.hooksPath .githooks
+}
+
+# Create a new Fractal component.
+function fractal:new {
+  mkdir -p "components/${1}"
+
+  echo "name: ${1}" > "components/${1}/${1}.config.yml"
+  echo "${1}" > "components/${1}/${1}.twig"
+}
+
+# Display a list of all available commands.
+function help {
+  printf "%s <task> [args]\n\nTasks:\n" "${0}"
+
+  compgen -A function | grep -v "^_" | cat -n
+
+  printf "\nExtended help:\n  Each task has comments for general usage\n"
+}
+
+# Start the project.
+function start {
+  {% if not isFlake %}
+    cp -v --no-clobber .env.example .env
+    docker compose up -d
+  {% else %}
+    fractal start --sync
+  {% endif %}
+}
+
+function sync {
+  clean
+  fractal build
+
+  aws s3 sync "build/." s3://"${BUCKET_NAME}" \
+    --acl "public-read" \
+    --cache-control max-age=3600
+}
+
+{% if not isFlake %}
+# Run a command within the node container.
+function cmd {
+  docker compose exec node yarn "${@}"
+}
+
+# Stop the project
+function stop {
+  docker compose down
+}
+
+# Execute yarn commands.
+function yarn {
+  cmd node yarn "${@}"
+}
+
+function _run {
+  local service="${1}"
+  local command="${2}"
+
+  docker compose run \
+    --entrypoint "${command}" \
+    --no-deps \
+    --rm \
+    -T \
+    "${service}" "${@}"
+}
+{% endif %}
+
+TIMEFORMAT=$'\nTask completed in %3lR'
+time "${@:-help}"
+
+# vim: ft=bash
