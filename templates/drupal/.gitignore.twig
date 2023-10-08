@@ -34,3 +34,8 @@ vendor/
 {{ drupal.docroot }}/themes/contrib/
 {{ drupal.docroot }}/update.php
 {{ drupal.docroot }}/web.config
+
+{% if flake is not defined %}
+.env
+docker-compose.override.yaml
+{% endif %}
