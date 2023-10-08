@@ -4,11 +4,12 @@
 
 set -eu
 
+{% set isDocker = flake is not defined %}
 {% set isFlake = flake is defined %}
 
 PATH="$PATH:./node_modules/.bin"
 
-{% if not isFlake %}
+{% if isDocker %}
 # If we're running in CI we need to disable TTY allocation for docker compose
 # commands that enable it by default, such as exec and run.
 TTY="${TTY:-}"
@@ -19,10 +20,18 @@ fi
 
 # Remove and generated or temporary files.
 function build {
+{% if isDocker %}
   cmd fractal build "${@}"
+{% if not isFlake %}
+  fractal build "${@}"
+{% endif %}
 }
 
 function ci:build {
+{% if isDocker %}
+  docker compose up -d
+{% endif %}
+
   build
 }
 
