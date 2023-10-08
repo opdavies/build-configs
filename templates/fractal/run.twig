@@ -29,6 +29,10 @@ function build {
 
 function ci:build {
 {% if isDocker %}
+  cp -v --no-clobber .env.example .env
+
+  docker network create traefik_proxy || true
+
   docker compose up -d
 {% endif %}
 
