@@ -36,6 +36,7 @@ vendor/
 {{ drupal.docroot }}/web.config
 
 {% if flake is not defined %}
+# Docker.
 .env
 docker-compose.override.yaml
 {% endif %}
