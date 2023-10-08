@@ -32,7 +32,9 @@ RUN a2enmod rewrite
 {% if dockerfile.stages.build.packages %}
 RUN apt-get update -yqq \
   && apt-get install -yqq --no-install-recommends \
-    {{ dockerfile.stages.build.packages | join(' ') }}
+    {{ dockerfile.stages.build.packages | join(' ') }} \
+  && rm -rf /var/lib/apt/lists/* /usr/share/doc /usr/share/man \
+  && apt-get clean
 {% endif %}
 
 RUN docker-php-ext-configure gd --with-jpeg
