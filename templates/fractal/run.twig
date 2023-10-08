@@ -22,7 +22,7 @@ fi
 function build {
 {% if isDocker %}
   cmd fractal build "${@}"
-{% if not isFlake %}
+{% else %}
   fractal build "${@}"
 {% endif %}
 }
