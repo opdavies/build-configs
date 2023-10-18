@@ -40,3 +40,7 @@ vendor/
 .env
 docker-compose.override.yaml
 {% endif %}
+
+{% for path in git.ignore %}
+{{ path }}
+{% endfor %}

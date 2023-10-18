@@ -60,5 +60,19 @@ final class Config
     #[Assert\NotBlank]
     public ?string $projectRoot;
 
+    #[Assert\Collection(
+        allowExtraFields: false,
+        fields: [
+            'ignore' => new Assert\Optional([
+                new Assert\Type('array'),
+                new Assert\Count(['min' => 1]),
+                new Assert\All([
+                    new Assert\Type('string'),
+                ])
+            ])
+        ]
+    )]
+    public array $git;
+
     public array $php;
 }
