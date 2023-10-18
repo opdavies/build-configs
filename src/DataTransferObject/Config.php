@@ -59,4 +59,6 @@ final class Config
 
     #[Assert\NotBlank]
     public ?string $projectRoot;
+
+    public array $php;
 }

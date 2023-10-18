@@ -21,9 +21,13 @@ function ci:test {
 
   composer install --quiet --no-progress
 
+{% if not php.phpcs is same as false %}
   test --testdox
+{% endif %}
 
+{% if not php.phpcs is same as false and not php.phpstan is same as false %}
   quality
+{% endif %}
 }
 
 # Run a command within the php container.
@@ -31,9 +35,11 @@ function cmd {
   docker compose exec php "${@}"
 }
 
+{% if not php.phpcs is same as false %}
 function coding-standards {
   cmd phpcs "${@}"
 }
+{% endif %}
 
 function composer {
   _exec php composer "${@}"
@@ -65,10 +71,16 @@ function lint:dockerfile {
     hadolint/hadolint hadolint --ignore DL3008 --ignore DL3059 -t style "${@}" - < Dockerfile
 }
 
+{% if not php.phpcs is same as false and not php.phpstan is same as false %}
 function quality {
+{% if not php.phpcs is same as false %}
   coding-standards
+{% endif %}
+{% if not php.phpstan is same as false %}
   static-analysis
+{% endif %}
 }
+{% endif %}
 
 function start {
   cp -v --no-clobber .env.example .env
@@ -76,22 +88,28 @@ function start {
   docker compose up -d
 }
 
+{% if not php.phpstan is same as false %}
 function static-analysis {
   cmd phpstan --memory-limit=-1 --no-progress "${@}"
 }
+{% endif %}
 
 function stop {
   docker compose down
 }
 
+{% if not php.phpunit is same as false %}
 function test {
   _exec php phpunit --colors=always "${@}"
 }
+{% endif %}
 
 function test:commit {
+{% if not php.phpunit is same as false %}
   test --testdox --testsuite functional
   test --testdox --testsuite kernel
   test --testdox --testsuite unit
+{% endif %}
 
   quality
 }

@@ -73,7 +73,6 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'drupal/.hadolint.yaml', name: '.hadolint.yaml'),
                     new TemplateFile(data: 'drupal/Dockerfile', name: 'Dockerfile'),
                     new TemplateFile(data: 'drupal/docker-compose.yaml', name: 'docker-compose.yaml'),
-                    new TemplateFile(data: 'drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'),
                     new TemplateFile(data: 'drupal/run', name: 'run'),
                 ]);
 
@@ -86,8 +85,18 @@ final class CreateListOfFilesToGenerate
                     ));
                 }
 
-                $filesToGenerate->push(new TemplateFile(data: 'drupal/phpcs.xml.dist', name: 'phpcs.xml.dist'));
-                $filesToGenerate->push(new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist'));
+                if ($configurationDataDto->php['phpcs'] !== false) {
+                    $filesToGenerate->push(new TemplateFile(data: 'drupal/phpcs.xml.dist', name: 'phpcs.xml.dist'));
+                }
+
+                if ($configurationDataDto->php['phpstan'] !== false) {
+                    $filesToGenerate->push(new TemplateFile(data: 'drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'));
+                }
+
+                if ($configurationDataDto->php['phpunit'] !== false) {
+                    $filesToGenerate->push(new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist'));
+                }
+
                 $filesToGenerate->push(new TemplateFile(
                     data: 'drupal/docker-entrypoint-php',
                     name: 'docker-entrypoint-php',
