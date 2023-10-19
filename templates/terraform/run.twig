@@ -4,6 +4,9 @@
 
 set -eu
 
+# Include any local tasks.
+source run.local || true
+
 # Disable Git hooks.
 function git-hooks:off {
   git config --unset core.hooksPath

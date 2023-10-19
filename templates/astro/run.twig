@@ -8,6 +8,9 @@ set -eu
 
 PATH="$PATH:./node_modules/.bin"
 
+# Include any local tasks.
+source run.local || true
+
 {% if not isFlake %}
 # If we're running in CI we need to disable TTY allocation for docker compose
 # commands that enable it by default, such as exec and run.

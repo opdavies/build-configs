@@ -4,6 +4,9 @@
 
 set -eu
 
+# Include any local tasks.
+source run.local || true
+
 # Run automated tests as part of the Continuous Integration (CI) pipeline.
 function ci:test {
   lint:dockerfile
