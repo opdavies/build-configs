@@ -4,9 +4,6 @@
 
 set -eu
 
-# Include any local tasks.
-source run.local || true
-
 # Run automated tests as part of the Continuous Integration (CI) pipeline.
 function ci:test {
   lint:dockerfile
@@ -132,6 +129,9 @@ function _run {
     -T \
     "${service}" "${@}"
 }
+
+# Include any local tasks.
+source run.local || true
 
 TIMEFORMAT=$'\nTask completed in %3lR'
 time "${@:-help}"
