@@ -41,6 +41,10 @@ vendor/
 docker-compose.override.yaml
 {% endif %}
 
+{% if flake is defined %}
+.dir-env/
+{% endif %}
+
 {% for path in git.ignore %}
 {{ path }}
 {% endfor %}

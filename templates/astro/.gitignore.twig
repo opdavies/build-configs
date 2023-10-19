@@ -11,6 +11,10 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+{% if flake is defined %}
+.dir-env/
+{% endif %}
+
 {% for path in git.ignore %}
 {{ path }}
 {% endfor %}

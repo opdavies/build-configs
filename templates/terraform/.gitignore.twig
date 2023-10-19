@@ -44,6 +44,10 @@ terraform.rc
 
 # End of https://www.toptal.com/developers/gitignore/api/terraform
 
+{% if flake is defined %}
+.dir-env/
+{% endif %}
+
 {% for path in git.ignore %}
 {{ path }}
 {% endfor %}
