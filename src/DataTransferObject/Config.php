@@ -49,16 +49,12 @@ final class Config
     #[Assert\Choice(choices: ['javascript', 'php', 'typescript'])]
     public string $language;
 
-    #[Assert\Length(min: 1)]
     #[Assert\NotBlank]
     public string $name;
 
     #[Assert\Choice(choices: ['astro', 'drupal', 'fractal', 'laravel', 'php-library', 'terraform', 'vuejs'])]
     #[Assert\NotBlank]
     public string $type;
-
-    #[Assert\NotBlank]
-    public ?string $projectRoot;
 
     #[Assert\Collection(
         allowExtraFields: false,
