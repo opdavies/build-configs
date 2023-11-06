@@ -32,6 +32,11 @@ function build {
   # TODO: build a Nix derivation and add it to the store.
 }
 
+function ci:test {
+  nix develop --command composer install
+  nix develop --command phpunit
+}
+
 # Display a list of all available commands.
 function help {
   printf "%s <task> [args]\n\nTasks:\n" "${0}"
