@@ -104,7 +104,7 @@ function _run {
 {% endif %}
 
 # Include any local tasks.
-source run.local || true
+[[ -e run.local ]] && source run.local
 
 TIMEFORMAT=$'\nTask completed in %3lR'
 time "${@:-help}"
