@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\DataTransferObject\Config;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
@@ -32,6 +33,10 @@ class ConfigurationValidatorTest extends KernelTestCase
      */
     public function testTheProjectNameShouldBeAString(mixed $projectName, int $expectedViolationCount): void
     {
+        if ($projectName === NULL) {
+            self::expectException(NotNormalizableValueException::class);
+        }
+
         $configurationData = [
             'language' => 'php',
             'name' => $projectName,
@@ -53,6 +58,10 @@ class ConfigurationValidatorTest extends KernelTestCase
      */
     public function testTheProjectLanguageShouldBeASupportedLanguage(mixed $language, int $expectedViolationCount): void
     {
+        if ($language === NULL) {
+            self::expectException(NotNormalizableValueException::class);
+        }
+
         $configurationData = [
             'language' => $language,
             'name' => 'test',
@@ -78,7 +87,7 @@ class ConfigurationValidatorTest extends KernelTestCase
             yield 'True' => [true, 1],
             yield 'False' => [false, 1],
             // yield 'Integer' => [1, 2],
-            // yield 'Null' => [null, 1],
+            yield 'Null' => [null, 1],
         ];
     }
 
@@ -88,7 +97,7 @@ class ConfigurationValidatorTest extends KernelTestCase
             yield 'Non-empty string' => ['test', 0],
             yield 'Empty string' => ['', 1],
             yield 'False' => [false, 1],
-            // yield 'Null' => [null, 1],
+            yield 'Null' => [null, 1],
         ];
     }
 
