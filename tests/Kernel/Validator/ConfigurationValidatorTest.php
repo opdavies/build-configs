@@ -29,9 +29,8 @@ class ConfigurationValidatorTest extends KernelTestCase
 
     /**
      * @dataProvider projectNameProvider
-     * @test
      */
-    public function project_name_should_be_a_string(string|int|bool|null $projectName, int $expectedViolationCount): void
+    public function testTheProjectNameShouldBeAString(mixed $projectName, int $expectedViolationCount): void
     {
         $configurationData = [
             'language' => 'php',
@@ -51,9 +50,8 @@ class ConfigurationValidatorTest extends KernelTestCase
 
     /**
      * @dataProvider projectLanguageProvider
-     * @test
      */
-    public function the_project_language_should_be_a_supported_language(string|int|bool|null $language, int $expectedViolationCount): void
+    public function testTheProjectLanguageShouldBeASupportedLanguage(mixed $language, int $expectedViolationCount): void
     {
         $configurationData = [
             'language' => $language,
