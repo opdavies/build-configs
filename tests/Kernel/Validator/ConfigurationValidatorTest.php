@@ -33,7 +33,7 @@ class ConfigurationValidatorTest extends KernelTestCase
      */
     public function testTheProjectNameShouldBeAString(mixed $projectName, int $expectedViolationCount): void
     {
-        if ($projectName === NULL) {
+        if ($projectName === null) {
             self::expectException(NotNormalizableValueException::class);
         }
 
@@ -58,7 +58,7 @@ class ConfigurationValidatorTest extends KernelTestCase
      */
     public function testTheProjectLanguageShouldBeASupportedLanguage(mixed $language, int $expectedViolationCount): void
     {
-        if ($language === NULL) {
+        if ($language === null) {
             self::expectException(NotNormalizableValueException::class);
         }
 
