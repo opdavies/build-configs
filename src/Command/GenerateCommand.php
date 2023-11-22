@@ -8,6 +8,7 @@ use App\Action\CreateFinalConfigurationData;
 use App\Action\CreateListOfFilesToGenerate;
 use App\Action\GenerateConfigurationFiles;
 use App\Action\ValidateConfigurationData;
+use App\DataTransferObject\Config;
 use App\DataTransferObject\TemplateFile;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
@@ -91,12 +92,12 @@ class GenerateCommand extends Command
         return Command::SUCCESS;
     }
 
-    private static function buildFilePath(TemplateFile $templateFile): string
+    protected static function buildFilePath(TemplateFile $templateFile): string
     {
         return collect([$templateFile->path, $templateFile->name])->filter()->implode('/');
     }
 
-    private static function getListOfFiles(Collection $filesToGenerate): Collection
+    protected static function getListOfFiles(Collection $filesToGenerate): Collection
     {
         return $filesToGenerate
             ->map(fn (TemplateFile $templateFile): string => static::buildFilePath($templateFile))
