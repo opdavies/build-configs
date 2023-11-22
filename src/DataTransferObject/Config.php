@@ -13,6 +13,12 @@ final class Config
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
+            'extra_databases' => new Assert\Optional([
+                new Assert\Type('array'),
+                new Assert\All([
+                    new Assert\Type('string'),
+                ]),
+            ]),
             'type' => new Assert\Required([
                 new Assert\Choice(choices: ['mariadb', 'mysql']),
                 new Assert\Type('string'),
@@ -50,6 +56,12 @@ final class Config
                 new Assert\All([
                     new Assert\Collection([
                         'commands' => new Assert\Optional([
+                            new Assert\Type('array'),
+                            new Assert\All([
+                                new Assert\Type('string'),
+                            ]),
+                        ]),
+                        'extra_directories' => new Assert\Optional([
                             new Assert\Type('array'),
                             new Assert\All([
                                 new Assert\Type('string'),
@@ -161,13 +173,8 @@ final class Config
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
-            'type' => new Assert\Required([
-                new Assert\Type('array'),
-                new Assert\Collection([
-                    'type' => new Assert\Required([
-                        new Assert\Type('string'),
-                    ]),
-                ]),
+            'version' => new Assert\Required([
+                new Assert\Type('string'),
             ]),
         ],
     )]
@@ -182,37 +189,53 @@ final class Config
                 new Assert\Type('string'),
             ]),
             'phpcs' => new Assert\Optional([
-                new Assert\Collection([
-                    'paths' => new Assert\Required([
-                        new Assert\Type('array'),
-                        new Assert\Count(['min' => 1]),
-                        new Assert\All([
-                            new Assert\Type('string'),
+                new Assert\AtLeastOneOf(
+                    constraints: [
+                        new Assert\IsFalse(),
+                        new Assert\Collection([
+                            'paths' => new Assert\Required([
+                                new Assert\Type('array'),
+                                new Assert\Count(['min' => 1]),
+                                new Assert\All([
+                                    new Assert\Type('string'),
+                                ]),
+                            ]),
+                            'standards' => new Assert\Required([
+                                new Assert\Type('array'),
+                                new Assert\Count(['min' => 1]),
+                                new Assert\All([
+                                    new Assert\Type('string'),
+                                ]),
+                            ]),
                         ]),
-                    ]),
-                    'standards' => new Assert\Required([
-                        new Assert\Type('array'),
-                        new Assert\Count(['min' => 1]),
-                        new Assert\All([
-                            new Assert\Type('string'),
-                        ]),
-                    ]),
-                ]),
+                    ]
+                ),
             ]),
-            'phpstan' => new Assert\Optional([
-                new Assert\Collection([
-                    'level' => new Assert\Required([
-                        new Assert\Type(['string', 'integer']),
-                    ]),
-                    'paths' => new Assert\Required([
-                        new Assert\Type('array'),
-                        new Assert\Count(['min' => 1]),
-                        new Assert\All([
-                            new Assert\Type('string'),
+            'phpstan' => new Assert\Optional(
+                new Assert\AtLeastOneOf(
+                    constraints: [
+                        new Assert\IsFalse(),
+                        new Assert\Collection([
+                            'baseline' => new Assert\Optional([
+                                new Assert\Type('boolean'),
+                            ]),
+                            'level' => new Assert\Required([
+                                new Assert\Type(['string', 'integer']),
+                            ]),
+                            'paths' => new Assert\Required([
+                                new Assert\Type('array'),
+                                new Assert\Count(['min' => 1]),
+                                new Assert\All([
+                                    new Assert\Type('string'),
+                                ]),
+                            ]),
                         ]),
-                    ]),
-                ]),
-            ]),
+                    ]
+                ),
+            ),
+            'phpunit' => new Assert\Optional(
+                new Assert\IsFalse(),
+            ),
         ],
     )]
     public array $php;
