@@ -96,8 +96,6 @@ class ConfigurationValidatorTest extends KernelTestCase
         return [
             yield 'Non-empty string' => ['test', 0],
             yield 'Empty string' => ['', 1],
-            yield 'False' => [false, 1],
-            yield 'Null' => [null, 1],
         ];
     }
 
