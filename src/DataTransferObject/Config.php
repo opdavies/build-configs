@@ -109,6 +109,7 @@ final class Config
             'runGitHooksBeforePush' => new Assert\Optional([
                 new Assert\Type('bool'),
             ]),
+            // TODO: remove this when its been removed from all `build.yaml` files.
             'useNewDatabaseCredentials' => new Assert\Optional([
                 new Assert\Type('bool'),
             ]),

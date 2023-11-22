@@ -16,3 +16,4 @@
 * `App\Enum\Webserver` now returns a string.
 * `ConfigurationValidatorTest` no longer performs serialisation.
 * Use `set -o errexit` and `set -o pipefail` in `run` scripts instead of `set -eu`.
+* Use new database credentials by default.

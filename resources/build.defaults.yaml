@@ -2,6 +2,6 @@ drupal:
   docroot: web
 
 experimental:
-  useNewDatabaseCredentials: false
+  useNewDatabaseCredentials: true
 
 project_root: /app
