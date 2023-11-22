@@ -2,7 +2,8 @@
 
 # {{ managedText | raw }}
 
-set -eu
+set -o errexit
+set -o pipefail
 
 # Run automated tests as part of the Continuous Integration (CI) pipeline.
 function ci:test {

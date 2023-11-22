@@ -2,7 +2,8 @@
 
 # {{ managedText | raw }}
 
-set -eu
+set -o errexit
+set -o pipefail
 
 {% set isDocker = flake is not defined %}
 {% set isFlake = flake is defined %}
