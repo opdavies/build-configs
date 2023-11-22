@@ -42,5 +42,10 @@ function help {
   printf "\nExtended help:\n  Each task has comments for general usage\n"
 }
 
+
+function test {
+  phpunit "${@}"
+}
+
 TIMEFORMAT=$'\nTask completed in %3lR'
 time "${@:-help}"
