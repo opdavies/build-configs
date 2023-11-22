@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\DataTransferObject\Config;
+use App\Enum\WebServer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
@@ -78,6 +79,38 @@ class ConfigurationValidatorTest extends KernelTestCase
         );
     }
 
+    /**
+     * @dataProvider validWebServerTypesProvider
+     */
+    public function testTheWebServerTypeIsValid(
+        string $webServer,
+        int $expectedViolationCount,
+    ): void
+    {
+        $configurationData = [
+            'language' => 'php',
+            'name' => 'test',
+            'type' => 'drupal',
+            'web' => ['type' => $webServer],
+        ];
+
+        $configurationDataDto = $this->createConfigurationDTO($configurationData);
+
+        $violations = $this->validator->validate($configurationDataDto);
+
+        self::assertCount(
+            expectedCount: $expectedViolationCount,
+            haystack: $violations,
+        );
+
+        if ($expectedViolationCount > 0) {
+            self::assertSame(
+                actual: $webServer,
+                expected: $violations[0]->getInvalidValue(),
+            );
+        }
+    }
+
     public function projectLanguageProvider(): \Generator
     {
         return [
@@ -102,5 +135,14 @@ class ConfigurationValidatorTest extends KernelTestCase
     private function createConfigurationDTO(array $configurationData): Config
     {
         return $this->serializer->deserialize(json_encode($configurationData), Config::class, 'json');
+    }
+
+    public function validWebServerTypesProvider(): \Generator
+    {
+        return [
+            yield 'caddy' => [WebServer::Caddy->value, 0],
+            yield 'invalid' => ['not-a-valid-web-server', 1],
+            yield 'nginx' => [WebServer::Nginx->value, 0],
+        ];
     }
 }

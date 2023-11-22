@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-enum WebServer
+enum WebServer: string
 {
-    case CADDY;
-    case NGINX;
+    case Caddy = 'caddy';
+    case Nginx = 'nginx';
 }

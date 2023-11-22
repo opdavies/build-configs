@@ -165,7 +165,7 @@ final class CreateListOfFilesToGenerate
             return false;
         }
 
-        return strtoupper($webServer) === WebServer::CADDY->name;
+        return strtoupper($webServer) === WebServer::Caddy->value;
     }
 
     private static function isDocker(array $configurationData): bool
@@ -188,6 +188,6 @@ final class CreateListOfFilesToGenerate
             return false;
         }
 
-        return strtoupper($webServer) === WebServer::NGINX->name;
+        return strtoupper($webServer) === WebServer::Nginx->value;
     }
 }
