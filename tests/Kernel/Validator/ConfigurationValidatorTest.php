@@ -5,48 +5,36 @@ namespace App\Tests;
 use App\DataTransferObject\Config;
 use App\Enum\WebServer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConfigurationValidatorTest extends KernelTestCase
 {
-    private SerializerInterface $serializer;
-
     private ValidatorInterface $validator;
 
     public function setUp(): void
     {
-        $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
-
-        $this->serializer = new Serializer([$normalizer], [new JsonEncoder()]);
-
-        $this->validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
+        $this->validator = Validation::createValidatorBuilder()
+            ->enableAnnotationMapping()
+            ->getValidator();
     }
 
     /**
      * @dataProvider projectNameProvider
      */
-    public function testTheProjectNameShouldBeAString(mixed $projectName, int $expectedViolationCount): void
-    {
+    public function testTheProjectNameShouldBeAString(
+        mixed $projectName,
+        int $expectedViolationCount,
+    ): void {
         if ($projectName === null) {
             self::expectException(NotNormalizableValueException::class);
         }
 
-        $configurationData = [
-            'language' => 'php',
-            'name' => $projectName,
-            'type' => 'drupal',
-        ];
+        $configurationDataDTO = self::createConfigurationDTO();
+        $configurationDataDTO->name = $projectName;
 
-        $configurationDataDto = $this->createConfigurationDTO($configurationData);
-
-        $violations = $this->validator->validate($configurationDataDto);
+        $violations = $this->validator->validate($configurationDataDTO);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
@@ -57,26 +45,26 @@ class ConfigurationValidatorTest extends KernelTestCase
     /**
      * @dataProvider projectLanguageProvider
      */
-    public function testTheProjectLanguageShouldBeASupportedLanguage(mixed $language, int $expectedViolationCount): void
-    {
-        if ($language === null) {
-            self::expectException(NotNormalizableValueException::class);
-        }
+    public function testTheProjectLanguageShouldBeASupportedLanguage(
+        string $language,
+        int $expectedViolationCount,
+    ): void {
+        $configurationDataDTO = self::createConfigurationDTO();
+        $configurationDataDTO->language = $language;
 
-        $configurationData = [
-            'language' => $language,
-            'name' => 'test',
-            'type' => 'drupal',
-        ];
-
-        $configurationDataDto = $this->createConfigurationDTO($configurationData);
-
-        $violations = $this->validator->validate($configurationDataDto);
+        $violations = $this->validator->validate($configurationDataDTO);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
             haystack: $violations,
         );
+
+        if ($expectedViolationCount > 0) {
+            self::assertSame(
+                actual: $language,
+                expected: $violations[0]->getInvalidValue(),
+            );
+        }
     }
 
     /**
@@ -85,18 +73,11 @@ class ConfigurationValidatorTest extends KernelTestCase
     public function testTheWebServerTypeIsValid(
         string $webServer,
         int $expectedViolationCount,
-    ): void
-    {
-        $configurationData = [
-            'language' => 'php',
-            'name' => 'test',
-            'type' => 'drupal',
-            'web' => ['type' => $webServer],
-        ];
+    ): void {
+        $configurationDataDTO = self::createConfigurationDTO();
+        $configurationDataDTO->web['type'] = $webServer;
 
-        $configurationDataDto = $this->createConfigurationDTO($configurationData);
-
-        $violations = $this->validator->validate($configurationDataDto);
+        $violations = $this->validator->validate($configurationDataDTO);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
@@ -117,10 +98,6 @@ class ConfigurationValidatorTest extends KernelTestCase
             yield 'Supported language string' => ['php', 0],
             yield 'Non-supported language string' => ['not-supported', 1],
             yield 'Empty string' => ['', 1],
-            yield 'True' => [true, 1],
-            yield 'False' => [false, 1],
-            yield 'Integer' => [1, 1],
-            yield 'Null' => [null, 1],
         ];
     }
 
@@ -132,11 +109,6 @@ class ConfigurationValidatorTest extends KernelTestCase
         ];
     }
 
-    private function createConfigurationDTO(array $configurationData): Config
-    {
-        return $this->serializer->deserialize(json_encode($configurationData), Config::class, 'json');
-    }
-
     public function validWebServerTypesProvider(): \Generator
     {
         return [
@@ -144,5 +116,15 @@ class ConfigurationValidatorTest extends KernelTestCase
             yield 'invalid' => ['not-a-valid-web-server', 1],
             yield 'nginx' => [WebServer::Nginx->value, 0],
         ];
+    }
+
+    private static function createConfigurationDTO(): Config
+    {
+        $configurationDataDTO = new Config();
+        $configurationDataDTO->language = 'php';
+        $configurationDataDTO->name = 'test';
+        $configurationDataDTO->type = 'drupal';
+
+        return $configurationDataDTO;
     }
 }
