@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 
-set -eu
-
-TTY="${TTY:-}"
-if [[ ! -t 1 ]]; then
-  TTY="-T"
-fi
+set -o errexit
+set -o pipefail
 
 export PATH=$PATH:./bin:./vendor/bin:./vendor-bin/box/vendor/bin
 

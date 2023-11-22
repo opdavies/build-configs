@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\DataTransferObject\Config;
+use App\Enum\ProjectType;
 use App\Enum\WebServer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
@@ -68,6 +69,31 @@ class ConfigurationValidatorTest extends KernelTestCase
     }
 
     /**
+     * @dataProvider projectTypeProvider
+     */
+    public function testTheProjectTypeShouldBeASupportedType(
+        string $projectType,
+        int $expectedViolationCount,
+    ): void {
+        $configurationDataDTO = self::createConfigurationDTO();
+        $configurationDataDTO->type = $projectType;
+
+        $violations = $this->validator->validate($configurationDataDTO);
+
+        self::assertCount(
+            expectedCount: $expectedViolationCount,
+            haystack: $violations,
+        );
+
+        if ($expectedViolationCount > 0) {
+            self::assertSame(
+                actual: $projectType,
+                expected: $violations[0]->getInvalidValue(),
+            );
+        }
+    }
+
+    /**
      * @dataProvider validWebServerTypesProvider
      */
     public function testTheWebServerTypeIsValid(
@@ -106,6 +132,20 @@ class ConfigurationValidatorTest extends KernelTestCase
         return [
             yield 'Non-empty string' => ['test', 0],
             yield 'Empty string' => ['', 1],
+        ];
+    }
+
+    public function projectTypeProvider(): \Generator
+    {
+        return [
+            yield 'astro' => [ProjectType::Astro->value, 0],
+            yield 'drupal' => [ProjectType::Drupal->value, 0],
+            yield 'fractal' => [ProjectType::Fractal->value, 0],
+            yield 'invalid' => ['not-a-project-type', 1],
+            yield 'laravel' => [ProjectType::Laravel->value, 0],
+            yield 'php-library' => [ProjectType::PHPLibrary->value, 0],
+            yield 'symfony' => [ProjectType::Symfony->value, 0],
+            yield 'terraform' => [ProjectType::Terraform->value, 0],
         ];
     }
 

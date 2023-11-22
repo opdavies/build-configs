@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-enum ProjectType
+enum ProjectType: string
 {
-    case Astro;
-    case Drupal;
-    case Fractal;
-    case Terraform;
+    case Astro = 'astro';
+    case Drupal = 'drupal';
+    case Fractal = 'fractal';
+    case Laravel = 'laravel';
+    case PHPLibrary = 'php-library';
+    case Symfony = 'symfony';
+    case Terraform = 'terraform';
 }

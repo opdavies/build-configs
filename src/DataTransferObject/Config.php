@@ -221,7 +221,7 @@ final class Config
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
-    #[Assert\Choice(choices: ['drupal', 'fractal', 'laravel', 'php-library', 'symfony'])]
+    #[Assert\Choice(choices: ['astro', 'drupal', 'fractal', 'laravel', 'php-library', 'symfony', 'terraform'])]
     public string $type;
 
     #[Assert\Type('array')]
