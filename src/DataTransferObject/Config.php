@@ -19,10 +19,12 @@ final class Config
                     new Assert\Type('string'),
                 ]),
             ]),
+
             'type' => new Assert\Required([
                 new Assert\Choice(choices: ['mariadb', 'mysql']),
                 new Assert\Type('string'),
             ]),
+
             'version' => new Assert\Required([
                 new Assert\Type('int'),
             ]),
@@ -61,15 +63,18 @@ final class Config
                                 new Assert\Type('string'),
                             ]),
                         ]),
+
                         'extra_directories' => new Assert\Optional([
                             new Assert\Type('array'),
                             new Assert\All([
                                 new Assert\Type('string'),
                             ]),
                         ]),
+
                         'extends' => new Assert\Optional([
                             new Assert\Type('string'),
                         ]),
+
                         'extensions' => new Assert\Optional([
                             new Assert\Collection(
                                 allowExtraFields: false,
@@ -83,12 +88,14 @@ final class Config
                                 ],
                             ),
                         ]),
+
                         'packages' => new Assert\Optional([
                             new Assert\Type('array'),
                             new Assert\All([
                                 new Assert\Type('string'),
                             ]),
                         ]),
+
                         'root_commands' => new Assert\Optional([
                             new Assert\Type('array'),
                             new Assert\All([
@@ -118,9 +125,11 @@ final class Config
             'createGitHubActionsConfiguration' => new Assert\Optional([
                 new Assert\Type('bool'),
             ]),
+
             'runGitHooksBeforePush' => new Assert\Optional([
                 new Assert\Type('bool'),
             ]),
+
             // TODO: remove this when its been removed from all `build.yaml` files.
             'useNewDatabaseCredentials' => new Assert\Optional([
                 new Assert\Type('bool'),
@@ -188,6 +197,7 @@ final class Config
             'version' => new Assert\Required([
                 new Assert\Type('string'),
             ]),
+
             'phpcs' => new Assert\Optional([
                 new Assert\AtLeastOneOf(
                     constraints: [
@@ -200,6 +210,7 @@ final class Config
                                     new Assert\Type('string'),
                                 ]),
                             ]),
+
                             'standards' => new Assert\Required([
                                 new Assert\Type('array'),
                                 new Assert\Count(['min' => 1]),
@@ -211,6 +222,7 @@ final class Config
                     ]
                 ),
             ]),
+
             'phpstan' => new Assert\Optional(
                 new Assert\AtLeastOneOf(
                     constraints: [
@@ -219,9 +231,11 @@ final class Config
                             'baseline' => new Assert\Optional([
                                 new Assert\Type('boolean'),
                             ]),
+
                             'level' => new Assert\Required([
                                 new Assert\Type(['string', 'integer']),
                             ]),
+
                             'paths' => new Assert\Required([
                                 new Assert\Type('array'),
                                 new Assert\Count(['min' => 1]),
@@ -233,6 +247,7 @@ final class Config
                     ]
                 ),
             ),
+
             'phpunit' => new Assert\Optional(
                 new Assert\IsFalse(),
             ),
