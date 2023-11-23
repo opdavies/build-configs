@@ -6,6 +6,10 @@
 
 * Test assertions for the expected violation messages.
 
+### Fixed
+
+* The `pre-push` Git hook should use `./run test:commit` instead of `just test-commit` since `just` is no longer used.
+
 ## 2023-11-22
 
 ### Added
