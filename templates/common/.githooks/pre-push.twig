@@ -4,4 +4,8 @@
 
 set -o errexit
 
+{% if isDocker %}
+export TTY="-T"
+{% endif %}
+
 ./run test:commit
