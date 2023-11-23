@@ -17,7 +17,7 @@ final class CreateFinalConfigurationData
 
         $configurationData = array_replace_recursive(
             Yaml::parseFile(filename: __DIR__ . '/../../resources/build.defaults.yaml'),
-            Yaml::parseFile(filename: $configFile),
+            $configurationData,
         );
 
         if (isset($configurationData['docker-compose'])) {
