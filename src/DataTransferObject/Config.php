@@ -273,4 +273,8 @@ final class Config
         ]),
     ])]
     public array $web;
+
+    public bool $isDocker;
+
+    public bool $isFlake;
 }

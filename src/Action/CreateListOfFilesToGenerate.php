@@ -19,15 +19,12 @@ final class CreateListOfFilesToGenerate
          * @var Config $configurationDataDto,
          * @var array<string,mixed> $configurationData
          */
-        [$configurationData, $configurationDataDto] = $configurationDataAndDto;
-
-        $isDocker = static::isDocker($configurationData);
-        $isFlake = static::isFlake($configurationData);
+        [$configurationData, $configurationDataDTO] = $configurationDataAndDto;
 
         /** @var Collection<int, TemplateFile> */
         $filesToGenerate = collect();
 
-        switch (strtolower($configurationDataDto->type)) {
+        switch (strtolower($configurationDataDTO->type)) {
             case (strtolower(ProjectType::Astro->name)):
                 $filesToGenerate = collect([
                     new TemplateFile(data: 'astro/.envrc', name: '.envrc'),
@@ -44,14 +41,14 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'fractal/run', name: 'run'),
                 ]);
 
-                if ($isDocker) {
+                if ($configurationDataDTO->isDocker) {
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.env.example', name: '.env.example'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.dockerignore', name: '.dockerignore'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.hadolint.yaml', name: '.hadolint.yaml'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.yarnrc', name: '.yarnrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/Dockerfile', name: 'Dockerfile'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/docker-compose.yaml', name: 'docker-compose.yaml'));
-                } elseif ($isFlake) {
+                } elseif ($configurationDataDTO->isFlake) {
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.envrc', name: '.envrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/flake.nix', name: 'flake.nix'));
                 }
@@ -85,15 +82,15 @@ final class CreateListOfFilesToGenerate
                     ));
                 }
 
-                if ($configurationDataDto->php['phpcs'] !== false) {
+                if ($configurationDataDTO->php['phpcs'] !== false) {
                     $filesToGenerate->push(new TemplateFile(data: 'drupal/phpcs.xml.dist', name: 'phpcs.xml.dist'));
                 }
 
-                if ($configurationDataDto->php['phpstan'] !== false) {
+                if ($configurationDataDTO->php['phpstan'] !== false) {
                     $filesToGenerate->push(new TemplateFile(data: 'drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'));
                 }
 
-                if ($configurationDataDto->php['phpunit'] !== false) {
+                if ($configurationDataDTO->php['phpunit'] !== false) {
                     $filesToGenerate->push(new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist'));
                 }
 
@@ -156,7 +153,7 @@ final class CreateListOfFilesToGenerate
             );
         }
 
-        return $next([$configurationData, $configurationDataDto, $filesToGenerate]);
+        return $next([$configurationData, $configurationDataDTO, $filesToGenerate]);
     }
 
     private static function isCaddy(?string $webServer): bool
@@ -166,20 +163,6 @@ final class CreateListOfFilesToGenerate
         }
 
         return strtoupper($webServer) === WebServer::Caddy->value;
-    }
-
-    private static function isDocker(array $configurationData): bool
-    {
-        // This should return `false` if there is no explicit `dockerfile` key
-        // in the build.yaml file. This is currently not the case, I assume
-        // because of default values being added.
-        // For now, if it's not a Flake, it's Docker.
-        return !static::isFlake($configurationData);
-    }
-
-    private static function isFlake(array $configurationData): bool
-    {
-        return Arr::get($configurationData, 'flake') !== null;
     }
 
     private static function isNginx(?string $webServer): bool

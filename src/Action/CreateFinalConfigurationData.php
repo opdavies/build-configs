@@ -10,6 +10,11 @@ use Symfony\Component\Yaml\Yaml;
 final class CreateFinalConfigurationData
 {
     public function handle(string $configFile, \Closure $next) {
+        // Perform some initial checks before the defaults are merged.
+        $configurationData = Yaml::parseFile(filename: $configFile);
+        $configurationData['isDocker'] = isset($configurationData['dockerfile']);
+        $configurationData['isFlake'] = isset($configurationData['flake']);
+
         $configurationData = array_replace_recursive(
             Yaml::parseFile(filename: __DIR__ . '/../../resources/build.defaults.yaml'),
             Yaml::parseFile(filename: $configFile),

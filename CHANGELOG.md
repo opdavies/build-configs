@@ -14,6 +14,7 @@
 ### Changed
 
 * Replace `set -ueo` in Git hook templates to use the long names and be consistent with `run` scripts.
+* Add `isDocker` and `isFlake` to the Configuration DTO and remove duplicate variables within templates.
 
 ## 2023-11-22
 

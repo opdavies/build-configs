@@ -5,9 +5,6 @@
 set -o errexit
 set -o pipefail
 
-{% set isDocker = flake is not defined %}
-{% set isFlake = flake is defined %}
-
 PATH="$PATH:./node_modules/.bin"
 
 {% if isDocker %}
