@@ -12,13 +12,52 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConfigurationValidatorTest extends KernelTestCase
 {
+    private Config $configurationDataDTO;
+
     private ValidatorInterface $validator;
 
     public function setUp(): void
     {
+        $this->configurationDataDTO = self::createConfigurationDTO();
+
         $this->validator = Validation::createValidatorBuilder()
             ->enableAnnotationMapping()
             ->getValidator();
+    }
+
+    /**
+     * @dataProvider extraDatabaseProvider
+     */
+    public function testThatExtraDatabasesCanBeSpecified(
+        ?array $extraDatabases,
+        int $expectedViolationCount,
+        ?string $expectedMessage,
+    ): void
+    {
+        $this->configurationDataDTO->database = [
+            'extra_databases' => $extraDatabases,
+            'type' => 'mariadb',
+            'version' => 10,
+        ];
+
+        $violations = $this->validator->validate($this->configurationDataDTO);
+
+        self::assertCount(
+            expectedCount: $expectedViolationCount,
+            haystack: $violations,
+        );
+
+        if ($expectedViolationCount > 0) {
+            self::assertSame(
+                actual: 'database[extra_databases][0]',
+                expected: $violations[0]->getPropertyPath(),
+            );
+
+            self::assertSame(
+                actual: $expectedMessage,
+                expected: $violations[0]->getMessage(),
+            );
+        }
     }
 
     /**
@@ -116,6 +155,16 @@ class ConfigurationValidatorTest extends KernelTestCase
                 expected: $violations[0]->getInvalidValue(),
             );
         }
+    }
+
+    public function extraDatabaseProvider(): \Generator
+    {
+        return [
+            yield 'correct' => [['migrate'], 0, null],
+            yield 'empty string' => [[''], 1, 'This value should not be blank.'],
+            yield 'missing' => [null, 0, null],
+            yield 'no extra databases' => [[], 0, null],
+        ];
     }
 
     public function projectLanguageProvider(): \Generator

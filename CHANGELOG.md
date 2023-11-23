@@ -13,6 +13,7 @@
   * Add `database.extra_databases`
   * Add `php.phpstan.baseline` as an optional boolean.
   * Add `node.version` as a string.
+* Add a test to ensure extra databases is an optional array of non-blank strings.
 * Add a test to ensure the project type is a valid type.
 * Add a test to ensure the web server is a valid type.
 * Add a `test` task to `run` script.

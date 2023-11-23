@@ -16,6 +16,7 @@ final class Config
             'extra_databases' => new Assert\Optional([
                 new Assert\Type('array'),
                 new Assert\All([
+                    new Assert\NotBlank(),
                     new Assert\Type('string'),
                 ]),
             ]),
