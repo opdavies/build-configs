@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023-11-23
+
+### Added
+
+* Test assertions for the expected violation messages.
+
 ## 2023-11-22
 
 ### Added

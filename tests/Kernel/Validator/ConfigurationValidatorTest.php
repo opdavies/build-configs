@@ -66,6 +66,7 @@ class ConfigurationValidatorTest extends KernelTestCase
     public function testTheProjectNameShouldBeAString(
         mixed $projectName,
         int $expectedViolationCount,
+        ?string $expectedMessage,
     ): void {
         if ($projectName === null) {
             self::expectException(NotNormalizableValueException::class);
@@ -80,6 +81,13 @@ class ConfigurationValidatorTest extends KernelTestCase
             expectedCount: $expectedViolationCount,
             haystack: $violations,
         );
+
+        if ($violations->count() > 0) {
+            self::assertSame(
+                actual: $expectedMessage,
+                expected: $violations[0]->getMessage(),
+            );
+        }
     }
 
     /**
@@ -88,6 +96,7 @@ class ConfigurationValidatorTest extends KernelTestCase
     public function testTheProjectLanguageShouldBeASupportedLanguage(
         string $language,
         int $expectedViolationCount,
+        ?string $expectedMessage,
     ): void {
         $configurationDataDTO = self::createConfigurationDTO();
         $configurationDataDTO->language = $language;
@@ -104,6 +113,11 @@ class ConfigurationValidatorTest extends KernelTestCase
                 actual: $language,
                 expected: $violations[0]->getInvalidValue(),
             );
+
+            self::assertSame(
+                actual: $expectedMessage,
+                expected: $violations[0]->getMessage(),
+            );
         }
     }
 
@@ -113,6 +127,7 @@ class ConfigurationValidatorTest extends KernelTestCase
     public function testTheProjectTypeShouldBeASupportedType(
         string $projectType,
         int $expectedViolationCount,
+        ?string $expectedMessage,
     ): void {
         $configurationDataDTO = self::createConfigurationDTO();
         $configurationDataDTO->type = $projectType;
@@ -129,6 +144,11 @@ class ConfigurationValidatorTest extends KernelTestCase
                 actual: $projectType,
                 expected: $violations[0]->getInvalidValue(),
             );
+
+            self::assertSame(
+                actual: $expectedMessage,
+                expected: $violations[0]->getMessage(),
+            );
         }
     }
 
@@ -138,6 +158,7 @@ class ConfigurationValidatorTest extends KernelTestCase
     public function testTheWebServerTypeIsValid(
         string $webServer,
         int $expectedViolationCount,
+        ?string $expectedMessage,
     ): void {
         $configurationDataDTO = self::createConfigurationDTO();
         $configurationDataDTO->web['type'] = $webServer;
@@ -153,6 +174,11 @@ class ConfigurationValidatorTest extends KernelTestCase
             self::assertSame(
                 actual: $webServer,
                 expected: $violations[0]->getInvalidValue(),
+            );
+
+            self::assertSame(
+                actual: $expectedMessage,
+                expected: $violations[0]->getMessage(),
             );
         }
     }
@@ -170,40 +196,40 @@ class ConfigurationValidatorTest extends KernelTestCase
     public function projectLanguageProvider(): \Generator
     {
         return [
-            yield 'Supported language string' => ['php', 0],
-            yield 'Non-supported language string' => ['not-supported', 1],
-            yield 'Empty string' => ['', 1],
+            yield 'Supported language string' => ['php', 0, null],
+            yield 'Non-supported language string' => ['not-supported', 1, 'The value you selected is not a valid choice.'],
+            yield 'Empty string' => ['', 1, 'The value you selected is not a valid choice.'],
         ];
     }
 
     public function projectNameProvider(): \Generator
     {
         return [
-            yield 'Non-empty string' => ['test', 0],
-            yield 'Empty string' => ['', 1],
+            yield 'Non-empty string' => ['test', 0, null],
+            yield 'Empty string' => ['', 1, 'This value should not be blank.'],
         ];
     }
 
     public function projectTypeProvider(): \Generator
     {
         return [
-            yield 'astro' => [ProjectType::Astro->value, 0],
-            yield 'drupal' => [ProjectType::Drupal->value, 0],
-            yield 'fractal' => [ProjectType::Fractal->value, 0],
-            yield 'invalid' => ['not-a-project-type', 1],
-            yield 'laravel' => [ProjectType::Laravel->value, 0],
-            yield 'php-library' => [ProjectType::PHPLibrary->value, 0],
-            yield 'symfony' => [ProjectType::Symfony->value, 0],
-            yield 'terraform' => [ProjectType::Terraform->value, 0],
+            yield 'astro' => [ProjectType::Astro->value, 0, null],
+            yield 'drupal' => [ProjectType::Drupal->value, 0, null],
+            yield 'fractal' => [ProjectType::Fractal->value, 0, null],
+            yield 'invalid' => ['not-a-project-type', 1, 'The value you selected is not a valid choice.'],
+            yield 'laravel' => [ProjectType::Laravel->value, 0, null],
+            yield 'php-library' => [ProjectType::PHPLibrary->value, 0, null],
+            yield 'symfony' => [ProjectType::Symfony->value, 0, null],
+            yield 'terraform' => [ProjectType::Terraform->value, 0, null],
         ];
     }
 
     public function validWebServerTypesProvider(): \Generator
     {
         return [
-            yield 'caddy' => [WebServer::Caddy->value, 0],
-            yield 'invalid' => ['not-a-valid-web-server', 1],
-            yield 'nginx' => [WebServer::Nginx->value, 0],
+            yield 'caddy' => [WebServer::Caddy->value, 0, null],
+            yield 'invalid' => ['not-a-valid-web-server', 1, 'The value you selected is not a valid choice.'],
+            yield 'nginx' => [WebServer::Nginx->value, 0, null],
         ];
     }
 
