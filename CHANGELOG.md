@@ -9,6 +9,7 @@
 ### Fixed
 
 * The `pre-push` Git hook should use `./run test:commit` instead of `just test-commit` since `just` is no longer used.
+* Recursively merge `build.defaults.yaml` into the given configuration.
 
 ## 2023-11-22
 

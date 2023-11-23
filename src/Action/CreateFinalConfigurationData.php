@@ -10,7 +10,7 @@ use Symfony\Component\Yaml\Yaml;
 final class CreateFinalConfigurationData
 {
     public function handle(string $configFile, \Closure $next) {
-        $configurationData = array_merge(
+        $configurationData = array_replace_recursive(
             Yaml::parseFile(filename: __DIR__ . '/../../resources/build.defaults.yaml'),
             Yaml::parseFile(filename: $configFile),
         );
