@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023-11-24
+
+### Changed
+
+* Simplified constraints on properties within the `Config` DTO class.
+
 ## 2023-11-23
 
 ### Added

@@ -8,8 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class Config
 {
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -23,7 +21,6 @@ final class Config
 
             'type' => new Assert\Required([
                 new Assert\Choice(choices: ['mariadb', 'mysql']),
-                new Assert\Type('string'),
             ]),
 
             'version' => new Assert\Required([
@@ -33,8 +30,6 @@ final class Config
     )]
     public array $database;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -49,8 +44,6 @@ final class Config
     )]
     public array $dockerCompose;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -110,16 +103,12 @@ final class Config
     )]
     public array $dockerfile;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: ['docroot' => new Assert\Choice([null, 'web', 'docroot'])],
     )]
     public array $drupal;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -139,8 +128,6 @@ final class Config
     )]
     public array $experimental;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid()]
     #[Assert\Collection([
         'ignore' => new Assert\Optional([
             new Assert\All([
@@ -150,8 +137,6 @@ final class Config
     ])]
     public array $git;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -170,7 +155,6 @@ final class Config
     )]
     public array $flake;
 
-    #[Assert\Type('string')]
     #[Assert\Choice(choices: ['javascript', 'php', 'typescript'])]
     public string $language;
 
@@ -178,8 +162,6 @@ final class Config
     #[Assert\Type('string')]
     public string $name;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -190,8 +172,6 @@ final class Config
     )]
     public array $node;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid]
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -259,16 +239,11 @@ final class Config
     #[Assert\Type('string')]
     public string $projectRoot;
 
-    #[Assert\NotBlank]
-    #[Assert\Type('string')]
     #[Assert\Choice(choices: ['astro', 'drupal', 'fractal', 'laravel', 'php-library', 'symfony', 'terraform'])]
     public string $type;
 
-    #[Assert\Type('array')]
-    #[Assert\Valid()]
     #[Assert\Collection([
         'type' => new Assert\Required([
-            new Assert\Type('string'),
             new Assert\Choice(choices: ['nginx', 'caddy']),
         ]),
     ])]
