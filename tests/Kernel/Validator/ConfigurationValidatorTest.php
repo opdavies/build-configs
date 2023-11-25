@@ -153,7 +153,7 @@ class ConfigurationValidatorTest extends KernelTestCase
     }
 
     /**
-     * @dataProvider validWebServerTypesProvider
+     * @dataProvider validWebServerTypes
      */
     public function testTheWebServerTypeIsValid(
         string $webServer,
@@ -183,7 +183,7 @@ class ConfigurationValidatorTest extends KernelTestCase
         }
     }
 
-    public function extraDatabaseProvider(): \Generator
+    public static function extraDatabaseProvider(): \Generator
     {
         return [
             yield 'correct' => [['migrate'], 0, null],
@@ -193,7 +193,7 @@ class ConfigurationValidatorTest extends KernelTestCase
         ];
     }
 
-    public function projectLanguageProvider(): \Generator
+    public static function projectLanguageProvider(): \Generator
     {
         return [
             yield 'Supported language string' => ['php', 0, null],
@@ -202,7 +202,7 @@ class ConfigurationValidatorTest extends KernelTestCase
         ];
     }
 
-    public function projectNameProvider(): \Generator
+    public static function projectNameProvider(): \Generator
     {
         return [
             yield 'Non-empty string' => ['test', 0, null],
@@ -210,7 +210,7 @@ class ConfigurationValidatorTest extends KernelTestCase
         ];
     }
 
-    public function projectTypeProvider(): \Generator
+    public static function projectTypeProvider(): \Generator
     {
         return [
             yield 'astro' => [ProjectType::Astro->value, 0, null],
@@ -224,7 +224,7 @@ class ConfigurationValidatorTest extends KernelTestCase
         ];
     }
 
-    public function validWebServerTypesProvider(): \Generator
+    public static function validWebServerTypes(): \Generator
     {
         return [
             yield 'caddy' => [WebServer::Caddy->value, 0, null],
