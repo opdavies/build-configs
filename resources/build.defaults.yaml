@@ -2,6 +2,7 @@ drupal:
   docroot: web
 
 experimental:
+  runStaticAnalysisOnTests: false
   useNewDatabaseCredentials: true
 
 project_root: /app

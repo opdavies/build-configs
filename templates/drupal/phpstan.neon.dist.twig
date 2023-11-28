@@ -2,9 +2,11 @@
 
 parameters:
   level: {{ php.phpstan.level }}
+{% if not experimental.runStaticAnalysisOnTests %}
   excludePaths:
     - *Test.php
     - *TestBase.php
+{% endif %}
   paths:
     {% for path in php.phpstan.paths -%}
     - {{ path }}
