@@ -20,7 +20,7 @@ function build {
   composer install --no-dev --prefer-dist --optimize-autoloader
   composer install --prefer-dist --optimize-autoloader --working-dir ./vendor-bin/box
 
-  composer dump-env prod
+  nix develop --command composer dump-env prod
 
   build-configs cache:clear
   build-configs cache:warmup
