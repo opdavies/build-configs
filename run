@@ -22,8 +22,8 @@ function build {
 
   nix develop --command composer dump-env prod
 
-  build-configs cache:clear
-  build-configs cache:warmup
+  nix develop --command build-configs cache:clear
+  nix develop --command build-configs cache:warmup
 
   # Generate the phar file.
   box compile --config box.json.dist
