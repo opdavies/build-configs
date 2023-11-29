@@ -23,8 +23,6 @@ jobs:
       - run: |
           ./run ci:test
 
-          - name: Get date
-
       - run: |
           echo "DATE=$(date '+%Y-%m-%d-%H.%M.%S')" >> $GITHUB_ENV
 
