@@ -7,7 +7,8 @@ export PATH=$PATH:./bin:./vendor/bin:./vendor-bin/box/vendor/bin
 
 # Delete any temporary or generated files.
 function clean {
-  rm -frv build build-configs tmp vendor vendor-bin/box/vendor
+  rm -frv dist/* tmp vendor vendor-bin/box/vendor
+  touch dist/.keep
 }
 
 # Build the phar version of build-configs.
@@ -24,6 +25,8 @@ function build {
 
   # Generate the phar file.
   box compile --config box.json.dist
+
+  tree dist/
 
   # TODO: build a Nix derivation and add it to the store.
 }

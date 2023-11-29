@@ -1,5 +1,5 @@
 {
-    "output": "build-configs",
+    "output": "dist/build-configs",
     "files": [
         ".env",
         "autoload_runtime.template",
