@@ -1,6 +1,7 @@
 /**/vendor/
 /.direnv
-/dist/
+/dist/*
+!/dist/.keep
 
 ###> symfony/framework-bundle ###
 /.env.local
