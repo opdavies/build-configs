@@ -23,7 +23,7 @@ function build {
   # Generate the phar file.
   box compile --config box.json.dist
 
-  rm .env.local.php
+  rm -f .env.local.php
 
   tree dist/
 
