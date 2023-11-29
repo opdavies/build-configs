@@ -23,7 +23,8 @@
         "resources",
         "templates",
         "templates/common/.githooks",
-        "templates/drupal/.github"
+        "templates/drupal/.github",
+        "var"
     ],
     "force-autodiscovery": true,
     "check-requirements": false,

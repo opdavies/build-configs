@@ -8,7 +8,7 @@ export PATH=$PATH:./bin:./vendor/bin:./vendor-bin/box/vendor/bin
 # Delete any temporary or generated files.
 function clean {
   rm -fr dist/* tmp vendor vendor-bin/box/vendor
-  touch dist/.keep
+  touch dist/.keep var/.keep
 }
 
 # Build the phar version of build-configs.
