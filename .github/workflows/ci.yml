@@ -23,6 +23,7 @@ jobs:
       - run: |
           ./run ci:test
 
-      - uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
+      - uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
         with:
-          files: dist/build-configs
+          artifacts: dist/build-configs
+          tag: ${{ env.DATE }}
