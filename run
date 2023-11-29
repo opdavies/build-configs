@@ -20,11 +20,10 @@ function build {
   composer install --no-dev --prefer-dist --optimize-autoloader
   composer install --prefer-dist --optimize-autoloader --working-dir ./vendor-bin/box
 
-  # Rebuild the Symfony cache.
-  build-configs cache:clear
-
   # Generate the phar file.
   box compile --config box.json.dist
+
+  rm .env.local.php
 
   tree dist/
 
