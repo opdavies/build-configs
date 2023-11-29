@@ -23,6 +23,11 @@ jobs:
       - run: |
           ./run ci:test
 
+          - name: Get date
+
+      - run: |
+          echo "DATE=$(date '+%Y-%m-%d-%H.%M.%S')" >> $GITHUB_ENV
+
       - uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
         with:
           artifacts: dist/build-configs
