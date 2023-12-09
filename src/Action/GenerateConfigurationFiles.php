@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Action;
 
-use App\DataTransferObject\Config;
+use App\DataTransferObject\ConfigDto;
 use App\DataTransferObject\TemplateFile;
 use Illuminate\Support\Collection;
 use Symfony\Component\Filesystem\Filesystem;
@@ -23,7 +23,7 @@ final class GenerateConfigurationFiles
     {
         /**
          * @var Collection<int,TemplateFile> $filesToGenerate
-         * @var Config $configurationDataDto,
+         * @var ConfigDto $configurationDataDto,
          * @var array<string,mixed> $configurationData
          */
         [$configurationData, $configurationDataDto, $filesToGenerate] = $filesToGenerateAndConfigurationData;

@@ -2,7 +2,7 @@
 
 namespace App\Tests;
 
-use App\DataTransferObject\Config;
+use App\DataTransferObject\ConfigDto;
 use App\Enum\ProjectType;
 use App\Enum\WebServer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -12,13 +12,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ConfigurationValidatorTest extends KernelTestCase
 {
-    private Config $configurationDataDTO;
+    private ConfigDto $configurationDataDto;
 
     private ValidatorInterface $validator;
 
     public function setUp(): void
     {
-        $this->configurationDataDTO = self::createConfigurationDTO();
+        $this->configurationDataDto = self::createConfigurationDto();
 
         $this->validator = Validation::createValidatorBuilder()
             ->enableAttributeMapping()
@@ -34,13 +34,13 @@ class ConfigurationValidatorTest extends KernelTestCase
         ?string $expectedMessage,
     ): void
     {
-        $this->configurationDataDTO->database = [
+        $this->configurationDataDto->database = [
             'extra_databases' => $extraDatabases,
             'type' => 'mariadb',
             'version' => 10,
         ];
 
-        $violations = $this->validator->validate($this->configurationDataDTO);
+        $violations = $this->validator->validate($this->configurationDataDto);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
@@ -72,10 +72,10 @@ class ConfigurationValidatorTest extends KernelTestCase
             self::expectException(NotNormalizableValueException::class);
         }
 
-        $configurationDataDTO = self::createConfigurationDTO();
-        $configurationDataDTO->name = $projectName;
+        $configurationDataDto = self::createConfigurationDto();
+        $configurationDataDto->name = $projectName;
 
-        $violations = $this->validator->validate($configurationDataDTO);
+        $violations = $this->validator->validate($configurationDataDto);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
@@ -98,10 +98,10 @@ class ConfigurationValidatorTest extends KernelTestCase
         int $expectedViolationCount,
         ?string $expectedMessage,
     ): void {
-        $configurationDataDTO = self::createConfigurationDTO();
-        $configurationDataDTO->language = $language;
+        $configurationDataDto = self::createConfigurationDto();
+        $configurationDataDto->language = $language;
 
-        $violations = $this->validator->validate($configurationDataDTO);
+        $violations = $this->validator->validate($configurationDataDto);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
@@ -129,10 +129,10 @@ class ConfigurationValidatorTest extends KernelTestCase
         int $expectedViolationCount,
         ?string $expectedMessage,
     ): void {
-        $configurationDataDTO = self::createConfigurationDTO();
-        $configurationDataDTO->type = $projectType;
+        $configurationDataDto = self::createConfigurationDto();
+        $configurationDataDto->type = $projectType;
 
-        $violations = $this->validator->validate($configurationDataDTO);
+        $violations = $this->validator->validate($configurationDataDto);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
@@ -160,10 +160,10 @@ class ConfigurationValidatorTest extends KernelTestCase
         int $expectedViolationCount,
         ?string $expectedMessage,
     ): void {
-        $configurationDataDTO = self::createConfigurationDTO();
-        $configurationDataDTO->web['type'] = $webServer;
+        $configurationDataDto = self::createConfigurationDto();
+        $configurationDataDto->web['type'] = $webServer;
 
-        $violations = $this->validator->validate($configurationDataDTO);
+        $violations = $this->validator->validate($configurationDataDto);
 
         self::assertCount(
             expectedCount: $expectedViolationCount,
@@ -233,13 +233,13 @@ class ConfigurationValidatorTest extends KernelTestCase
         ];
     }
 
-    private static function createConfigurationDTO(): Config
+    private static function createConfigurationDto(): ConfigDto
     {
-        $configurationDataDTO = new Config();
-        $configurationDataDTO->language = 'php';
-        $configurationDataDTO->name = 'test';
-        $configurationDataDTO->type = 'drupal';
+        $configurationDataDto = new ConfigDto();
+        $configurationDataDto->language = 'php';
+        $configurationDataDto->name = 'test';
+        $configurationDataDto->type = 'drupal';
 
-        return $configurationDataDTO;
+        return $configurationDataDto;
     }
 }

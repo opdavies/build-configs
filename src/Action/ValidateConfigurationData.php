@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Action;
 
-use App\DataTransferObject\Config;
+use App\DataTransferObject\ConfigDto;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -18,7 +18,7 @@ final class ValidateConfigurationData
         $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
 
-        $configurationDataDto = $serializer->deserialize(json_encode($configurationData), Config::class, 'json');
+        $configurationDataDto = $serializer->deserialize(json_encode($configurationData), ConfigDto::class, 'json');
 
         $validator = Validation::createValidatorBuilder()->enableAnnotationMapping()->getValidator();
         $violations = $validator->validate($configurationDataDto);

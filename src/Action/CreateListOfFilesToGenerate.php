@@ -19,12 +19,12 @@ final class CreateListOfFilesToGenerate
          * @var Config $configurationDataDto,
          * @var array<string,mixed> $configurationData
          */
-        [$configurationData, $configurationDataDTO] = $configurationDataAndDto;
+        [$configurationData, $configDto] = $configurationDataAndDto;
 
         /** @var Collection<int, TemplateFile> */
         $filesToGenerate = collect();
 
-        switch (strtolower($configurationDataDTO->type)) {
+        switch (strtolower($configDto->type)) {
             case (strtolower(ProjectType::Astro->name)):
                 $filesToGenerate = collect([
                     new TemplateFile(data: 'astro/.envrc', name: '.envrc'),
@@ -41,14 +41,14 @@ final class CreateListOfFilesToGenerate
                     new TemplateFile(data: 'fractal/run', name: 'run'),
                 ]);
 
-                if ($configurationDataDTO->isDocker) {
+                if ($configDto->isDocker) {
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.env.example', name: '.env.example'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.dockerignore', name: '.dockerignore'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.hadolint.yaml', name: '.hadolint.yaml'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.yarnrc', name: '.yarnrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/Dockerfile', name: 'Dockerfile'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/docker-compose.yaml', name: 'docker-compose.yaml'));
-                } elseif ($configurationDataDTO->isFlake) {
+                } elseif ($configDto->isFlake) {
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.envrc', name: '.envrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/flake.nix', name: 'flake.nix'));
                 }
@@ -82,15 +82,15 @@ final class CreateListOfFilesToGenerate
                     ));
                 }
 
-                if ($configurationDataDTO->php['phpcs'] !== false) {
+                if (!isset($configDto->php['phpcs']) || $configDto->php['phpcs'] !== false) {
                     $filesToGenerate->push(new TemplateFile(data: 'drupal/phpcs.xml.dist', name: 'phpcs.xml.dist'));
                 }
 
-                if ($configurationDataDTO->php['phpstan'] !== false) {
+                if (!isset($configDto->php['phpstan']) || $configDto->php['phpstan'] !== false) {
                     $filesToGenerate->push(new TemplateFile(data: 'drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'));
                 }
 
-                if ($configurationDataDTO->php['phpunit'] !== false) {
+                if (!isset($configDto->php['phpunit']) || $configDto->php['phpunit'] !== false) {
                     $filesToGenerate->push(new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist'));
                 }
 
@@ -153,7 +153,7 @@ final class CreateListOfFilesToGenerate
             );
         }
 
-        return $next([$configurationData, $configurationDataDTO, $filesToGenerate]);
+        return $next([$configurationData, $configDto, $filesToGenerate]);
     }
 
     private static function isCaddy(?string $webServer): bool

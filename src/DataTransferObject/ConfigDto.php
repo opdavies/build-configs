@@ -6,7 +6,7 @@ namespace App\DataTransferObject;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-final class Config
+final class ConfigDto
 {
     #[Assert\Collection(
         allowExtraFields: false,
