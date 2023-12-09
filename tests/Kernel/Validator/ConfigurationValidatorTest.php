@@ -21,7 +21,7 @@ class ConfigurationValidatorTest extends KernelTestCase
         $this->configurationDataDTO = self::createConfigurationDTO();
 
         $this->validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping()
+            ->enableAttributeMapping()
             ->getValidator();
     }
 
