@@ -2,6 +2,7 @@
 /.direnv
 /dist/*
 !/dist/.keep
+.ignored/
 
 ###> symfony/framework-bundle ###
 /.env.local
