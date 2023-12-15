@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023-12-15
+
+### Fixed
+
+* Make `TTY` configurable in `run` files for Drupal projects.
+
 ## 2023-11-24
 
 ### Changed
