@@ -1,0 +1,49 @@
+name: drupal-commerce-kickstart
+language: php
+type: drupal
+
+web:
+  type: nginx
+
+database:
+  type: mariadb
+  version: 10
+
+php:
+  version: 8.1-fpm-bullseye
+  phpcs: false
+  phpstan: false
+  phpunit: false
+
+drupal:
+  docroot: web
+
+docker-compose:
+  services:
+    - database
+    - php
+    - web
+
+dockerfile:
+  stages:
+    build:
+      extra_directories:
+        - config
+        - patches
+        - scripts
+      commands:
+        - composer validate
+        - composer install
+      extensions:
+        install:
+          - bcmath
+
+git:
+  ignore:
+    - /bin/
+    - /libraries/
+    - /web/profiles/contrib/
+
+experimental:
+  createGitHubActionsConfiguration: true
+  runGitHooksBeforePush: true

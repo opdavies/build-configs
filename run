@@ -80,6 +80,8 @@ function test:snapshots {
   local configs=(
     # TODO: add more configurations for different types and configurations.
     drupal
+    drupal-commerce-kickstart
+    drupal-localgov
   )
 
   for config in "${configs[@]}"; do
