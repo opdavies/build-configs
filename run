@@ -28,7 +28,7 @@ function build {
   # Generate the phar file.
   box compile --config box.json.dist
 
-  rm -f .env.local.php
+  rm -f .env.local .env.local.php
 
   tree dist/
 
@@ -37,6 +37,7 @@ function build {
 
 function ci:test {
   nix develop --command composer install
+  nix develop --command ./run test:snapshots
   nix develop --command phpunit
 }
 
@@ -49,9 +50,56 @@ function help {
   printf "\nExtended help:\n  Each task has comments for general usage\n"
 }
 
-
 function test {
   phpunit "${@}"
+}
+
+# Create a new snapshot for a configuration based on generated files.
+function test:create-snapshot {
+  set -o nounset
+  config="${1}"
+
+  input_path="tests/snapshots/output/${config}"
+  output_path=".ignored/snapshots/output/${config}"
+  
+  rm -fr "${input_path}"
+  cp -r "${output_path}" "${input_path}" 
+
+  git status "${input_path}"
+}
+
+# Generate a file and ensure it matches the expected version.
+function test:snapshots {
+  rm -rf .ignored/snapshots
+  mkdir -p .ignored/snapshots
+
+  local configs=(
+    # TODO: add more configurations for different types and configurations.
+    drupal
+  )
+
+  for config in "${configs[@]}"; do
+    config_file="tests/snapshots/configs/${config}.yaml"
+    input_path="tests/snapshots/output/${config}"
+    output_path=".ignored/snapshots/output/${config}"
+
+    cat "${config_file}"
+
+    ./bin/build-configs app:generate --config-file "${config_file}" --output-dir "${output_path}"
+
+    find "${input_path}" -type f -print0 | while IFS= read -r -d '' original_file; do
+      generated_file="$output_path/${original_file#"${input_path}"/}"
+
+      if cmp -s "${original_file}" "${generated_file}"; then
+        echo "Files match: ${original_file}"
+      else
+        # TODO: show the diff for all failed files. This will stop after the first failure.
+        echo "Files do not match: ${original_file}"
+        diff "${original_file}" "${generated_file}"
+        exit 1
+      fi
+    done
+  done
 }
 
 TIMEFORMAT=$'\nTask completed in %3lR'

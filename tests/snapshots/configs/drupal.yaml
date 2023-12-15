@@ -1,0 +1,43 @@
+name: drupal
+language: php
+type: drupal
+
+web:
+  type: nginx
+
+database:
+  type: mariadb
+  version: 10
+
+php:
+  version: 8.1-fpm-bullseye
+  phpcs:
+    paths:
+      - web/modules/custom
+    standards:
+      - Drupal
+      - DrupalPractice
+  phpstan:
+    level: max
+    paths:
+      - web/modules/custom
+
+drupal:
+  docroot: web
+
+docker-compose:
+  services:
+    - database
+    - php
+    - web
+
+dockerfile:
+  stages:
+    build:
+      commands:
+        - composer validate
+        - composer install
+
+experimental:
+  createGitHubActionsConfiguration: true
+  runGitHooksBeforePush: true
