@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Action;
 
-use App\DataTransferObject\Config;
+use App\DataTransferObject\ConfigDto;
 use App\DataTransferObject\TemplateFile;
 use App\Enum\ProjectType;
 use App\Enum\WebServer;
@@ -16,7 +16,7 @@ final class CreateListOfFilesToGenerate
     public function handle(array $configurationDataAndDto, \Closure $next)
     {
         /**
-         * @var Config $configurationDataDto,
+         * @var ConfigDto $configDto,
          * @var array<string,mixed> $configurationData
          */
         [$configurationData, $configDto] = $configurationDataAndDto;

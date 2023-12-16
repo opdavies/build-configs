@@ -8,7 +8,7 @@ use App\Action\CreateFinalConfigurationData;
 use App\Action\CreateListOfFilesToGenerate;
 use App\Action\GenerateConfigurationFiles;
 use App\Action\ValidateConfigurationData;
-use App\DataTransferObject\Config;
+use App\DataTransferObject\ConfigDto;
 use App\DataTransferObject\TemplateFile;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
@@ -77,7 +77,7 @@ class GenerateCommand extends Command
 
         /**
          * @var Collection<int,TemplateFile> $generatedFiles
-         * @var Config $configurationData
+         * @var ConfigDto $configurationData
          */
         [$configurationData, $generatedFiles] = (new Pipeline())
             ->send($configFile)
