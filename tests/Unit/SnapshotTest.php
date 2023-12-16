@@ -17,6 +17,7 @@ class SnapshotTest extends TestCase
         'drupal',
         'drupal-commerce-kickstart',
         'drupal-localgov',
+        'fractal',
     ];
 
     public function testCompareFiles(): void
@@ -41,10 +42,12 @@ class SnapshotTest extends TestCase
 
     private function runCliTool(string $config): void
     {
+        $configFilePath = getcwd() . "/tests/snapshots/configs/{$config}.yaml";
+
         $cliCommand = sprintf(
             "%s app:generate --config-file %s --output-dir %s",
             getcwd() . '/bin/build-configs',
-            getcwd() . "/tests/snapshots/configs/{$config}.yaml",
+            $configFilePath,
             getcwd() . "/.ignored/snapshots/output/{$config}",
         );
 

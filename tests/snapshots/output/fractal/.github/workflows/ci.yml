@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+env:
+  COMPOSE_DOCKER_CLI_BUILD: 1
+  DOCKER_BUILDKIT: 1
+  DOCKER_UID: 1001
+
+jobs:
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # v2.3.4
+
+      - name: Build
+        run: |
+          ./run ci:build
