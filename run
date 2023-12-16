@@ -37,7 +37,7 @@ function build {
 
 function ci:test {
   nix develop --command composer install
-  nix develop --command phpunit
+  nix develop --command phpunit --testdox
 }
 
 # Display a list of all available commands.
