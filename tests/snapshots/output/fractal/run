@@ -64,7 +64,7 @@ function help {
 
 # Start the project.
 function start {
-      cp -v --no-clobber .env.example .env
+      cp -v --no-clobber .env.example .env || true
     docker compose up -d
   }
 
