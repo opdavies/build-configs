@@ -57,7 +57,7 @@ function help {
 # Start the project.
 function start {
   {% if not isFlake %}
-    cp -v --no-clobber .env.example .env
+    cp -v --no-clobber .env.example .env || true
     docker compose up -d
   {% else %}
     fractal start --sync
