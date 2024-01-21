@@ -25,16 +25,6 @@ final class CreateListOfFilesToGenerate
         $filesToGenerate = collect();
 
         switch (strtolower($configDto->type)) {
-            case (strtolower(ProjectType::Astro->name)):
-                $filesToGenerate = collect([
-                    new TemplateFile(data: 'astro/.envrc', name: '.envrc'),
-                    new TemplateFile(data: 'astro/.gitignore', name: '.gitignore'),
-                    new TemplateFile(data: 'astro/flake.nix', name: 'flake.nix'),
-                    new TemplateFile(data: 'astro/run', name: 'run'),
-                    new TemplateFile(data: 'astro/tsconfig.json', name: 'tsconfig.json'),
-                ]);
-                break;
-
             case (strtolower(ProjectType::Fractal->name)):
                 $filesToGenerate = collect([
                     new TemplateFile(data: 'fractal/.gitignore', name: '.gitignore'),

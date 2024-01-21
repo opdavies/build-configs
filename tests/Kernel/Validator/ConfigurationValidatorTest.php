@@ -213,7 +213,6 @@ class ConfigurationValidatorTest extends KernelTestCase
     public static function projectTypeProvider(): \Generator
     {
         return [
-            yield 'astro' => [ProjectType::Astro->value, 0, null],
             yield 'drupal' => [ProjectType::Drupal->value, 0, null],
             yield 'fractal' => [ProjectType::Fractal->value, 0, null],
             yield 'invalid' => ['not-a-project-type', 1, 'The value you selected is not a valid choice.'],

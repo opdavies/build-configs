@@ -14,9 +14,7 @@
         "templates/drupal/.env.example.twig",
         "templates/drupal/.hadolint.yaml.twig",
         "templates/drupal/.gitignore.twig",
-        "templates/terraform/.gitignore.twig",
-        "templates/astro/.envrc.twig",
-        "templates/astro/.gitignore.twig"
+        "templates/terraform/.gitignore.twig"
     ],
     "directories": [
         "config",

@@ -6,7 +6,6 @@ namespace App\Enum;
 
 enum ProjectType: string
 {
-    case Astro = 'astro';
     case Drupal = 'drupal';
     case Fractal = 'fractal';
     case Laravel = 'laravel';
