@@ -32,7 +32,13 @@ final class CreateListOfFilesToGenerate
                 ]);
 
                 if ($configDto->isFlake) {
-                    $filesToGenerate->push(new TemplateFile(data: 'php/sculpin/flake.nix', name: 'flake.nix'));
+                    $filesToGenerate->push(new TemplateFile(data: 'php/common/flake.nix', name: 'flake.nix'));
+                }
+                break;
+
+            case (strtolower(ProjectType::Symfony->name)):
+                if ($configDto->isFlake) {
+                    $filesToGenerate->push(new TemplateFile(data: 'php/common/flake.nix', name: 'flake.nix'));
                 }
                 break;
 
