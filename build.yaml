@@ -1,0 +1,9 @@
+name: build-configs
+type: symfony
+language: php
+
+flake:
+  devshell:
+    packages:
+      - php81
+      - php81Packages.composer
