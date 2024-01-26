@@ -243,7 +243,7 @@ final class ConfigDto
     #[Assert\Type('string')]
     public string $projectRoot;
 
-    #[Assert\Choice(choices: ['drupal', 'fractal', 'laravel', 'php-library', 'symfony', 'terraform'])]
+    #[Assert\Choice(choices: ['drupal', 'fractal', 'laravel', 'php-library', 'sculpin', 'symfony', 'terraform'])]
     public string $type;
 
     #[Assert\Collection([

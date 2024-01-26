@@ -25,6 +25,17 @@ final class CreateListOfFilesToGenerate
         $filesToGenerate = collect();
 
         switch (strtolower($configDto->type)) {
+            case (strtolower(ProjectType::Sculpin->name)):
+                $filesToGenerate = collect([
+                    new TemplateFile(data: 'php/sculpin/.gitignore', name: '.gitignore'),
+                    new TemplateFile(data: 'php/sculpin/run', name: 'run'),
+                ]);
+
+                if ($configDto->isFlake) {
+                    $filesToGenerate->push(new TemplateFile(data: 'php/sculpin/flake.nix', name: 'flake.nix'));
+                }
+                break;
+
             case (strtolower(ProjectType::Fractal->name)):
                 $filesToGenerate = collect([
                     new TemplateFile(data: 'fractal/.gitignore', name: '.gitignore'),

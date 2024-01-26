@@ -1,0 +1,12 @@
+# {{ managedText|raw }}
+
+/output_*/
+/vendor/
+
+{% if isFlake %}
+/.direnv/
+{% endif %}
+
+{% for path in git.ignore %}
+{{ path }}
+{% endfor %}

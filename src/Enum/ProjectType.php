@@ -10,6 +10,7 @@ enum ProjectType: string
     case Fractal = 'fractal';
     case Laravel = 'laravel';
     case PHPLibrary = 'php-library';
+    case Sculpin = 'sculpin';
     case Symfony = 'symfony';
     case Terraform = 'terraform';
 }
