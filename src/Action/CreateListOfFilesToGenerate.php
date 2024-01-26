@@ -146,6 +146,13 @@ final class CreateListOfFilesToGenerate
                 break;
         }
 
+        if (Arr::get($configurationData, 'experimental.createTmuxStartupFile') === true) {
+            $filesToGenerate[] = new TemplateFile(
+                data: 'common/.tmux',
+                name: '.tmux',
+            );
+        }
+
         $filesToGenerate[] = new TemplateFile(
             data: 'common/.githooks/prepare-commit-msg',
             name: 'prepare-commit-msg',

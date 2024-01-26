@@ -59,6 +59,10 @@ final class GenerateConfigurationFiles
             $this->filesystem->chmod("{$this->outputDir}/.githooks/prepare-commit-msg", 0755);
         }
 
+        if ($this->filesystem->exists("{$this->outputDir}/.tmux")) {
+            $this->filesystem->chmod("{$this->outputDir}/.tmux", 0755);
+        }
+
         if ($this->filesystem->exists("{$this->outputDir}/run")) {
             $this->filesystem->chmod("{$this->outputDir}/run", 0755);
         }

@@ -116,6 +116,10 @@ final class ConfigDto
                 new Assert\Type('bool'),
             ]),
 
+            'createTmuxStartupFile' => new Assert\Optional([
+                new Assert\Type('bool'),
+            ]),
+
             'runGitHooksBeforePush' => new Assert\Optional([
                 new Assert\Type('bool'),
             ]),
