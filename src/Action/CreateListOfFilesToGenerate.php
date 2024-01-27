@@ -176,7 +176,7 @@ final class CreateListOfFilesToGenerate
             return false;
         }
 
-        return strtoupper($webServer) === WebServer::Caddy->value;
+        return $webServer === WebServer::Caddy->value;
     }
 
     private static function isNginx(?string $webServer): bool
@@ -185,6 +185,6 @@ final class CreateListOfFilesToGenerate
             return false;
         }
 
-        return strtoupper($webServer) === WebServer::Nginx->value;
+        return $webServer === WebServer::Nginx->value;
     }
 }
