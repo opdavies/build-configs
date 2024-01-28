@@ -15,8 +15,8 @@
       perSystem = { config, self', inputs', pkgs, system, ... }: {
         devshells.default = {
           packages = with pkgs; [
-            "php81"
-            "php81Packages.composer"
+            "php82"
+            "php82Packages.composer"
           ];
         };
       };
