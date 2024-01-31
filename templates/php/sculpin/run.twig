@@ -16,7 +16,7 @@ function generate {
     args=(--server --watch)
   fi
 
-  sculpin generate "${args[@]}"
+  sculpin generate "${args[@]}" "${@}"
 }
 
 function help {
