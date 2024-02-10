@@ -71,51 +71,51 @@ final class CreateListOfFilesToGenerate
 
             case (strtolower(ProjectType::Drupal->name)):
                 $filesToGenerate = collect([
-                    new TemplateFile(data: 'drupal/.dockerignore', name: '.dockerignore'),
-                    new TemplateFile(data: 'drupal/.env.example', name: '.env.example'),
-                    new TemplateFile(data: 'drupal/.gitignore', name: '.gitignore'),
-                    new TemplateFile(data: 'drupal/.hadolint.yaml', name: '.hadolint.yaml'),
-                    new TemplateFile(data: 'drupal/Dockerfile', name: 'Dockerfile'),
-                    new TemplateFile(data: 'drupal/docker-compose.yaml', name: 'docker-compose.yaml'),
-                    new TemplateFile(data: 'drupal/run', name: 'run'),
+                    new TemplateFile(data: 'php/drupal/.dockerignore', name: '.dockerignore'),
+                    new TemplateFile(data: 'php/drupal/.env.example', name: '.env.example'),
+                    new TemplateFile(data: 'php/drupal/.gitignore', name: '.gitignore'),
+                    new TemplateFile(data: 'php/drupal/.hadolint.yaml', name: '.hadolint.yaml'),
+                    new TemplateFile(data: 'php/drupal/Dockerfile', name: 'Dockerfile'),
+                    new TemplateFile(data: 'php/drupal/docker-compose.yaml', name: 'docker-compose.yaml'),
+                    new TemplateFile(data: 'php/drupal/run', name: 'run'),
                 ]);
 
                 $extraDatabases = Arr::get($configurationData, 'database.extra_databases', []);
                 if (count($extraDatabases) > 0) {
                     $filesToGenerate->push(new TemplateFile(
-                        data: 'drupal/extra-databases.sql',
+                        data: 'php/drupal/extra-databases.sql',
                         name: 'extra-databases.sql',
                         path: 'tools/docker/images/database/root/docker-entrypoint-initdb.d',
                     ));
                 }
 
                 if (!isset($configDto->php['phpcs']) || $configDto->php['phpcs'] !== false) {
-                    $filesToGenerate->push(new TemplateFile(data: 'drupal/phpcs.xml.dist', name: 'phpcs.xml.dist'));
+                    $filesToGenerate->push(new TemplateFile(data: 'php/drupal/phpcs.xml.dist', name: 'phpcs.xml.dist'));
                 }
 
                 if (!isset($configDto->php['phpstan']) || $configDto->php['phpstan'] !== false) {
-                    $filesToGenerate->push(new TemplateFile(data: 'drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'));
+                    $filesToGenerate->push(new TemplateFile(data: 'php/drupal/phpstan.neon.dist', name: 'phpstan.neon.dist'));
                 }
 
                 if (!isset($configDto->php['phpunit']) || $configDto->php['phpunit'] !== false) {
-                    $filesToGenerate->push(new TemplateFile(data: 'drupal/phpunit.xml.dist', name: 'phpunit.xml.dist'));
+                    $filesToGenerate->push(new TemplateFile(data: 'php/drupal/phpunit.xml.dist', name: 'phpunit.xml.dist'));
                 }
 
                 $filesToGenerate->push(new TemplateFile(
-                    data: 'drupal/docker-entrypoint-php',
+                    data: 'php/drupal/docker-entrypoint-php',
                     name: 'docker-entrypoint-php',
                     path: 'tools/docker/images/php/root/usr/local/bin',
                 ));
 
                 $filesToGenerate->push(new TemplateFile(
-                    data: 'drupal/php.ini',
+                    data: 'php/drupal/php.ini',
                     name: 'php.ini',
                     path: 'tools/docker/images/php/root/usr/local/etc/php',
                 ));
 
                 if (static::isCaddy(Arr::get($configurationData, 'web.type'))) {
                     $filesToGenerate[] = new TemplateFile(
-                        data: 'drupal/caddy/Caddyfile',
+                        data: 'php/drupal/caddy/Caddyfile',
                         name: 'Caddyfile',
                         path: 'tools/docker/images/web/root/etc/caddy',
                     );
@@ -123,7 +123,7 @@ final class CreateListOfFilesToGenerate
 
                 if (static::isNginx(Arr::get($configurationData, 'web.type'))) {
                     $filesToGenerate[] = new TemplateFile(
-                        data: 'drupal/nginx/default.conf',
+                        data: 'php/drupal/nginx/default.conf',
                         name: 'default.conf',
                         path: 'tools/docker/images/web/root/etc/nginx/conf.d',
                     );
@@ -131,7 +131,7 @@ final class CreateListOfFilesToGenerate
 
                 if (Arr::get($configurationData, 'experimental.createGitHubActionsConfiguration', false) === true) {
                     $filesToGenerate[] = new TemplateFile(
-                        data: 'drupal/.github/workflows/ci.yml',
+                        data: 'php/drupal/.github/workflows/ci.yml',
                         name: 'ci.yml',
                         path: '.github/workflows',
                     );
