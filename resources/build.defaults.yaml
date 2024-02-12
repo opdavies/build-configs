@@ -6,6 +6,5 @@ php:
 
 experimental:
   runStaticAnalysisOnTests: false
-  useNewDatabaseCredentials: true
 
 project_root: /app

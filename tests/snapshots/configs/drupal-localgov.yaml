@@ -32,6 +32,3 @@ dockerfile:
         - composer install
       extra_directories:
         - assets
-
-experimental:
-  useNewDatabaseCredentials: true

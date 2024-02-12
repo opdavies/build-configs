@@ -131,11 +131,6 @@ final class ConfigDto
             'runStaticAnalysisOnTests' => new Assert\Optional([
                 new Assert\Type('bool'),
             ]),
-
-            // TODO: remove this when its been removed from all `build.yaml` files.
-            'useNewDatabaseCredentials' => new Assert\Optional([
-                new Assert\Type('bool'),
-            ]),
         ],
     )]
     public array $experimental;
