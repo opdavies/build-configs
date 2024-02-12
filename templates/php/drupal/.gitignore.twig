@@ -53,7 +53,7 @@ docker-compose.override.yaml
 !/{{ drupal.docroot }}/*/custom/**
 {% endif %}
 
-{% for path in git.ignore|sort %}
+{% for path in git.ignore|default([])|sort %}
 {{ path }}
 {% endfor %}
 

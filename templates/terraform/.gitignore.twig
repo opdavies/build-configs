@@ -48,6 +48,6 @@ terraform.rc
 .dir-env/
 {% endif %}
 
-{% for path in git.ignore %}
+{% for path in git.ignore|default([])|sort %}
 {{ path }}
 {% endfor %}
