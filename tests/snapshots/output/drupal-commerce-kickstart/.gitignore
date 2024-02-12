@@ -43,3 +43,4 @@ docker-compose.override.yaml
 /bin/
 /libraries/
 /web/profiles/contrib/
+
