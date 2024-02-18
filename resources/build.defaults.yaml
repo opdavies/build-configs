@@ -1,6 +1,9 @@
 drupal:
   docroot: web
 
+php:
+  test_runner: phpunit
+
 experimental:
   runStaticAnalysisOnTests: false
   useNewDatabaseCredentials: true

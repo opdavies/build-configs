@@ -111,9 +111,9 @@ function stop {
   docker compose down
 }
 
-{% if not php.phpunit is same as false %}
+{% if not php.phpunit is same as false and not php.test_runner is same as false %}
 function test {
-  _exec php phpunit --colors=always "${@}"
+  _exec php {{ php.test_runner }} --colors=always "${@}"
 }
 {% endif %}
 
