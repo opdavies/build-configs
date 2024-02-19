@@ -239,10 +239,6 @@ final class ConfigDto
             'phpunit' => new Assert\Optional(
                 new Assert\IsFalse(),
             ),
-
-            'test_runner' => new Assert\Optional(
-                new Assert\Choice(['phpunit', 'pest', 'paratest']),
-            ),
         ],
     )]
     public array $php;
