@@ -33,6 +33,7 @@ final class GenerateConfigurationFiles
             return $next([$configurationDataDto, $filesToGenerate]);
         }
 
+        $filesToGenerate->each(function (TemplateFile $templateFile) use ($configurationData): void {
             if ($templateFile->path !== null) {
                 if (!$this->filesystem->exists($templateFile->path)) {
                     $this->filesystem->mkdir("{$this->outputDir}/{$templateFile->path}");
