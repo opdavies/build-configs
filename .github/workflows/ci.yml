@@ -20,9 +20,8 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-23.05
 
-      - run: ./run ci:test
-
-      - run: ./run build
+      - run: nix develop --command just ci-test
+      - run: nix develop --command just build
 
       - run: |
           echo "DATE=$(date '+%Y-%m-%d-%H.%M.%S')" >> $GITHUB_ENV

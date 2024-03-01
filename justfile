@@ -1,29 +1,18 @@
-#!/usr/bin/env bash
+_default:
+  just --list
 
-set -o errexit
-set -o pipefail
-
-export PATH=$PATH:./bin:./vendor/bin:./vendor-bin/box/vendor/bin
-
-# Delete any temporary or generated files.
-function clean {
-  rm -fr dist/* tmp vendor vendor-bin/box/vendor
-  touch dist/.keep var/.keep
-}
-
-# Build the phar version of build-configs.
-function build {
-  clean
+build:
+  just clean
 
   # Install dependencies.
   composer validate
   composer install --no-dev --prefer-dist --optimize-autoloader
   composer install --prefer-dist --optimize-autoloader --working-dir ./vendor-bin/box
 
-  nix develop --command composer dump-env prod
+  composer dump-env prod
 
-  nix develop --command build-configs cache:clear
-  nix develop --command build-configs cache:warmup
+  ./build-configs cache:clear
+  ./build-configs cache:warmup
 
   # Generate the phar file.
   box compile --config box.json.dist
@@ -33,36 +22,26 @@ function build {
   tree dist/
 
   # TODO: build a Nix derivation and add it to the store.
-}
 
-function ci:test {
+clean:
+  rm -fr dist/* tmp vendor vendor-bin/box/vendor
+  touch dist/.keep var/.keep
+
+ci-test:
   nix develop --command composer install
   nix develop --command ./run test:snapshots
   nix develop --command phpunit --testdox
-}
 
-# Display a list of all available commands.
-function help {
-  printf "%s <task> [args]\n\nTasks:\n" "${0}"
+test *args:
+  phpunit {{ args }}
 
-  compgen -A function | grep -v "^_" | cat -n
-
-  printf "\nExtended help:\n  Each task has comments for general usage\n"
-}
-
-function test {
-  phpunit "${@}"
-}
-
-# Create a new snapshot for a configuration based on generated files.
-function test:create-snapshot {
+create-snapshot config:
+  #!/usr/bin/env bash
   set -o nounset
 
-  config="${1}"
+  config_file="tests/snapshots/configs/{{ config }}.yaml"
+  output_path="tests/snapshots/output/{{ config }}"
 
-  config_file="tests/snapshots/configs/${config}.yaml"
-  output_path="tests/snapshots/output/${config}"
-  
   cat "${config_file}"
 
   rm -fr "${output_path}"
@@ -70,10 +49,9 @@ function test:create-snapshot {
   ./bin/build-configs app:generate --config-file "${config_file}" --output-dir "${output_path}"
 
   git status "${output_path}"
-}
 
-# Generate a file and ensure it matches the expected version.
-function test:snapshots {
+run-snapshots:
+  #!/usr/bin/env bash
   rm -rf .ignored/snapshots
   mkdir -p .ignored/snapshots
 
@@ -107,7 +85,3 @@ function test:snapshots {
       fi
     done
   done
-}
-
-TIMEFORMAT=$'\nTask completed in %3lR'
-time "${@:-help}"
