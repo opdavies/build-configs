@@ -29,8 +29,8 @@ clean:
 
 ci-test:
   nix develop --command composer install
-  nix develop --command ./run test:snapshots
-  nix develop --command phpunit --testdox
+  nix develop --command just run-snapshots
+  nix develop --command vendor/bin/phpunit --testdox
 
 test *args:
   phpunit {{ args }}
