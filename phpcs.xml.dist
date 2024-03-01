@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="phpcs.xsd">
+    <file>src</file>
+    <file>tests</file>
+
+    <arg name="colors"/>
+    <arg name="parallel" value="75"/>
+    <arg value="np"/>
+
+    <!-- Include the whole PEAR standard -->
+    <rule ref="PSR12"/>
+
+    <rule ref="PSR12.Operators.OperatorSpacing.NoSpaceAfter">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PSR12.Operators.OperatorSpacing.NoSpaceBefore">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Check var names, but we don't want leading underscores for private vars -->
+    <!-- <rule ref="Squiz.NamingConventions.ValidVariableName"/>
+    <rule ref="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore">
+        <severity>0</severity>
+    </rule> -->
+
+</ruleset>
