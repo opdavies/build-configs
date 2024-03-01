@@ -25,7 +25,7 @@ final class GenerateConfigurationFiles
         /**
          * @var Collection<int,TemplateFile> $filesToGenerate
          * @var ConfigDto $configurationDataDto,
-         * @var array<string,mixed> $configurationData
+         * @var array<non-empty-string,mixed> $configurationData
          */
         [$configurationData, $configurationDataDto, $filesToGenerate] = $filesToGenerateAndConfigurationData;
 
