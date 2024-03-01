@@ -110,7 +110,7 @@ final class ConfigDto
     public array $drupal;
 
     #[Assert\Collection(
-        allowExtraFields: false,
+        allowExtraFields: true,
         fields: [
             'createGitHubActionsConfiguration' => new Assert\Optional([
                 new Assert\Type('bool'),
