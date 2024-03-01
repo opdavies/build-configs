@@ -51,6 +51,11 @@ class GenerateCommand extends Command
                 description: 'The directory to create files in',
                 default: '.',
             )
+            ->addOption(
+                name: 'dry-run',
+                mode: InputOption::VALUE_NONE,
+                description: 'Whether to generate files or not',
+            )
         ;
     }
 
@@ -60,18 +65,17 @@ class GenerateCommand extends Command
 
         $configFile = $input->getOption(name: 'config-file');
         $outputDir = $input->getOption(name: 'output-dir');
+        $isDryRun = $input->getOption(name: 'dry-run');
 
         $pipelines = [
             new CreateFinalConfigurationData(),
-
             new ValidateConfigurationData(),
-
             new CreateListOfFilesToGenerate(),
-
             new GenerateConfigurationFiles(
                 $this->filesystem,
                 $this->twig,
                 $outputDir,
+                $isDryRun,
             ),
         ];
 
@@ -85,6 +89,10 @@ class GenerateCommand extends Command
             ->thenReturn();
 
         $io->info("Building configuration for {$configurationData->name}.");
+
+        if ($isDryRun === true) {
+            $io->warning('This is a dry run, no files have been generated.');
+        }
 
         $io->write('Generated files:');
         $io->listing(static::getListOfFiles(filesToGenerate: $generatedFiles)->toArray());

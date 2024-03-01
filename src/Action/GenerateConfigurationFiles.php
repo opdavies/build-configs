@@ -16,6 +16,7 @@ final class GenerateConfigurationFiles
         private Filesystem $filesystem,
         private Environment $twig,
         private string $outputDir,
+        private bool $isDryRun = false,
     ) {
     }
 
@@ -28,7 +29,10 @@ final class GenerateConfigurationFiles
          */
         [$configurationData, $configurationDataDto, $filesToGenerate] = $filesToGenerateAndConfigurationData;
 
-        $filesToGenerate->each(function(TemplateFile $templateFile) use ($configurationData): void {
+        if ($this->isDryRun) {
+            return $next([$configurationDataDto, $filesToGenerate]);
+        }
+
             if ($templateFile->path !== null) {
                 if (!$this->filesystem->exists($templateFile->path)) {
                     $this->filesystem->mkdir("{$this->outputDir}/{$templateFile->path}");
