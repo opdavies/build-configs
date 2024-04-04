@@ -113,6 +113,14 @@ final class CreateListOfFilesToGenerate
                     path: 'tools/docker/images/php/root/usr/local/etc/php',
                 ));
 
+                if (static::isApache(Arr::get($configurationData, 'web.type'))) {
+                    $filesToGenerate[] = new TemplateFile(
+                        data: 'php/drupal/apache/000-default.conf',
+                        name: '000-default.conf',
+                        path: 'tools/docker/images/php/root/etc/apache2/sites-available',
+                    );
+                }
+
                 if (static::isCaddy(Arr::get($configurationData, 'web.type'))) {
                     $filesToGenerate[] = new TemplateFile(
                         data: 'php/drupal/caddy/Caddyfile',
@@ -168,6 +176,15 @@ final class CreateListOfFilesToGenerate
         }
 
         return $next([$configurationData, $configDto, $filesToGenerate]);
+    }
+
+    private static function isApache(?string $webServer): bool
+    {
+        if (is_null($webServer)) {
+            return false;
+        }
+
+        return $webServer === WebServer::Apache->value;
     }
 
     private static function isCaddy(?string $webServer): bool

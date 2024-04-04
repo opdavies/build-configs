@@ -11,8 +11,8 @@ build:
 
   composer dump-env prod
 
-  ./build-configs cache:clear
-  ./build-configs cache:warmup
+  ./bin/build-configs cache:clear
+  ./bin/build-configs cache:warmup
 
   # Generate the phar file.
   box compile --config box.json.dist

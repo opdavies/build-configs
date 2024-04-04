@@ -65,7 +65,11 @@ RUN {{ command }}
 COPY --chown=app:app tools/docker/images/php/root /
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-php"]
+{% if web.type == "apache" %}
+CMD ["apache2-foreground"]
+{% else %}
 CMD ["php-fpm"]
+{% endif %}
 
 {% if dockerfile.stages.test %}
 ################################################################################

@@ -251,7 +251,7 @@ final class ConfigDto
 
     #[Assert\Collection([
         'type' => new Assert\Required([
-            new Assert\Choice(choices: ['nginx', 'caddy']),
+            new Assert\Choice(choices: ['apache', 'caddy', 'nginx']),
         ]),
     ])]
     public array $web;

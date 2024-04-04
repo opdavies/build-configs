@@ -6,6 +6,7 @@ namespace App\Enum;
 
 enum WebServer: string
 {
+    case Apache = 'apache';
     case Caddy = 'caddy';
     case Nginx = 'nginx';
 }
