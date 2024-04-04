@@ -9,11 +9,12 @@
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
-      inherit (pkgs) mkShell;
+      inherit (pkgs) just mkShell php82 php82Packages;
+
+      php = php82;
+      phpPackages = php82Packages;
     in {
       devShells.${system}.default =
-        mkShell { buildInputs = with pkgs; [ just php82 php82Packages.composer ]; };
-
-      formatter.${system} = pkgs.nixfmt;
+        mkShell { buildInputs = [ just php phpPackages.composer ]; };
     };
 }
