@@ -15,7 +15,7 @@ build:
   ./bin/build-configs cache:warmup
 
   # Generate the phar file.
-  box compile --config box.json.dist
+  ./vendor-bin/box/vendor/bin/box compile --config box.json.dist
 
   rm -f .env.local .env.local.php
 
