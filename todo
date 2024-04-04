@@ -1,3 +1,2 @@
 generate phpcs, phpstan config files for symfony
 allow for using flakes and docker in the smae project
-remove createInclusiveGitIgnoreFile option

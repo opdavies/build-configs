@@ -116,10 +116,6 @@ final class ConfigDto
                 new Assert\Type('bool'),
             ]),
 
-            'createInclusiveGitIgnoreFile' => new Assert\Optional([
-                new Assert\Type('bool'),
-            ]),
-
             'createTmuxStartupFile' => new Assert\Optional([
                 new Assert\Type('bool'),
             ]),

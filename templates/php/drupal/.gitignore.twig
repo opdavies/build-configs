@@ -1,6 +1,5 @@
 # {{ managedText|raw }}
 
-{% if not experimental.createInclusiveGitIgnoreFile %}
 .editorconfig
 .env
 .gitattributes
@@ -45,20 +44,4 @@ docker-compose.override.yaml
 
 {% if flake is defined %}
 .dir-env/
-{% endif %}
-{% else %}
-# Ignore everything.
-*
-
-# Include these things:
-!/{{ drupal.docroot }}/*/custom/**
-{% endif %}
-
-{% for path in git.ignore|default([])|sort %}
-{{ path }}
-{% endfor %}
-
-{% if experimental.createInclusiveGitIgnoreFile %}
-# Even if they are in sub-directories.
-!*/
 {% endif %}
