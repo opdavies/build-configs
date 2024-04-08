@@ -39,6 +39,7 @@ final class CreateFinalConfigurationData
 
         $phpExtensions = [
             'gd',
+            'opcache',
             // TODO: only add `pdo_mysql` if its used.
             'pdo_mysql',
             'zip',
