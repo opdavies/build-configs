@@ -10,9 +10,20 @@
       pkgs = nixpkgs.legacyPackages.${system};
 
       inherit (pkgs) mkShell;
+      inherit (pkgs.php) buildComposerProject;
     in {
       devShells.${system}.default =
         mkShell { buildInputs = with pkgs; [ just php82 php82Packages.composer ]; };
+
+        packages.${system}.default = buildComposerProject (finalAttrs: {
+          pname = "build-configs";
+          version = "0.1.0";
+          src = ./.;
+
+          composerLock = ./composer.lock;
+
+          vendorHash = "sha256-HElnPeC88D4kFp39/dikEd2XbqQ3xXOaDR0k48TB2tY=";
+        });
 
       formatter.${system} = pkgs.nixfmt;
     };
