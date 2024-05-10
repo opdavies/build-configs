@@ -3,7 +3,7 @@
 x-proxy: &default-proxy
   networks:
     - default
-    - web
+    - proxy
   labels:
     - "traefik.enable=true"
     - "traefik.docker.network=traefik_proxy"
@@ -54,6 +54,6 @@ services:
     profiles: [node]
 
 networks:
-  web:
+  proxy:
     external: true
     name: traefik_proxy
