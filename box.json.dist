@@ -9,6 +9,7 @@
         "config",
         "resources",
         "templates",
+        "templates/common/.githooks",
         "var"
     ],
     "force-autodiscovery": true,
