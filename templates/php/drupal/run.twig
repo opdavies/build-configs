@@ -53,6 +53,13 @@ function composer {
   _exec php composer "${@}"
 }
 
+# Connect to the database.
+function db {
+  [[ -f ".env" ]] && source .env
+
+  docker compose exec database mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME"
+}
+
 function drush {
   _exec php drush "${@}"
 }
