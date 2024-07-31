@@ -43,6 +43,12 @@ final class CreateFinalConfigurationData
         $configurationData['isDocker'] = isset($configurationData['dockerfile']);
         $configurationData['isFlake'] = isset($configurationData['flake']);
 
+        // Alias `symfony-cli` to `symfony`. In the future, this allows for
+        // different configurations for CLI-based and web-based applications.
+        if ($configurationData['type'] === 'symfony-cli') {
+            $configurationData['type'] = 'symfony';
+        }
+
         if (isset($configurationData['docker-compose'])) {
             $configurationData['dockerCompose'] = $configurationData['docker-compose'];
             $configurationData['docker-compose'] = null;
