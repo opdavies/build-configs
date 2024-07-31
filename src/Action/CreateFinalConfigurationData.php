@@ -22,6 +22,7 @@ final class CreateFinalConfigurationData
         // Map the new `template` value to `type`.
         if (isset($configurationData['template'])) {
             $configurationData['type'] = match ($configurationData['template']) {
+                'sculpin-site' => 'sculpin',
                 default => $configurationData['template'],
             };
 
