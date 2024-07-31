@@ -12,7 +12,7 @@
       inherit (pkgs) mkShell;
     in {
       devShells.${system}.default =
-        mkShell { buildInputs = with pkgs; [ just php82 php82Packages.composer ]; };
+        mkShell { buildInputs = with pkgs; [ bashInteractive php82 php82Packages.composer ]; };
 
       formatter.${system} = pkgs.nixfmt;
     };
