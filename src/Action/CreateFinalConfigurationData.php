@@ -9,16 +9,38 @@ use Symfony\Component\Yaml\Yaml;
 
 final class CreateFinalConfigurationData
 {
-    public function handle(string $configFile, \Closure $next) {
+    public function handle(string $configFile, \Closure $next)
+    {
         // Perform some initial checks before the defaults are merged.
         $configurationData = Yaml::parseFile(filename: $configFile);
-        $configurationData['isDocker'] = isset($configurationData['dockerfile']);
-        $configurationData['isFlake'] = isset($configurationData['flake']);
 
         $configurationData = array_replace_recursive(
             Yaml::parseFile(filename: __DIR__ . '/../../resources/build.defaults.yaml'),
             $configurationData,
         );
+
+        // Map the new `template` value to `type`.
+        if (isset($configurationData['template'])) {
+            $configurationData['type'] = match ($configurationData['template']) {
+                default => $configurationData['template'],
+            };
+
+            $configurationData['template'] = null;
+        }
+
+        // Flatten the new `parameters` into the main configuration.
+        if (isset($configurationData['parameters'])) {
+            $configurationData = array_merge($configurationData, [...$configurationData['parameters']]);
+        }
+
+        // `flake` renamed to `nix`.
+        if (isset($configurationData['nix'])) {
+            $configurationData['flake'] = $configurationData['nix'];
+            $configurationData['nix'] = null;
+        }
+
+        $configurationData['isDocker'] = isset($configurationData['dockerfile']);
+        $configurationData['isFlake'] = isset($configurationData['flake']);
 
         if (isset($configurationData['docker-compose'])) {
             $configurationData['dockerCompose'] = $configurationData['docker-compose'];
