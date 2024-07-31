@@ -1,6 +1,0 @@
-name: build-configs
-root: .
-
-windows:
-  - vim: nvim
-  - shell:
