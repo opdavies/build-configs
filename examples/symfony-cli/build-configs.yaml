@@ -1,0 +1,9 @@
+---
+name: project-name
+template: symfony-cli
+parameters:
+  nix:
+    devshell:
+      packages:
+        - php82
+        - php82Packages.composer
