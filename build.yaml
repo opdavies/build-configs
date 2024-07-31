@@ -1,9 +1,0 @@
-name: build-configs
-type: symfony
-language: php
-flake:
-  devshell:
-    packages:
-      - bashInteractive
-      - php82
-      - php82Packages.composer

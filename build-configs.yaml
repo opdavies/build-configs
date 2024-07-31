@@ -1,0 +1,10 @@
+---
+name: build-configs
+template: symfony-cli
+parameters:
+  nix:
+    devshell:
+      packages:
+        - bashInteractive
+        - php82
+        - php82Packages.composer
