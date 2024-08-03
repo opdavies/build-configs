@@ -19,8 +19,8 @@ function ci:test {
 }
 
 function clean {
-  rm -fr dist/* tmp vendor vendor-bin/box/vendor
-  touch dist/.keep var/.keep
+  rm -fr tmp vendor vendor-bin/box/vendor
+  touch var/.keep
 }
 
 function create-snapshot {
