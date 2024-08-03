@@ -1,0 +1,44 @@
+---
+name: project-name
+template: drupal
+parameters:
+  database:
+    type: mariadb
+    version: 10
+
+  drupal:
+    docroot: web
+
+  docker-compose:
+    services:
+      - database
+      - php
+      - web
+
+  dockerfile:
+    stages:
+      build:
+        commands:
+          - composer validate --strict
+          - composer install
+
+  php:
+    version: 8.2-fpm-bullseye
+    phpcs:
+      paths:
+        - web/modules/custom
+      standards:
+        - Drupal
+        - DrupalPractice
+    phpstan:
+      level: max
+      paths:
+        - web/modules/custom
+
+  web:
+    type: nginx
+
+  experimental:
+    createGitHubActionsConfiguration: true
+    runGitHooksBeforePush: true
+    useNewDatabaseCredentials: true
