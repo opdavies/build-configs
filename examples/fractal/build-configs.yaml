@@ -1,0 +1,11 @@
+---
+name: project-name
+template: fractal
+parameters:
+  flake:
+    devshell:
+      packages:
+        - nodejs_20
+  git:
+    ignore:
+      - build/
