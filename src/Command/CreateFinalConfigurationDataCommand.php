@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Action;
+namespace App\Command;
 
 use Illuminate\Support\Arr;
 use Symfony\Component\Yaml\Yaml;
 
-final class CreateFinalConfigurationData
+final class CreateFinalConfigurationDataCommand
 {
-    public function handle(string $configFile, \Closure $next)
+    public function execute(string $configFile, \Closure $next)
     {
         // Perform some initial checks before the defaults are merged.
         $configurationData = Yaml::parseFile(filename: $configFile);

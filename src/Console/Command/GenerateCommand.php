@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Command;
 
-use App\Action\CreateFinalConfigurationData;
-use App\Action\CreateListOfFilesToGenerate;
-use App\Action\GenerateConfigurationFiles;
-use App\Action\ValidateConfigurationData;
+use App\Command\CreateFinalConfigurationDataCommand;
+use App\Command\CreateListOfFilesToGenerateCommand;
+use App\Command\GenerateConfigurationFilesCommand;
+use App\Command\ValidateConfigurationDataCommand;
 use App\DataTransferObject\ConfigDto;
 use App\DataTransferObject\TemplateFile;
 use Illuminate\Pipeline\Pipeline;
@@ -42,7 +42,6 @@ class GenerateCommand extends Command
                 shortcut: ['c'],
                 mode: InputOption::VALUE_REQUIRED,
                 description: 'The path to the project\'s build.yaml file',
-                default: 'build.yaml',
             )
             ->addOption(
                 name: 'output-dir',
@@ -68,10 +67,10 @@ class GenerateCommand extends Command
         $isDryRun = $input->getOption(name: 'dry-run');
 
         $pipelines = [
-            new CreateFinalConfigurationData(),
-            new ValidateConfigurationData(),
-            new CreateListOfFilesToGenerate(),
-            new GenerateConfigurationFiles(
+            new CreateFinalConfigurationDataCommand(),
+            new ValidateConfigurationDataCommand(),
+            new CreateListOfFilesToGenerateCommand(),
+            new GenerateConfigurationFilesCommand(
                 $this->filesystem,
                 $this->twig,
                 $outputDir,
@@ -85,6 +84,7 @@ class GenerateCommand extends Command
          */
         [$configurationData, $generatedFiles] = (new Pipeline())
             ->send($configFile)
+            ->via('execute')
             ->through($pipelines)
             ->thenReturn();
 

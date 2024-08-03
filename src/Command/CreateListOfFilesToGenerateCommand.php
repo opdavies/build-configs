@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Action;
+namespace App\Command;
 
 use App\DataTransferObject\ConfigDto;
 use App\DataTransferObject\TemplateFile;
@@ -11,9 +11,9 @@ use App\Enum\WebServer;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-final class CreateListOfFilesToGenerate
+final class CreateListOfFilesToGenerateCommand
 {
-    public function handle(array $configurationDataAndDto, \Closure $next)
+    public function execute(array $configurationDataAndDto, \Closure $next)
     {
         /**
          * @var ConfigDto $configDto,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Action;
+namespace App\Command;
 
 use App\DataTransferObject\ConfigDto;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -11,9 +11,10 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Validation;
 
-final class ValidateConfigurationData
+final class ValidateConfigurationDataCommand
 {
-    public function handle(array $configurationData, \Closure $next) {
+    public function execute(array $configurationData, \Closure $next)
+    {
         // Convert the input to a configuration data object.
         $normalizer = new ObjectNormalizer(null, new CamelCaseToSnakeCaseNameConverter());
         $serializer = new Serializer([$normalizer], [new JsonEncoder()]);

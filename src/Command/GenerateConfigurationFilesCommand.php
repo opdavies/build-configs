@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Action;
+namespace App\Command;
 
 use App\DataTransferObject\ConfigDto;
 use App\DataTransferObject\TemplateFile;
@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 
-final class GenerateConfigurationFiles
+final class GenerateConfigurationFilesCommand
 {
     public function __construct(
         private Filesystem $filesystem,
@@ -20,7 +20,7 @@ final class GenerateConfigurationFiles
     ) {
     }
 
-    public function handle(array $filesToGenerateAndConfigurationData, \Closure $next)
+    public function execute(array $filesToGenerateAndConfigurationData, \Closure $next)
     {
         /**
          * @var Collection<int,TemplateFile> $filesToGenerate
