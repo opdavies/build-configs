@@ -145,13 +145,6 @@ final class CreateListOfFilesToGenerate
                     );
                 }
                 break;
-
-            case (strtolower(ProjectType::Terraform->name)):
-                $filesToGenerate = collect([
-                    new TemplateFile(data: 'terraform/.gitignore', name: '.gitignore'),
-                    new TemplateFile(data: 'terraform/run', name: 'run'),
-                ]);
-                break;
         }
 
         if (Arr::get($configurationData, 'experimental.createTmuxStartupFile') === true) {

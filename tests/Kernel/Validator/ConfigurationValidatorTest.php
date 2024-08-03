@@ -32,8 +32,7 @@ class ConfigurationValidatorTest extends KernelTestCase
         ?array $extraDatabases,
         int $expectedViolationCount,
         ?string $expectedMessage,
-    ): void
-    {
+    ): void {
         $this->configurationDataDto->database = [
             'extra_databases' => $extraDatabases,
             'type' => 'mariadb',
@@ -219,7 +218,6 @@ class ConfigurationValidatorTest extends KernelTestCase
             yield 'laravel' => [ProjectType::Laravel->value, 0, null],
             yield 'php-library' => [ProjectType::PHPLibrary->value, 0, null],
             yield 'symfony' => [ProjectType::Symfony->value, 0, null],
-            yield 'terraform' => [ProjectType::Terraform->value, 0, null],
         ];
     }
 

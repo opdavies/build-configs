@@ -12,5 +12,4 @@ enum ProjectType: string
     case PHPLibrary = 'php-library';
     case Sculpin = 'sculpin';
     case Symfony = 'symfony';
-    case Terraform = 'terraform';
 }
