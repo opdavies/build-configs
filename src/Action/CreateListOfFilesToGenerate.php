@@ -55,7 +55,9 @@ final class CreateListOfFilesToGenerate
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.yarnrc', name: '.yarnrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/Dockerfile', name: 'Dockerfile'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/docker-compose.yaml', name: 'docker-compose.yaml'));
-                } elseif ($configDto->isFlake) {
+                }
+
+                if ($configDto->isFlake) {
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/.envrc', name: '.envrc'));
                     $filesToGenerate->push(new TemplateFile(data: 'fractal/flake.nix', name: 'flake.nix'));
                 }
