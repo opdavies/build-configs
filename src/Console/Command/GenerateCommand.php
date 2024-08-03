@@ -6,6 +6,7 @@ namespace App\Console\Command;
 
 use App\Command\CreateFinalConfigurationDataCommand;
 use App\Command\CreateListOfFilesToGenerateCommand;
+use App\Command\FindBuildConfigurationFileCommand;
 use App\Command\GenerateConfigurationFilesCommand;
 use App\Command\ValidateConfigurationDataCommand;
 use App\DataTransferObject\ConfigDto;
@@ -67,6 +68,7 @@ class GenerateCommand extends Command
         $isDryRun = $input->getOption(name: 'dry-run');
 
         $pipelines = [
+            new FindBuildConfigurationFileCommand($this->filesystem),
             new CreateFinalConfigurationDataCommand(),
             new ValidateConfigurationDataCommand(),
             new CreateListOfFilesToGenerateCommand(),
