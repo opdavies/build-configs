@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Console\Command;
 
 use App\Action\CreateFinalConfigurationData;
 use App\Action\CreateListOfFilesToGenerate;
