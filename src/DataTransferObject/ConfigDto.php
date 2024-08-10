@@ -105,7 +105,15 @@ final class ConfigDto
 
     #[Assert\Collection(
         allowExtraFields: false,
-        fields: ['docroot' => new Assert\Choice([null, 'web', 'docroot'])],
+        fields: [
+            'docroot' => new Assert\Choice([null, 'web', 'docroot']),
+
+            'simpletest' => new Assert\Optional(
+                new Assert\Collection([
+                    'db' => new Assert\Optional(new Assert\Type('string')),
+                ]),
+            ),
+        ],
     )]
     public array $drupal;
 

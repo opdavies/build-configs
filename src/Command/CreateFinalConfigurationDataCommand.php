@@ -31,7 +31,7 @@ final class CreateFinalConfigurationDataCommand
 
         // Flatten the new `parameters` into the main configuration.
         if (isset($configurationData['parameters'])) {
-            $configurationData = array_merge($configurationData, [...$configurationData['parameters']]);
+            $configurationData = array_replace_recursive($configurationData, [...$configurationData['parameters']]);
         }
 
         // `flake` renamed to `nix`.

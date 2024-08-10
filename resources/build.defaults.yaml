@@ -1,5 +1,8 @@
+---
 drupal:
   docroot: web
+  simpletest:
+    db: sqlite://localhost//dev/shm/test.sqlite
 
 experimental:
   runStaticAnalysisOnTests: false
