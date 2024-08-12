@@ -139,15 +139,6 @@ final class ConfigDto
     )]
     public array $experimental;
 
-    #[Assert\Collection([
-        'ignore' => new Assert\Optional([
-            new Assert\All([
-                new Assert\Type('string'),
-            ]),
-        ]),
-    ])]
-    public array $git;
-
     #[Assert\Collection(
         allowExtraFields: false,
         fields: [
@@ -165,6 +156,19 @@ final class ConfigDto
         ],
     )]
     public array $flake;
+
+    #[Assert\Collection([
+        'ignore' => new Assert\Optional([
+            new Assert\All([
+                new Assert\Type('string'),
+            ]),
+        ]),
+    ])]
+    public array $git;
+
+    public bool $isDocker;
+
+    public bool $isFlake;
 
     #[Assert\Choice(choices: ['javascript', 'php', 'typescript'])]
     public string $language;
@@ -259,8 +263,4 @@ final class ConfigDto
         ]),
     ])]
     public array $web;
-
-    public bool $isDocker;
-
-    public bool $isFlake;
 }
