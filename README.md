@@ -2,6 +2,8 @@
 
 A CLI tool for generating build configuration files for PHP projects.
 
+![A flowchart of the Build Configs workflow.](./docs/diagram.png)
+
 ## Supported Projects
 
 ### PHP

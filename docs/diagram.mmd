@@ -1,0 +1,19 @@
+flowchart TD
+  A[build-configs.yaml]
+
+  subgraph I[Template Files]
+    Dockerfile.twig
+    docker-compose.yaml.twig
+    phpstan.neon.dist.twig
+  end
+
+  A -->|Include project configuration| B
+  I -->|Include template files| B
+
+  B(Build Configs) -->|Generate configuration files| J
+
+  subgraph J[Output Files]
+    Dockerfile
+    docker-compose.yaml
+    phpstan.neon.dist
+  end
