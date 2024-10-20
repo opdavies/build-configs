@@ -45,3 +45,7 @@ docker-compose.override.yaml
 {% if flake is defined %}
 .dir-env/
 {% endif %}
+
+{% for i in git.ignore %}
+{{ i }}
+{% endfor %}
