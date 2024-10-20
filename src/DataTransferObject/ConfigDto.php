@@ -258,6 +258,14 @@ final class ConfigDto
     public string $type;
 
     #[Assert\Collection([
+        'extra_hosts' => new Assert\Optional([
+            new Assert\Type('array'),
+            new Assert\All([
+                new Assert\NotBlank(),
+                new Assert\Type('string'),
+            ]),
+        ]),
+
         'type' => new Assert\Required([
             new Assert\Choice(choices: ['apache', 'caddy', 'nginx']),
         ]),
