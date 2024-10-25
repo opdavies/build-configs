@@ -194,6 +194,13 @@ final class ConfigDto
                 new Assert\Type('string'),
             ]),
 
+            'ini' => new Assert\Optional([
+                new Assert\Type('array'),
+                new Assert\All([
+                    new Assert\Type('string'),
+                ]),
+            ]),
+
             'phpcs' => new Assert\Optional([
                 new Assert\AtLeastOneOf(
                     constraints: [
