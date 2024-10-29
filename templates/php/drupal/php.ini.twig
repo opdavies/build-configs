@@ -1,4 +1,7 @@
 # {{ managedText }}
 
 max_vars_input = 1000
-memory_limit = {{ php.ini.memory_limit | default('128M') }}
+memory_limit = {{ php.ini.memory_limit }}
+
+post_max_size = {{ php.ini.post_max_size }}
+upload_max_filesize = {{ php.ini.upload_max_filesize }}
