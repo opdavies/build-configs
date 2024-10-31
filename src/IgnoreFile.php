@@ -10,6 +10,10 @@ final class IgnoreFile
 
     public static function parse(): array
     {
+        if (@stat(self::FILENAME) === false) {
+            return [];
+        }
+
         return explode("\n", file_get_contents(self::FILENAME));
     }
 }

@@ -18,4 +18,9 @@ class IgnoreFileTest extends KernelTestCase
 
         self::assertSame(['phpstan.neon.dist'], IgnoreFile::parse());
     }
+
+    public function test_it_returns_an_empty_array_of_filenames_if_there_is_no_ignore_file(): void
+    {
+        self::assertSame([], IgnoreFile::parse());
+    }
 }
