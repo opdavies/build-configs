@@ -18,8 +18,8 @@ class RemoveIgnoredFilesCommandTest extends KernelTestCase
         $command = new RemoveIgnoredFilesCommand($filenamesToIgnore);
 
         $command->execute([[], [], $filenamesToGenerate], function ($result) {
-            self::assertCount(1, $result[1]);
-            self::assertSame('phpcs.xml.dist', $result[1][0]->name);
+            self::assertCount(1, $result[2]);
+            self::assertSame('phpcs.xml.dist', $result[2][0]->name);
         });
     }
 }

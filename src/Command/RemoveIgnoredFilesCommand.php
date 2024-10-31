@@ -29,6 +29,6 @@ final class RemoveIgnoredFilesCommand
             return !collect($this->filenames)->contains($templateFile->name);
         });
 
-        return $next([$configurationDataDto, $filesToGenerate]);
+        return $next([$configurationData, $configurationDataDto, $filesToGenerate]);
     }
 }
