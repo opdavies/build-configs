@@ -8,9 +8,11 @@ use App\Command\CreateFinalConfigurationDataCommand;
 use App\Command\CreateListOfFilesToGenerateCommand;
 use App\Command\FindBuildConfigurationFileCommand;
 use App\Command\GenerateConfigurationFilesCommand;
+use App\Command\RemoveIgnoredFilesCommand;
 use App\Command\ValidateConfigurationDataCommand;
 use App\DataTransferObject\ConfigDto;
 use App\DataTransferObject\TemplateFile;
+use App\IgnoreFile;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Collection;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -72,6 +74,7 @@ class GenerateCommand extends Command
             new CreateFinalConfigurationDataCommand(),
             new ValidateConfigurationDataCommand(),
             new CreateListOfFilesToGenerateCommand(),
+            new RemoveIgnoredFilesCommand(IgnoreFile::parse()),
             new GenerateConfigurationFilesCommand(
                 $this->filesystem,
                 $this->twig,
