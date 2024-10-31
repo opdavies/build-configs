@@ -19,13 +19,13 @@ final class RemoveIgnoredFilesCommand
     public function execute(array $filesToGenerateAndConfigurationData, \Closure $next)
     {
         /**
-         * @var array<int,TemplateFile> $filesToGenerate
+         * @var Collection<int,TemplateFile> $filesToGenerate
          * @var ConfigDto $configurationDataDto,
          * @var array<non-empty-string,mixed> $configurationData
          */
         [$configurationData, $configurationDataDto, $filesToGenerate] = $filesToGenerateAndConfigurationData;
 
-        $filesToGenerate = array_filter($filesToGenerate, function (TemplateFile $templateFile): bool {
+        $filesToGenerate = $filesToGenerate->filter(function (TemplateFile $templateFile): bool {
             return !collect($this->filenames)->contains($templateFile->name);
         });
 

@@ -8,10 +8,10 @@ class RemoveIgnoredFilesCommandTest extends KernelTestCase
 {
     public function test_it_removes_any_ignored_files(): void
     {
-        $filenamesToGenerate = [
+        $filenamesToGenerate = collect([
             new TemplateFile(data: '', name: 'phpcs.xml.dist'),
             new TemplateFile(data: '', name: 'phpstan.neon.dist'),
-        ];
+        ]);
 
         $filenamesToIgnore = ['phpstan.neon.dist'];
 
